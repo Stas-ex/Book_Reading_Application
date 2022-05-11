@@ -1,0 +1,38 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="header-profile (main,myStories,createStory)">
+    <style>
+        .menu {
+            margin: 3% 25%;
+            width: 50%;
+            font-size: 20px;
+        }
+        a{
+            text-decoration: none; /* Отменяем подчеркивание у ссылки */
+            color: white;
+            transition: 0.4s;
+        }
+        a:hover{
+            text-decoration: none; /* Отменяем подчеркивание у ссылки */
+            color: white;
+        }
+        .active:hover{
+            text-decoration: none; /* Отменяем подчеркивание у ссылки */
+            color: white;
+        }
+
+    </style>
+
+    <div class="menu">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a th:class="'nav-link' + ${main}" th:href="@{/profile}">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a th:class="'nav-link' + ${myStories}" th:href="@{/profile-history}">My stories</a>
+            </li>
+            <li class="nav-item">
+                <a th:class="'nav-link' + ${createStory}" th:href="@{/profile-create}">Create story</a>
+            </li>
+        </ul>
+    </div>

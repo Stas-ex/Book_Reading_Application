@@ -1,0 +1,75 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<title>Black-Fox [LogIn]</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+<style>
+    body {
+        background: rgb(251, 241, 252) url("https://images.hdqwalls.com/download/spiderman-into-the-spiderverse4k-oc-2048x1152.jpg") no-repeat;
+        background-attachment: fixed;
+
+    }
+    .form-control{
+        box-shadow: 1px 1px 10px darkblue;
+    }
+    .form-control:hover{
+        box-shadow: 3px 3px 10px white;
+    }
+    .form-container{
+        color: white;
+        text-shadow: 5px 5px 20px darkblue;
+        font-size: 25px;
+    }
+   .btn{
+      box-shadow: 1px 1px 10px darkblue;
+   }
+    .btn:hover{
+        box-shadow: 3px 3px 10px white;
+    }
+
+
+</style>
+
+<div class="form-container">
+    <h1 style="margin-top: 10%" align="center">Log in</h1>
+
+    <form th:action="@{/login}" method="post" th:default-target-url="'/profile'">
+        <div class="form-group main" align="center">
+            <div class="col-md-10 mb-3" style=" margin-top: 2%">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" name="username"
+                       placeholder="Enter userName" style="width: 40%">
+                <small id="emailHelp" class="form-text text-muted">Enter username.</small>
+            </div>
+        </div>
+        <div class="form-group" align="center">
+            <div class="col-md-10 mb-3">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" name="password"
+                       placeholder="Password" style="width: 40%">
+                <small id="passHelp" class="form-text text-muted">Enter user password.</small>
+            </div>
+        </div>
+
+        <div class="form-group" align="center">
+            <div class="col-md-10 mt-3 input">
+                <button style="width: 40%; margin-top: 5%;" type="submit" class="btn btn-dark">Log in</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="form-group" align="center">
+        <div class="col-md-10 mt-2">
+            <a style="width: 20%" th:href="'/'" class="btn btn-outline-secondary">Back</a>
+            <a style="width: 20%" th:href="'/registration'" class="btn btn-outline-warning">Registration</a>
+        </div>
+    </div>
+
+    <div th:if="${param.error}">
+        <h3 style="color: crimson; margin-top: 5%" align="center">Invalid username and password.</h3>
+    </div>
+</div>
+</html>
+

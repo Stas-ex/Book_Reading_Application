@@ -1,0 +1,2 @@
+add deploy.sh : chmod +x scripts/deploy.sh
+start : ./scripts/deploy.sh
