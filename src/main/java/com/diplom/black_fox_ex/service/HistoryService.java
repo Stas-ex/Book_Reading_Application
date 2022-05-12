@@ -1,5 +1,5 @@
 package com.diplom.black_fox_ex.service;
-/*-----------------------------------------------------------------------------------**/
+
 import com.diplom.black_fox_ex.exeptions.AnswerErrorCode;
 import com.diplom.black_fox_ex.exeptions.ServerException;
 import com.diplom.black_fox_ex.model.History;
@@ -20,21 +20,21 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-/**-----------------------------------------------------------------------------------**/
 @Service
 public class HistoryService {
-    /**-----------------------------------------------------------------------------------**/
-    @Autowired
-    HistoryRepo historyRepo;
-
-    @Autowired
-    TagRepo tagRepo;
-
-    @Autowired
-    UserRepo userRepo;
-
     @Value("${upload.path}")
-    private String uploadPath;// Вытаскиваем путь к файлу
+    private String uploadPath;
+
+    private final HistoryRepo historyRepo;
+    private final TagRepo tagRepo;
+    private final UserRepo userRepo;
+
+    @Autowired
+    public HistoryService(HistoryRepo historyRepo, TagRepo tagRepo, UserRepo userRepo) {
+        this.historyRepo = historyRepo;
+        this.tagRepo = tagRepo;
+        this.userRepo = userRepo;
+    }
 
     /**-----------------------------------------------------------------------------------**/
     public HistoryCreateDtoResponse createHistory(HistoryCreateDtoReq dto) {

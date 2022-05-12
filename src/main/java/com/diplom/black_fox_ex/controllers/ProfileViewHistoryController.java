@@ -1,5 +1,5 @@
 package com.diplom.black_fox_ex.controllers;
-/*-----------------------------------------------------------------------------------**/
+
 import com.diplom.black_fox_ex.request.HistoryDeleteDtoReq;
 import com.diplom.black_fox_ex.request.HistoryUpdateDtoReq;
 import com.diplom.black_fox_ex.response.*;
@@ -11,40 +11,44 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-/**-----------------------------------------------------------------------------------**/
+
 @Controller
 @RequestMapping("/profile-history")
 public class ProfileViewHistoryController {
-    /**-----------------------------------------------------------------------------------**/
-    @Autowired
-    private UserService userService;
+
+//    @Autowired
+//    LogInController logIn;
+    private final UserService userService;
+    private final HistoryService historyService;
 
     @Autowired
-    private HistoryService historyService;
+    public ProfileViewHistoryController(UserService userService, HistoryService historyService) {
+        this.userService = userService;
+        this.historyService = historyService;
+    }
 
-    @Autowired
-    LogInController logIn;
-    /**-----------------------------------------------------------------------------------**/
     @GetMapping
     public String profileViewHistory(Model model) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        ProfileViewHiAllDtoResponse response = userService.getAllHistoryByUser(username);
+        ProfileViewHiAllDtoResponse historyDtoResp = userService.getAllHistoryByUser(username);
 
-        if (response.getError() != null) {
-            model.addAttribute("error", response.getError());
+        if (historyDtoResp.getError() != null) {
+            model.addAttribute("error", historyDtoResp.getError());
         } else {
-            model.addAttribute("histories", response.getHistoryDto());
+            model.addAttribute("histories", historyDtoResp.getHistoryDto());
         }
-        model.addAttribute("user",logIn.logInViewUser());
+//        model.addAttribute("user",logIn.logInViewUser());
         return "/profile/profile-viewHistory";
     }
-    /**-----------------------------------------------------------------------------------**/
+
     @GetMapping("/{id}/edit")
     public String profileViewHistory(@PathVariable long id, Model model) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         ProfileViewHiDtoResponse response = userService.getHistory(username,id);
+
         String bigText = response.getHistoryDto().getBigText().replaceAll("<br>","\n");
         response.getHistoryDto().setBigText(bigText);
+
         if(response.getError() != null){
             System.out.println(response.getError());
             return "redirect:/profile-history";
@@ -53,7 +57,7 @@ public class ProfileViewHistoryController {
         model.addAttribute("history",response.getHistoryDto());
         return "/profile/profile-updateHistory";
     }
-    /**-----------------------------------------------------------------------------------**/
+
     @PostMapping("/{id}/update")
     public String createHistory(@RequestParam String title, @RequestParam String bigText,
                                 @RequestParam("img") MultipartFile img, @PathVariable long id,
@@ -69,7 +73,7 @@ public class ProfileViewHistoryController {
         }
         return "/profile/profile-viewHistory";
     }
-    /**-----------------------------------------------------------------------------------**/
+
     @GetMapping("/{id}/delete")
     public String deleteHistory(@PathVariable long id, Model model) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();

@@ -42,6 +42,8 @@ public class HistoryDto {
     }
 
     public HistoryDto(History history, String uploadPath) {
+        this(history);
+
         this.id = history.getId();
         this.title = history.getTitle();
         this.backgroundImg = uploadPath + history.getBackgroundImg();
@@ -61,80 +63,6 @@ public class HistoryDto {
         this.listComment = list;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getBackgroundImg() {
-        return backgroundImg;
-    }
-
-    public void setBackgroundImg(String backgroundImg) {
-        this.backgroundImg = backgroundImg;
-    }
-
-    public String getBigText() {
-        return bigText;
-    }
-
-    public void setBigText(String bigText) {
-        this.bigText = bigText;
-    }
-
-    public List<String> getListAuthors() {
-        return listAuthors;
-    }
-
-    public void setListAuthors(List<String> listAuthors) {
-        this.listAuthors = listAuthors;
-    }
-
-    public String getSmallText() {
-        return smallText;
-    }
-
-    public void setSmallText(String smallText) {
-        this.smallText = smallText;
-    }
-
-    public List<CommentDto> getListComment() {
-        return listComment;
-    }
-
-    public void setListComment(List<CommentDto> listComment) {
-        this.listComment = listComment;
-    }
-
-    public long getCountLike() {
-        return countLike;
-    }
-
-    public void setCountLike(long countLike) {
-        this.countLike = countLike;
-    }
-
-    public String getTag() {
-        if(tag == null){
-            tag = "History";
-        }
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
 }
 
 
