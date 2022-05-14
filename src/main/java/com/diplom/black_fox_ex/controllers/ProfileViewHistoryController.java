@@ -1,11 +1,15 @@
 package com.diplom.black_fox_ex.controllers;
 
+import com.diplom.black_fox_ex.model.User;
 import com.diplom.black_fox_ex.request.HistoryDeleteDtoReq;
 import com.diplom.black_fox_ex.request.HistoryUpdateDtoReq;
 import com.diplom.black_fox_ex.response.*;
 import com.diplom.black_fox_ex.service.HistoryService;
 import com.diplom.black_fox_ex.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,11 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequestMapping("/profile-history")
 public class ProfileViewHistoryController {
-
-//    @Autowired
-//    LogInController logIn;
     private final UserService userService;
     private final HistoryService historyService;
+    private static final Logger logger =  LoggerFactory.getLogger(ProfileViewHistoryController.class);
 
     @Autowired
     public ProfileViewHistoryController(UserService userService, HistoryService historyService) {
@@ -28,7 +30,7 @@ public class ProfileViewHistoryController {
     }
 
     @GetMapping
-    public String profileViewHistory(Model model) {
+    public String profileViewHistory(@AuthenticationPrincipal User user, Model model) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         ProfileViewHiAllDtoResponse historyDtoResp = userService.getAllHistoryByUser(username);
 

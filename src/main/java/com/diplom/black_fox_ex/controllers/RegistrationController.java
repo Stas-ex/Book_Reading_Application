@@ -35,7 +35,7 @@ public class RegistrationController {
     public String addNewUser(@ModelAttribute("userReg") UserDtoRegDtoRequest dtoRequest, Model model){
         UserRegDtoResponse dtoResponse = userService.registrationUser(dtoRequest);
         if(dtoResponse.getErrors() != null){
-            model.addAttribute("answer", dtoResponse.getErrors());
+            model.addAttribute("errorReg", dtoResponse.getErrors());
             model.addAttribute("userReg", dtoRequest);
             return "registration";
         }

@@ -2,6 +2,8 @@ package com.diplom.black_fox_ex.service;
 
 import com.diplom.black_fox_ex.exeptions.AnswerErrorCode;
 import com.diplom.black_fox_ex.exeptions.ServerException;
+import com.diplom.black_fox_ex.io.FileDirectories;
+import com.diplom.black_fox_ex.io.FileManager;
 import com.diplom.black_fox_ex.model.History;
 import com.diplom.black_fox_ex.model.SupportAnswer;
 import com.diplom.black_fox_ex.model.User;
@@ -15,25 +17,24 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.criteria.Path;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 @Service
 public class UserService implements UserDetailsService {
+    private final String USERNAME_PATTERN = "^[A-z]{3,20}";
+    private final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,15})";
+    private final String EMAIL_PATTERN = "([A-z0-9_.-]{1,})@([A-z0-9_.-]{1,}).([A-z]{2,8})";
+    private final String TELEGRAM_PATTERN = ".*\\B@(?=\\w{5,32}\\b)[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*.*";
+
 
     @Value("${upload.path}")
     private String uploadPath;
-
     private final UserRepo userRepo;
     private final HistoryRepo historyRepo;
+    private final FileManager fileManager = new FileManager();
 
     @Autowired
     public UserService(UserRepo userRepo, HistoryRepo historyRepo) {
@@ -41,82 +42,64 @@ public class UserService implements UserDetailsService {
         this.historyRepo = historyRepo;
     }
 
-
-    public ProfileViewHiDtoResponse getHistory(String username, long id) {
-        ProfileViewHiDtoResponse response = new ProfileViewHiDtoResponse();
-        try {
-            validateGetHistory(username, id);
-            List<History> list = userRepo.findAllByUsername(username);
-            for (History history : list) {
-                if (history.getId() == id) {
-                    response.setHistoryDto(new HistoryDto(history));
-                    return response;
-                }
-            }
-            throw new ServerException(AnswerErrorCode.HISTORY_NOT_FOUND);
-        } catch (ServerException ex) {
-            response.setError(ex.getErrorMessage());
-        }
-        return response;
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepo.findByUsername(username);
     }
 
+
+    public UserMenuDto getUserMenu(User user) {
+        if (user == null) return null;
+        return new UserMenuDto(user);
+    }
+
+    public UserProfileDto getUserProfile(User user) {
+        if (user == null) return null;
+        return new UserProfileDto(user);
+    }
 
     public UserRegDtoResponse registrationUser(UserDtoRegDtoRequest dto) {
         var dtoResponse = new UserRegDtoResponse();
         try {
             validateRegistrationUser(dto);
-
-            String fileName = createFile(dto.getImg());
-            dto.setFileName(fileName);
-
+            dto.setFileName(fileManager.createFile(FileDirectories.USER_IMG, dto.getImg()));
             User user = new User(
                     dto.getUsername(), dto.getEmail(), dto.getPassword(),
                     Integer.parseInt(dto.getAge()), dto.getSex(), dto.getInfo(),
                     dto.getFileName(), dto.isActive()
             );
             userRepo.save(user);
-
         } catch (ServerException ex) {
             dtoResponse.setErrors(ex.getErrorMessage());
         }
         return dtoResponse;
     }
 
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByUsername(username);
-    }
-
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    public void deleteById(long id) {
-        userRepo.deleteById(id);
-    }
-
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    public UserUpdateDtoResponse updateUser(UserDto userOld, UpdateDtoRequest userDto) {
-        UserUpdateDtoResponse response = new UserUpdateDtoResponse();
-
+    public UserUpdateDtoResponse updateUser(User userOld, UpdateDtoRequest userDto) {
+        var response = new UserUpdateDtoResponse();
         try {
             validateUpdateUser(userOld, userDto);
-            userDto.setSex(userDto.getSex());
-            String fileName;
-            if ((fileName = createFile(userDto.getImgFile())).equals("")) {
+            if (userDto.getImgFile() != null && !userDto.getImgFile().isEmpty())
+                userDto.setFileName(fileManager.createFile(FileDirectories.USER_IMG,userDto.getImgFile()));
+            else
                 userDto.setFileName(userOld.getImgFile());
-            } else {
-                userDto.setFileName(fileName);
-            }
-            User user = userRepo.findByUsername(userDto.getUsername());
-            user.updateUserByDto(userDto);
-            userRepo.save(user);
+            userOld.updateUserByDto(userDto);
+            userRepo.save(userOld);
         } catch (ServerException ex) {
             response.setErrors(ex.getErrorMessage());
         }
         return response;
+    }
+
+    public DeleteUserDtoResp deleteUser(User user, String username) {
+        var deleteResp = new DeleteUserDtoResp();
+        try {
+            validateDeleteUser(user, username);
+            userRepo.delete(user);
+        }catch (ServerException ex) {
+            deleteResp.setError(ex.getErrorMessage());
+        }
+        return deleteResp;
     }
 
     /**
@@ -139,27 +122,45 @@ public class UserService implements UserDetailsService {
         return response;
     }
 
-    private String createFile(MultipartFile imgFile) throws ServerException {
-        //Проверка и сохранение картинки
-        if (Objects.equals(imgFile.getOriginalFilename(), "")) {
-            return "user.jpg";
-        }
-
-        File uploadDir = new File(uploadPath);
-        //If the file does not exist
-        if (!uploadDir.exists()) {
-            uploadDir.mkdir();//We will create it
-        }
-        String fileName = UUID.randomUUID().toString().substring(3, 7) + "." + imgFile.getOriginalFilename();
-
+    public ProfileViewHiDtoResponse getHistory(String username, long id) {
+        var response = new ProfileViewHiDtoResponse();
         try {
-            imgFile.transferTo(new File(uploadPath + fileName));
-        } catch (IOException e) {
-            throw new ServerException(AnswerErrorCode.FILE_CREATE_ERROR);
+            validateGetHistory(username, id);
+            List<History> list = userRepo.findAllByUsername(username);
+            for (History history : list) {
+                if (history.getId() == id) {
+                    response.setHistoryDto(new HistoryDto(history));
+                    return response;
+                }
+            }
+            throw new ServerException(AnswerErrorCode.HISTORY_NOT_FOUND);
+        } catch (ServerException ex) {
+            response.setError(ex.getErrorMessage());
         }
-
-        return fileName;
+        return response;
     }
+
+//    private String createFile(MultipartFile imgFile) throws ServerException {
+//        //Проверка и сохранение картинки
+//        if (Objects.equals(imgFile.getOriginalFilename(), "")) {
+//            return "user.jpg";
+//        }
+//
+//        File uploadDir = new File(uploadPath);
+//        //If the file does not exist
+//        if (!uploadDir.exists()) {
+//            uploadDir.mkdir();//We will create it
+//        }
+//        String fileName = UUID.randomUUID().toString().substring(3, 7) + "." + imgFile.getOriginalFilename();
+//
+//        try {
+//            imgFile.transferTo(new File(uploadPath + fileName));
+//        } catch (IOException e) {
+//            throw new ServerException(AnswerErrorCode.FILE_CREATE_ERROR);
+//        }
+//
+//        return fileName;
+//    }
 
     public UserDto getUserByUsername(String name) {
         try {
@@ -306,46 +307,37 @@ public class UserService implements UserDetailsService {
     /**
      * -----------------------------------------------------------------------------------
      **/
-    private void validateUpdateUser(UserDto userOld, UpdateDtoRequest dto) throws ServerException {
+    private void validateUpdateUser(User userOld, UpdateDtoRequest userDto) throws ServerException {
         if (userOld == null) {
             throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
         }
-        if (dto.getUsername().length() < 3) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_USERNAME);
+        if (!userOld.getUsername().equals(userDto.getUsername())) {
+            throw new ServerException(AnswerErrorCode.UPDATE_NOT_ROOT_UPDATE);
+        }
+        if (!userDto.getEmail().matches(EMAIL_PATTERN)) {
+            throw new ServerException(AnswerErrorCode.UPDATE_WRONG_VALIDATE_EMAIL);
+        }
+        if (!Pattern.matches(PASSWORD_PATTERN, userDto.getPassword())) {
+            throw new ServerException(AnswerErrorCode.UPDATE_WRONG_VALIDATE_PASSWORD);
+        }
+        if (userDto.getSex() == null || Objects.equals(userDto.getSex(), "")) {
+            throw new ServerException(AnswerErrorCode.UPDATE_WRONG_VALIDATE_SEX);
+        }
+        if (userDto.getInfo() == null || userDto.getInfo().length() < 10) {
+            throw new ServerException(AnswerErrorCode.UPDATE_WRONG_VALIDATE_INFO);
+        }
+        if(userDto.getTelegramUsername() != null && !Pattern.matches(TELEGRAM_PATTERN, userDto.getTelegramUsername())){
+            throw new ServerException(AnswerErrorCode.UPDATE_WRONG_TELEGRAM_ADDRESS);
         }
 
-        if (!userOld.getUsername().equals(dto.getUsername()) && userRepo.findByUsername(dto.getUsername()) != null) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_USERNAME_ALREADY_EXIST);
-        }
-        if (!dto.getEmail().matches("([A-z0-9_.-]{1,})@([A-z0-9_.-]{1,}).([A-z]{2,8})")) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VOLIDATE_EMAIL);
-        }
-        if (dto.getPassword() == null) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VOLIDATE_PASSWORD);
-        }
-        if (dto.getImgFile() == null) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VOLIDATE_IMG);
-        }
-        if (dto.getSex() == null || Objects.equals(dto.getSex(), "")) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VOLIDATE_SEX);
-        }
-        if (dto.getInfo() == null || dto.getInfo().length() < 10) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VOLIDATE_INFO);
-        }
-        if (!dto.getTelegramUsername().equals("") && !dto.getTelegramUsername().matches("@([A-z0-9_.-]{2,})")) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_TELEGRAM_BOT);
-        }
-        if (dto.getRoles() == null) {
-            throw new ServerException(AnswerErrorCode.USER_NOT_ROLE);
-        }
         int age;
         try {
-            age = Integer.parseInt(dto.getAge());
+            age = Integer.parseInt(userDto.getAge());
         } catch (Exception ex) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_AGE);
+            throw new ServerException(AnswerErrorCode.UPDATE_WRONG_AGE_SYNTAX);
         }
-        if (age > 110 || age < 1) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_AGE);
+        if (age > 110 || age < 3) {
+            throw new ServerException(AnswerErrorCode.UPDATE_WRONG_AGE_RANGE);
         }
     }
 
@@ -353,36 +345,37 @@ public class UserService implements UserDetailsService {
      * -----------------------------------------------------------------------------------
      **/
     private void validateRegistrationUser(UserDtoRegDtoRequest dto) throws ServerException {
-        if (Pattern.matches("^[A-zА-я]{3,20}",dto.getUsername())) {
+        if (!Pattern.matches(USERNAME_PATTERN, dto.getUsername())) {
             throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_USERNAME);
         }
+
         if (userRepo.findByUsername(dto.getUsername()) != null) {
             throw new ServerException(AnswerErrorCode.REGISTRATION_USERNAME_ALREADY_EXIST);
         }
-        if (!dto.getEmail().matches("([A-z0-9_.-]{1,})@([A-z0-9_.-]{1,}).([A-z]{2,8})")) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VOLIDATE_EMAIL);
+        if (!dto.getEmail().matches(EMAIL_PATTERN)) {
+            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VALIDATE_EMAIL);
         }
-        if (Pattern.matches("((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,15})", dto.getPassword())) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VOLIDATE_PASSWORD);
+        if (!Pattern.matches(PASSWORD_PATTERN, dto.getPassword())) {
+            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VALIDATE_PASSWORD);
         }
         if (dto.getSex() == null || Objects.equals(dto.getSex(), "")) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VOLIDATE_SEX);
+            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VALIDATE_SEX);
         }
         if (dto.getInfo() == null || dto.getInfo().length() < 10) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VOLIDATE_INFO);
+            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VALIDATE_INFO);
         }
         if (dto.getImg() == null) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VOLIDATE_IMG);
+            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VALIDATE_IMG);
         }
 
         int age;
         try {
             age = Integer.parseInt(dto.getAge());
         } catch (Exception ex) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_AGE);
+            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_AGE_SYNTAX);
         }
         if (age > 110 || age < 3) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_AGE);
+            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_AGE_RANGE);
         }
     }
 
@@ -451,6 +444,15 @@ public class UserService implements UserDetailsService {
         }
         if (request.getUserDto() == null) {
             throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
+        }
+    }
+
+    private void validateDeleteUser(User user, String username) throws ServerException {
+        if(user == null){
+            throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
+        }
+        if(!user.getUsername().equals(username)){
+            throw new ServerException(AnswerErrorCode.UPDATE_NOT_ROOT_UPDATE);
         }
     }
 }

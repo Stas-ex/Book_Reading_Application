@@ -93,8 +93,8 @@ public class User implements UserDetails {
         this.age = Integer.parseInt(userDto.getAge());
         this.sex = userDto.getSex();
         this.info = userDto.getInfo();
-        this.imgFile = userDto.getFileName();
         this.telegramUsername = userDto.getTelegramUsername();
+        this.imgFile = userDto.getFileName();
     }
 
     public void addHistory(History history){
