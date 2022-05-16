@@ -29,7 +29,7 @@ public class HistoryService {
     private final TagRepo tagRepo;
     private final UserRepo userRepo;
     private final CommentsRepo commentsRepo;
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    private static final Logger logger = LoggerFactory.getLogger(HistoryService.class);
 
 
     @Autowired

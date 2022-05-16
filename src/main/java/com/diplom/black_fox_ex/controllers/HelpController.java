@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
+/**
+ * This is the class for interacting with the support page.
+ */
 @Controller
 @RequestMapping("/help")
 public class HelpController {
@@ -22,7 +25,12 @@ public class HelpController {
         this.userService = userService;
     }
 
-    //---------------------------------------------------------------------------//
+    /**
+     *
+     * @param user Retrieving Authorized User Data Using Spring Security
+     * @param model for creating attributes sent to the server as a response
+     * @return the support page
+     */
     @GetMapping
     public String start(@AuthenticationPrincipal User user, Model model) {
         var response = userService.getAllAnswersSupportByUserDto(user);
@@ -34,8 +42,15 @@ public class HelpController {
         return "help";
     }
 
+    /**
+     *
+     * @param id is responsible for the id of the message from the support group
+     * @param user Retrieving Authorized User Data Using Spring Security
+     * @param model for creating attributes sent to the server as a response
+     * @return the support page and possible errors
+     */
     @GetMapping("/{id}/delete")
-    public String deleteAnswerSupport(@AuthenticationPrincipal User user, @PathVariable long id, Model model) {
+    public String deleteAnswerSupport(@PathVariable long id, @AuthenticationPrincipal User user, Model model) {
         var request = new DeleteHelpDtoReq(user, id);
         var response = userService.deleteAnswerByUser(request);
         if (response.getErrors() != null) {

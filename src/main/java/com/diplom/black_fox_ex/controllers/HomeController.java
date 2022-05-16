@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.stereotype.Controller;
 
+/**
+ * This is the class for interacting with the start page.
+ */
 @Controller
 public class HomeController {
     private final UserService userService;
@@ -18,7 +21,12 @@ public class HomeController {
         this.userService = userService;
     }
 
-    //---------------------------------------------------------------------------//
+    /**
+     * The function for going to the start page
+     * @param user Retrieving Authorized User Data Using Spring Security
+     * @param model for creating attributes sent to the server as a response
+     * @return the start page
+     */
     @GetMapping("/")
     public String getHome(@AuthenticationPrincipal User user, Model model) {
        model.addAttribute("userMenu",userService.getUserMenu(user));

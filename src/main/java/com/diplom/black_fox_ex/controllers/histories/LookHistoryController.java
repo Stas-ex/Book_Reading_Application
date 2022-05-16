@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.MessageFormat;
 
+/**
+ * This is the class for interacting with the 'comment creator' page.
+ */
 @Controller
 @RequestMapping("/history/{id}")
 public class LookHistoryController {
@@ -21,6 +24,13 @@ public class LookHistoryController {
         this.historyService = historyService;
     }
 
+    /**
+     * Go to history page function
+     * @param user retrieving Authorized User Data Using Spring Security
+     * @param id id contains a unique history identifier
+     * @param model for creating attributes sent to the server as a response
+     * @return like, history to the 'history look' page
+     */
     @GetMapping("/look")
     public String lookHistory(@AuthenticationPrincipal User user, @PathVariable long id, Model model) {
         var response = historyService.getHistoryById(user, id);
@@ -34,6 +44,13 @@ public class LookHistoryController {
         return "history-look";
     }
 
+    /**
+     *
+     * @param commentDto creating a null model to render the page
+     * @param id id contains a unique history identifier
+     * @param model for creating attributes sent to the server as a response
+     * @return id to the 'comment creator' page
+     */
     @GetMapping("/comment")
     public String comment(@ModelAttribute AddCommentDtoReq commentDto, @PathVariable long id, Model model) {
         model.addAttribute("commentDto", commentDto);
@@ -41,6 +58,13 @@ public class LookHistoryController {
         return "comment-add";
     }
 
+    /**
+     * Comment creation function
+     * @param user retrieving Authorized User Data Using Spring Security
+     * @param request containing a request to create a comment from the user
+     * @param model for creating attributes sent to the server as a response
+     * @return the 'history look' page
+     */
     @PostMapping("/comment/add")
     public String commentAdd(@AuthenticationPrincipal User user,
                              @ModelAttribute AddCommentDtoReq request,

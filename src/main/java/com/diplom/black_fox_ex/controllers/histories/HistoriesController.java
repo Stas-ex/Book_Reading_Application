@@ -10,6 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+/**
+ * This is the class for interacting with the "user history" page.
+ */
 @Controller
 public class HistoriesController {
     private final HistoryService historyService;
@@ -21,7 +24,14 @@ public class HistoriesController {
         this.userService = userService;
     }
 
-
+    /**
+     * The function of displaying stories by tags
+     * @param user retrieving Authorized User Data Using Spring Security
+     * @param numPage contains the serial number of the page of displayed stories
+     * @param nameTag contains the name of the tag that is used in the search filter
+     * @param model for creating attributes sent to the server as a response
+     * @return histories, user, tags, number page, name tag to the 'histories' page
+     */
     @GetMapping("/histories/{nameTag}/{numPage}")
     public String getHistoriesByTag(@AuthenticationPrincipal User user, @PathVariable int numPage, @PathVariable String nameTag, Model model){
         var response = historyService.getAllHistoryByTag(nameTag, numPage);

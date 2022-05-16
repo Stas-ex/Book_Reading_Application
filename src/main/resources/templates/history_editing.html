@@ -79,10 +79,9 @@
 
 </head>
 <body>
-<!--+ ${btn.toLowerCase()} +'/'+  ${historyDto.getId() != null ? historyDto.getId() : ''}-->
-<form th:action="'/profile-history/' + ${id != null ? id + '/' : ''} + ${btn.toLowerCase()}" method="post" enctype="multipart/form-data">
+<form th:action="'/profile-history/' + ${id != null ? id + '/' : ''} + ${title.toLowerCase()}" method="post" enctype="multipart/form-data">
     <div class="wrapper">
-        <h2 th:text="${btn} + ' history'"></h2>
+        <h2 th:text="${title} + ' history'"></h2>
         <textarea spellcheck="false" placeholder="Start writing history now!" name="bigText" required th:text="${historyDto.getBigText()}"></textarea>
 
         <div class="form-row mt-1">
@@ -104,7 +103,7 @@
 
         <h4 align="center" style="color: crimson" th:text="${errorCreateHistory}"/>
         <div class="col-md-14">
-            <button type="submit" class="btn btn-outline-info" style="width: 25%" align="center" th:text="${btn}">Btn</button>
+            <button type="submit" class="btn btn-outline-info" style="width: 25%" align="center" th:text="${title}">Btn</button>
             <a th:href="'/profile-history'" class="btn btn-outline-danger" style="width: 25%">Back</a>
         </div>
     </div>

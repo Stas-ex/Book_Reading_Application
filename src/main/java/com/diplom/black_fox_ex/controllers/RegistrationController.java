@@ -9,6 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
+/**
+ * This is the class for interacting with the registration page.
+ */
 @Controller
 @RequestMapping("/registration")
 public class RegistrationController {
@@ -17,18 +20,28 @@ public class RegistrationController {
     @Autowired
     public RegistrationController(UserService userService) {this.userService = userService;}
 
-    //---------------------------------------------------------------------------//
+    /**
+     * The function for going to the registration page
+     * @param userDto that accepts user input
+     * @return the 'registration' page
+     */
     @GetMapping
-    public String registration(@ModelAttribute("userReg") RegistrationUserDtoReq dtoRequest) {
+    public String registration(@ModelAttribute("userReg") RegistrationUserDtoReq userDto) {
         return "registration";
     }
 
+    /**
+     *
+     * @param userDto that accepts user input
+     * @param model for creating attributes sent to the server as a response
+     * @return to original page in case of error, otherwise to the login page
+     */
     @PostMapping("/add")
-    public String addNewUser(@ModelAttribute("userReg") RegistrationUserDtoReq dtoRequest, Model model) {
-        var dtoResponse = userService.registrationUser(dtoRequest);
+    public String addNewUser(@ModelAttribute("userReg") RegistrationUserDtoReq userDto, Model model) {
+        var dtoResponse = userService.registrationUser(userDto);
         if (dtoResponse.getErrors() != null) {
             model.addAttribute("errorReg", dtoResponse.getErrors());
-            model.addAttribute("userReg", dtoRequest);
+            model.addAttribute("userReg", userDto);
             return "registration";
         }
         SecurityContextHolder.getContext().setAuthentication(null);

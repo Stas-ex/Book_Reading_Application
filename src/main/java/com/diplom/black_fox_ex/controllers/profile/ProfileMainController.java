@@ -11,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
+/**
+ * This is the class for interacting with the "user profile" page.
+ */
 @Controller
 @RequestMapping("/profile")
 public class ProfileMainController {
@@ -21,7 +24,12 @@ public class ProfileMainController {
         this.userService = userService;
     }
 
-    //---------------------------------------------------------------------------//
+    /**
+     * Function to go to the profile page
+     * @param user Retrieving Authorized User Data Using Spring Security
+     * @param model for creating attributes sent to the server as a response
+     * @return the 'user profile' page otherwise error page
+     */
     @GetMapping
     public String profilePage(@AuthenticationPrincipal User user, Model model) {
         var userProfileDto = userService.getUserProfile(user);
@@ -34,6 +42,13 @@ public class ProfileMainController {
         return "/profile/profile-main";
     }
 
+    /**
+     * Function to update the user
+     * @param user Retrieving Authorized User Data Using Spring Security
+     * @param model for creating attributes sent to the server as a response
+     * @param userUpdate containing a request from the user
+     * @return to 'user profile' page and possible errors
+     */
     @PostMapping("/update")
     public String update(@AuthenticationPrincipal User user,
                          @ModelAttribute UpdateUserDtoReq userUpdate,
@@ -47,6 +62,13 @@ public class ProfileMainController {
         return "redirect:/profile";
     }
 
+    /**
+     * Function to delete the user
+     * @param user Retrieving Authorized User Data Using Spring Security
+     * @param username contains the username of the user being deleted
+     * @param model for creating attributes sent to the server as a response
+     * @return the start page otherwise 'user profile' page
+     */
     @GetMapping("/delete/{username}")
     public String delete(@AuthenticationPrincipal User user, @PathVariable String username, Model model) {
         SecurityContextHolder.getContext().setAuthentication(null);
@@ -58,6 +80,10 @@ public class ProfileMainController {
         return "redirect:/";
     }
 
+    /**
+     * User account logout function
+     * @return the start page
+     */
     @GetMapping("/exit")
     public String logOut() {
         SecurityContextHolder.getContext().setAuthentication(null);
