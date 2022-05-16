@@ -18,6 +18,7 @@ public class HomeController {
         this.userService = userService;
     }
 
+    //---------------------------------------------------------------------------//
     @GetMapping("/")
     public String getHome(@AuthenticationPrincipal User user, Model model) {
        model.addAttribute("userMenu",userService.getUserMenu(user));

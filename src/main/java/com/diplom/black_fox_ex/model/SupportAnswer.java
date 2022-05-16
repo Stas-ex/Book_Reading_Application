@@ -1,7 +1,14 @@
 package com.diplom.black_fox_ex.model;
 
-import javax.persistence.*;
+import lombok.*;
 
+import javax.persistence.*;
+import java.util.Objects;
+
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 public class SupportAnswer {
     @Id
@@ -10,30 +17,21 @@ public class SupportAnswer {
 
     @Column(length=1000)
     private String answer;
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private User user;
 
-    public long getId() {
-        return id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SupportAnswer that = (SupportAnswer) o;
+        return id == that.id && Objects.equals(answer, that.answer) && Objects.equals(user, that.user);
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, answer, user);
     }
 }

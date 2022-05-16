@@ -1,7 +1,6 @@
 package com.diplom.black_fox_ex.repositories;
 
 import com.diplom.black_fox_ex.model.History;
-import com.diplom.black_fox_ex.model.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,8 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface HistoryRepo extends JpaRepository<History, Long> {
-    List<History> findAllByTags(Tag tag);
 
-    @Query("select h from History h join h.tags t where t.name = :name")
+    @Query("SELECT h FROM History h JOIN h.tag t WHERE t.name = :name  GROUP BY h.id")
     List<History> findAllByTagName(@Param("name")String name);
 }

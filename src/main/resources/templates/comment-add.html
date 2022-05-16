@@ -82,34 +82,31 @@
 <form th:action="'/history/' + ${id} + '/comment/add'" method="post" enctype="multipart/form-data">
     <div class="wrapper">
         <h2>Leave your comment about the story</h2>
-        <textarea spellcheck="false" placeholder="Start writing comment now!" name="bigText" required></textarea>
-        <h4 align="center" style="color: crimson" th:text="${error}"/>
+        <textarea spellcheck="false" placeholder="Start writing comment now!" name="bigText" th:text="${commentDto.getBigText()}" required></textarea>
+        <h4 align="center" style="color: crimson" th:text="${errorComment}"/>
 
             <div class="col-md-4 mb-3">
                 <label>Color comment</label>
                 <div class="input-group">
                     <div class="form-check form-check-inline ">
                         <input class="form-check-input" type="radio" name="color" id="inlineRadio1"
-                               value="danger">
+                               value="danger" th:checked="${commentDto.getColor() != null && commentDto.getColor().equals('danger')}">
                         <label class="form-check-label" for="inlineRadio1">red</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="color" id="inlineRadio2"
-                               value="primary">
+                               value="primary" th:checked="${commentDto.getColor() != null && commentDto.getColor().equals('primary')}">
                         <label class="form-check-label" for="inlineRadio2">blue</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="color" id="inlineRadio3"
-                               value="success">
+                               value="success" th:checked="${commentDto.getColor() != null && commentDto.getColor().equals('success')}">
                         <label class="form-check-label" for="inlineRadio2">green</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="color" id="inlineRadio4"
-                               value="warning">
+                               value="warning" th:checked="${commentDto.getColor() != null && commentDto.getColor().equals('warning')}">
                         <label class="form-check-label" for="inlineRadio2">orange</label>
-                    </div>
-                    <div class="invalid-feedback">
-                        Please choose a color.
                     </div>
                 </div>
             </div>

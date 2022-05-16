@@ -92,89 +92,61 @@
 <!-- TAG ------>
 <div class="tagsSearch">
     <div style="margin: 2% 1%" class="btnNext">
-        <a th:href="'/histories/0'" class="btn btn-light" style="width: 10%;margin: 1%">All</a>
+        <a th:href="'/histories/all/0'" class="btn btn-light" style="width: 10%;margin: 1%">All</a>
 
-        <span th:each="elems : ${allTags}">
-             <span th:if="${elems != nameTag}">
-                 <a th:href="'/histories/tag/' + ${elems} + '/0'"
-                    class="btn btn-light" th:text="'#'+${elems}"
+        <span th:each="tag : ${allTags}">
+             <span th:if="${tag != nameTag}">
+                 <a th:href="'/histories/' + ${tag} + '/0'"
+                    class="btn btn-light" th:text="'#'+${tag}"
                     style="width: 10%;margin: 1%"/>
             </span>
-            <span th:if="${elems == nameTag}">
-                 <a th:href="'/histories/tag/' + ${elems} + '/0'"
-                    class="btn btn-warning" th:text="'#'+${elems}"
+            <span th:if="${tag == nameTag}">
+                 <a th:href="'/histories/' + ${tag} + '/0'"
+                    class="btn btn-warning" th:text="'#'+${tag}"
                     style="width: 10%;margin: 1%"/>
             </span>
         </span>
-        </div>
     </div>
 </div>
 
 
 <div class="cards">
-    <div th:each="elem : ${histories}" style="background-color: peachpuff">
+    <div th:each="history : ${histories}" style="background-color: peachpuff">
         <article class="card">
             <div class="img">
-                <img th:src="${elem.getBackgroundImg()}"
+                <img th:src="${history.getBackgroundImg()}"
                      alt="Hot air balloons">
             </div>
             <header>
-                <h2 th:text="${elem.getTitle()}"></h2>
+                <h2 th:text="${history.getTitle()}"></h2>
             </header>
             <div class="content">
-                <p th:text="${elem.getSmallText()}"></p>
+                <p th:utext="${history.getSmallText()}"></p>
             </div>
-            <a th:href="'/history/'+${elem.getId()}+'/look'" class="btn btn-outline-warning btns">Look</a>
+            <a th:href="'/history/'+${history.getId()}+'/look'" class="btn btn-outline-warning btns">Look</a>
             <p style="color: crimson; padding-top: 2%; font-size: 20px"
-               th:text="'Like is ' + ${elem.getCountLike()}"/>
+               th:text="'Like is ' + ${history.getCountLike()}"/>
             <p style="color: dodgerblue; font-size: 20px"
-                th:text="' #' +${elem.getTag()}"/>
+               th:text="' #' +${history.getTag()}"/>
 
         </article>
     </div>
 </div>
 
-<div th:if="${nameTag == null}">
-    <div style="margin: 2% 1%">
-        <div class="btnNext" th:if="${allNumPageList.size() > 1}">
-        <span th:each="elem : ${allNumPageList}">
-            <span th:if="${elem != numPage}">
-                <a th:href="'/histories/' + ${elem}"
-                   class="btn btn-dark" th:text="${elem}"
-                   style="width: 5%;margin: 1%"/>
-            </span>
-            <span th:if="${elem == numPage}">
-                 <a th:href="'/histories/' + ${elem}"
-                    class="btn btn-warning" th:text="${elem}"
+<div style="margin: 2% 1%">
+    <div class="btnNext" th:if="${pageNumbers.size() > 1}">
+        <span th:each="number : ${pageNumbers}">
+            <span>
+                 <a th:href="'/histories/' + ${nameTag} + '/' + ${number}"
+                    th:class="'btn btn-' + ${number == numPage ? 'warning' : 'dark'}" th:text="${number}"
                     style="width: 5%;margin: 1%"/>
             </span>
         </span>
-        </div>
     </div>
 </div>
 
-<div th:if="${nameTag != null}">
-    <div style="margin: 2% 1%">
-        <div class="btnNext" th:if="${allNumPageList.size() > 1}">
-        <span th:each="elem : ${allNumPageList}">
-            <span th:if="${elem != numPage}">
-                <a th:href="'/histories/tag/'+ ${nameTag} + '/' + ${elem}"
-                   class="btn btn-dark" th:text="${elem}"
-                   style="width: 5%;margin: 1%"/>
-            </span>
-            <span th:if="${elem == numPage}">
-                 <a th:href="'/histories/tag/' + ${elem} + '/' + ${elem}"
-                    class="btn btn-warning" th:text="${elem}"
-                    style="width: 5%;margin: 1%"/>
-            </span>
-        </span>
-        </div>
-    </div>
-</div>
-
-<!------------------------------------------------------------------------------->
-<div th:if="${error != null}">
-    <h3 style="text-align: center; color: crimson; padding: 20%" th:text="${error}"></h3>
+<div th:if="${errorHistories != null}">
+    <h3 style="text-align: center; color: crimson; padding: 20%" th:text="${errorHistories}"></h3>
 </div>
 </body>
 </html>

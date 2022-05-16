@@ -1,5 +1,6 @@
 package com.diplom.black_fox_ex.repositories;
 /*-----------------------------------------------------------------------------------**/
+import com.diplom.black_fox_ex.model.Comment;
 import com.diplom.black_fox_ex.model.History;
 import com.diplom.black_fox_ex.model.SupportAnswer;
 import com.diplom.black_fox_ex.model.User;
@@ -16,13 +17,15 @@ public interface UserRepo extends JpaRepository<User, Long> {
     @Query("select h from User u join u.favoriteStories h where u.id = :id")
     List<History> findFavoriteHistoryById(@Param("id")long id);
 
-    @Query("select h from User u join u.histories h where u.username = :username")
-    List<History> findAllByUsername(@Param("username")String username);
+    @Query("select h from User u join u.histories h where u.id = :id")
+    List<History> findAllById(@Param("id") long id);
 
-    @Query("select h from User u join u.histories h where u.username = :username and h.id = :id")
-    History findAllByUsernameAndId(@Param("username")String username, @Param("id") long id);
+    @Query("select h from User u join u.histories h where u.id = :idUser and h.id = :idHistory")
+    History findHistoryById(@Param("idUser")long idUser, @Param("idHistory") long idHistory);
+
+    @Query("select c from User u join u.comments c where u.id = :id")
+    List<Comment> findAllCommentsByUserId(@Param("id")long idUser);
 
     @Query("SELECT s FROM User u join u.supportAnswer s where u.id = :id")
     List<SupportAnswer> findSupportAnswerById(@Param("id")long id);
-
 }

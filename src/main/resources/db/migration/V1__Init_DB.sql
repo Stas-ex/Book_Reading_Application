@@ -1,4 +1,4 @@
-create table comments
+create table comment
 (
     id          bigint not null,
     color       varchar(255),
@@ -8,43 +8,34 @@ create table comments
     comment_id  bigint,
     primary key (id)
 );
-
-create table hibernate_sequence( next_val bigint);
-
-insert into hibernate_sequence values (1);
-
+create table hibernate_sequence
+(
+    next_val bigint
+);
+insert into hibernate_sequence
+values (1);
 create table history
 (
     id             bigint not null,
     background_img varchar(300),
     big_text       varchar(15000),
     title          varchar(255),
+    tag_id         bigint,
     primary key (id)
 );
-
-create table history_tag
-(
-    history_id bigint not null,
-    tag_id     bigint not null,
-    primary key (history_id, tag_id)
-);
-
 create table support_answer
 (
-    id         bigint not null,
-    answer     varchar(1000),
-    user_id    bigint,
-    support_id bigint,
+    id      bigint not null,
+    answer  varchar(1000),
+    user_id bigint,
     primary key (id)
 );
-
 create table tag
 (
     id   bigint not null,
     name varchar(255),
     primary key (id)
 );
-
 create table user
 (
     id                bigint  not null,
@@ -59,23 +50,34 @@ create table user
     username          varchar(255),
     primary key (id)
 );
-
 create table user_favorite
 (
     users_id    bigint not null,
-    favorite_id bigint not null,
-    primary key (users_id, favorite_id)
+    favorite_id bigint not null
 );
-
 create table user_history
 (
     user_id    bigint not null,
-    history_id bigint not null,
-    primary key (user_id, history_id)
+    history_id bigint not null
 );
-
 create table user_role
 (
     user_id bigint not null,
     roles   varchar(255)
 );
+create table user_support_answer
+(
+    user_id           bigint not null,
+    support_answer_id bigint not null
+);
+
+
+insert into tag
+values (1, 'Detective'),
+       (2, 'Fantasy'),
+       (3, 'Adventures'),
+       (4, 'Novel'),
+       (5, 'Scientific'),
+       (6, 'Humor');
+insert into hibernate_sequence values (7);
+

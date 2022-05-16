@@ -4,9 +4,6 @@ public enum FileDirectories {
     USER_IMG("/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/user-img/"),
     HISTORY_IMG("/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/history-img/");
 
-
-
-
     private String path;
     FileDirectories(String msg) {
         setPath(msg);

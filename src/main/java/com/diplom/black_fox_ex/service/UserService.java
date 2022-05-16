@@ -2,20 +2,21 @@ package com.diplom.black_fox_ex.service;
 
 import com.diplom.black_fox_ex.exeptions.AnswerErrorCode;
 import com.diplom.black_fox_ex.exeptions.ServerException;
+import com.diplom.black_fox_ex.repositories.UserRepo;
+import com.diplom.black_fox_ex.model.SupportAnswer;
 import com.diplom.black_fox_ex.io.FileDirectories;
 import com.diplom.black_fox_ex.io.FileManager;
 import com.diplom.black_fox_ex.model.History;
-import com.diplom.black_fox_ex.model.SupportAnswer;
 import com.diplom.black_fox_ex.model.User;
-import com.diplom.black_fox_ex.repositories.HistoryRepo;
-import com.diplom.black_fox_ex.repositories.UserRepo;
 import com.diplom.black_fox_ex.request.*;
 import com.diplom.black_fox_ex.response.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -24,22 +25,18 @@ import java.util.regex.Pattern;
 
 @Service
 public class UserService implements UserDetailsService {
+    private final UserRepo userRepo;
+    private final FileManager fileManager = new FileManager();
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     private final String USERNAME_PATTERN = "^[A-z]{3,20}";
     private final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,15})";
     private final String EMAIL_PATTERN = "([A-z0-9_.-]{1,})@([A-z0-9_.-]{1,}).([A-z]{2,8})";
     private final String TELEGRAM_PATTERN = ".*\\B@(?=\\w{5,32}\\b)[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*.*";
 
-
-    @Value("${upload.path}")
-    private String uploadPath;
-    private final UserRepo userRepo;
-    private final HistoryRepo historyRepo;
-    private final FileManager fileManager = new FileManager();
-
     @Autowired
-    public UserService(UserRepo userRepo, HistoryRepo historyRepo) {
+    public UserService(UserRepo userRepo) {
         this.userRepo = userRepo;
-        this.historyRepo = historyRepo;
     }
 
     @Override
@@ -47,19 +44,19 @@ public class UserService implements UserDetailsService {
         return userRepo.findByUsername(username);
     }
 
-
-    public UserMenuDto getUserMenu(User user) {
+    //------------------------------------------------------------------------------------------------------//
+    public GetUserMenuDtoResp getUserMenu(User user) {
         if (user == null) return null;
-        return new UserMenuDto(user);
+        return new GetUserMenuDtoResp(user);
     }
 
-    public UserProfileDto getUserProfile(User user) {
+    public GetUserProfileDtoResp getUserProfile(User user) {
         if (user == null) return null;
-        return new UserProfileDto(user);
+        return new GetUserProfileDtoResp(user);
     }
 
-    public UserRegDtoResponse registrationUser(UserDtoRegDtoRequest dto) {
-        var dtoResponse = new UserRegDtoResponse();
+    public RegistrationUserDtoResp registrationUser(RegistrationUserDtoReq dto) {
+        var dtoResponse = new RegistrationUserDtoResp();
         try {
             validateRegistrationUser(dto);
             dto.setFileName(fileManager.createFile(FileDirectories.USER_IMG, dto.getImg()));
@@ -71,22 +68,28 @@ public class UserService implements UserDetailsService {
             userRepo.save(user);
         } catch (ServerException ex) {
             dtoResponse.setErrors(ex.getErrorMessage());
+            logger.warn("(registrationUser) error -> {}",ex.getErrorMessage());
+        }catch (Exception ex){
+            logger.error("(registrationUser) error: {}", ex.getMessage());
         }
         return dtoResponse;
     }
 
-    public UserUpdateDtoResponse updateUser(User userOld, UpdateDtoRequest userDto) {
-        var response = new UserUpdateDtoResponse();
+    public UpdateUserDtoResp updateUser(User userOld, UpdateUserDtoReq userDto) {
+        var response = new UpdateUserDtoResp();
         try {
             validateUpdateUser(userOld, userDto);
             if (userDto.getImgFile() != null && !userDto.getImgFile().isEmpty())
-                userDto.setFileName(fileManager.createFile(FileDirectories.USER_IMG,userDto.getImgFile()));
+                userDto.setFileName(fileManager.createFile(FileDirectories.USER_IMG, userDto.getImgFile()));
             else
                 userDto.setFileName(userOld.getImgFile());
             userOld.updateUserByDto(userDto);
             userRepo.save(userOld);
         } catch (ServerException ex) {
             response.setErrors(ex.getErrorMessage());
+            logger.warn("User ({}) -> (updateUser) error -> {}.",userOld.getId(), ex.getErrorMessage());
+        }catch (Exception ex){
+            logger.error("User ({}) -> (updateUser) error -> {}.", userOld.getId(), ex.getMessage());
         }
         return response;
     }
@@ -96,218 +99,72 @@ public class UserService implements UserDetailsService {
         try {
             validateDeleteUser(user, username);
             userRepo.delete(user);
-        }catch (ServerException ex) {
+        } catch (ServerException ex) {
             deleteResp.setError(ex.getErrorMessage());
+            logger.warn("User ({}) -> (deleteUser) error -> {}.",user.getId(), ex.getErrorMessage());
+        }catch (Exception ex){
+            logger.error("User ({}) -> (deleteUser) error -> {}.",user.getId(), ex.getMessage());
         }
         return deleteResp;
     }
 
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    public ProfileViewHiAllDtoResponse getAllHistoryByUser(String username) {
-        ProfileViewHiAllDtoResponse response = new ProfileViewHiAllDtoResponse();
+    public GetAllHelpsResp getAllAnswersSupportByUserDto(User user) {
+        GetAllHelpsResp response = new GetAllHelpsResp();
         try {
-            validateUsername(username);
-            List<History> listHistory = userRepo.findAllByUsername(username);
-
-            List<HistoryDto> listDto = new ArrayList<>();
-            listHistory.forEach(elem -> listDto.add(new HistoryDto(elem, uploadPath)));
-
-            response.setHistoryDto(listDto);
-            return response;
-        } catch (ServerException e) {
-            response.setError(e.getErrorMessage());
-        }
-        return response;
-    }
-
-    public ProfileViewHiDtoResponse getHistory(String username, long id) {
-        var response = new ProfileViewHiDtoResponse();
-        try {
-            validateGetHistory(username, id);
-            List<History> list = userRepo.findAllByUsername(username);
-            for (History history : list) {
-                if (history.getId() == id) {
-                    response.setHistoryDto(new HistoryDto(history));
-                    return response;
-                }
-            }
-            throw new ServerException(AnswerErrorCode.HISTORY_NOT_FOUND);
-        } catch (ServerException ex) {
-            response.setError(ex.getErrorMessage());
-        }
-        return response;
-    }
-
-//    private String createFile(MultipartFile imgFile) throws ServerException {
-//        //Проверка и сохранение картинки
-//        if (Objects.equals(imgFile.getOriginalFilename(), "")) {
-//            return "user.jpg";
-//        }
-//
-//        File uploadDir = new File(uploadPath);
-//        //If the file does not exist
-//        if (!uploadDir.exists()) {
-//            uploadDir.mkdir();//We will create it
-//        }
-//        String fileName = UUID.randomUUID().toString().substring(3, 7) + "." + imgFile.getOriginalFilename();
-//
-//        try {
-//            imgFile.transferTo(new File(uploadPath + fileName));
-//        } catch (IOException e) {
-//            throw new ServerException(AnswerErrorCode.FILE_CREATE_ERROR);
-//        }
-//
-//        return fileName;
-//    }
-
-    public UserDto getUserByUsername(String name) {
-        try {
-            validateUsername(name);
-            return new UserDto(userRepo.findByUsername(name));
-        } catch (ServerException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    public UserDto getUserByUsernameView(String name) {
-        try {
-            validateUsername(name);
-            return new UserDto(userRepo.findByUsername(name), uploadPath);
-        } catch (ServerException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    public FavoriteAddResponse addFavoriteHistory(FavoriteAddRequest request) {
-        FavoriteAddResponse response = new FavoriteAddResponse();
-        try {
-            validateAddFavoriteHistory(request);
-            User user = userRepo.findByUsername(request.getUser().getUsername());
-            History history = historyRepo.findById(request.getIdHistory()).orElseThrow();
-
-            //If the user has already liked
-            if (history.getUserLike().contains(user)) {
-                history.getUserLike().remove(user);
-                historyRepo.save(history);
-
-                User userNew = userRepo.findByUsername(request.getUser().getUsername());
-                userNew.removeFavoriteHistory(history);
-                userRepo.save(userNew);
-                return response;
-            }
-
-
-            history.getUserLike().add(user);
-            historyRepo.save(history);
-
-            User userNew = userRepo.getById(request.getUser().getId());
-            userNew.addFavoriteHistory(history);
-            userRepo.save(userNew);
-
-        } catch (ServerException e) {
-            response.setError(e.getErrorMessage());
-        } catch (Exception ex) {
-            response.setError(ex.getMessage());
-        }
-        return response;
-    }
-
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    public HelpGetAllAnswersResponse getAllAnswersSupportByUserDto(UserDto userDto) {
-        HelpGetAllAnswersResponse response = new HelpGetAllAnswersResponse();
-        try {
-            validateGetAllAnswersSupport(userDto);
-            List<SupportAnswer> listSupp = userRepo.findSupportAnswerById(userDto.getId());
+            validateGetAllAnswersSupport(user);
+            List<SupportAnswer> listSupp = userRepo.findSupportAnswerById(user.getId());
             response.setAnswers(listSupp);
         } catch (ServerException e) {
             response.setErrors(e.getMessage());
+            logger.warn("User ({}) -> (getAllAnswersSupportByUserDto) error {}.",user.getId(), e.getErrorMessage());
+        }catch (Exception ex){
+            logger.error("User ({}) -> (getAllAnswersSupportByUserDto) error {}.",user.getId(), ex.getMessage());
         }
         return response;
     }
 
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    public FavoriteDelResponse deleteFavoriteHistory(FavoriteDelRequest request) {
-        FavoriteDelResponse response = new FavoriteDelResponse();
-        try {
-            validateFavoriteDelResponse(request);
-
-            User user = userRepo.getById(request.getUser().getId());
-            History history = historyRepo.findById(request.getHistoryId()).orElseThrow();
-
-            history.getUserLike().remove(user);
-            historyRepo.save(history);
-
-            User userNew = userRepo.getById(request.getUser().getId());
-            userNew.removeFavoriteHistory(history);
-            userRepo.save(userNew);
-
-        } catch (ServerException e) {
-            response.setError(e.getErrorMessage());
-        }
-        return response;
-    }
-
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    public HelpDeleteAnswerResponse deleteAnswerByUser(HelpDeleteAnswerRequest request) {
-        HelpDeleteAnswerResponse response = new HelpDeleteAnswerResponse();
+    public DeleteHelpResp deleteAnswerByUser(DeleteHelpDtoReq request) {
+        DeleteHelpResp response = new DeleteHelpResp();
         try {
             validateDeleteAnswerSupport(request);
-            User user = userRepo.findByUsername(request.getUserDto().getUsername());
+            User user = userRepo.findByUsername(request.getUser().getUsername());
             user.removeSupportAnswer(request.getId());
             userRepo.save(user);
         } catch (ServerException e) {
             response.setErrors(e.getErrorMessage());
+            logger.warn("User ({}) -> (deleteAnswerByUser) error {}.",request.getUser().getId(), e.getErrorMessage());
+        }
+        catch (Exception ex){
+            logger.error("User ({}) -> (deleteAnswerByUser) error {}.",request.getUser().getId(), ex.getMessage());
         }
         return response;
     }
 
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-
-    public FavoriteGetAllUserResponse getAllFavoriteByUser(FavoriteGetAllUserRequest request) {
-        FavoriteGetAllUserResponse response = new FavoriteGetAllUserResponse();
+    public GetAllFavoriteHiResp getAllFavoriteByUser(User user) {
+        GetAllFavoriteHiResp response = new GetAllFavoriteHiResp();
         try {
-            validateFavoriteGetAllUserResponse(request);
-            List<History> list = userRepo.findFavoriteHistoryById(request.getUserId());
-            List<HistoryDto> listDto = new ArrayList<>();
-            list.forEach(elem -> listDto.add(new HistoryDto(elem, uploadPath)));
-            response.setListDto(listDto);
+            validateGetAllFavoriteByUser(user);
+            List<GetHistoryCardDtoResp> listHistoryDto = new ArrayList<>();
+            List<History> listHistory = userRepo.findFavoriteHistoryById(user.getId());
+            listHistory.forEach(history -> listHistoryDto.add(new GetHistoryCardDtoResp(history)));
+            response.setListDto(listHistoryDto);
         } catch (ServerException e) {
             response.setError(e.getErrorMessage());
+            logger.warn("User ({}) -> (getAllFavoriteByUser) error {}.",user.getId(), e.getErrorMessage());
+        }catch (Exception ex){
+            logger.error("User ({}) -> (getAllFavoriteByUser) error {}.",user.getId(), ex.getMessage());
         }
         return response;
     }
 
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    private void validateFavoriteGetAllUserResponse(FavoriteGetAllUserRequest request) throws ServerException {
-        if (Long.valueOf(request.getUserId()) == null) {
+    //---------------------------------------------------------------------------//
+    private void validateGetAllFavoriteByUser(User user) throws ServerException {
+        if (user == null) {
             throw new ServerException(AnswerErrorCode.FAVORITE_USER_ERROR);
         }
     }
 
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    private void validateUpdateUser(User userOld, UpdateDtoRequest userDto) throws ServerException {
+    private void validateUpdateUser(User userOld, UpdateUserDtoReq userDto) throws ServerException {
         if (userOld == null) {
             throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
         }
@@ -326,7 +183,7 @@ public class UserService implements UserDetailsService {
         if (userDto.getInfo() == null || userDto.getInfo().length() < 10) {
             throw new ServerException(AnswerErrorCode.UPDATE_WRONG_VALIDATE_INFO);
         }
-        if(userDto.getTelegramUsername() != null && !Pattern.matches(TELEGRAM_PATTERN, userDto.getTelegramUsername())){
+        if (!userDto.getTelegramUsername().isEmpty() && !Pattern.matches(TELEGRAM_PATTERN, userDto.getTelegramUsername())) {
             throw new ServerException(AnswerErrorCode.UPDATE_WRONG_TELEGRAM_ADDRESS);
         }
 
@@ -341,10 +198,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    private void validateRegistrationUser(UserDtoRegDtoRequest dto) throws ServerException {
+    private void validateRegistrationUser(RegistrationUserDtoReq dto) throws ServerException {
         if (!Pattern.matches(USERNAME_PATTERN, dto.getUsername())) {
             throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_USERNAME);
         }
@@ -379,79 +233,26 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    private void validateUsername(String username) throws ServerException {
-        if (username == null || userRepo.findByUsername(username) == null) {
-            throw new ServerException(AnswerErrorCode.HISTORY_USER_NOT_FOUND);
-        }
-    }
-
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    private void validateGetHistory(String username, long id) throws ServerException {
-        if (username == null) {
-            throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
-        }
-        if (Long.valueOf(id) == null) {
-            throw new ServerException(AnswerErrorCode.HISTORY_USER_NOT_FOUND);
-        }
-    }
-
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    private void validateAddFavoriteHistory(FavoriteAddRequest request) throws ServerException {
-        if (Long.valueOf(request.getIdHistory()) == null) {
-            throw new ServerException(AnswerErrorCode.FAVORITE_HISTORY_ID_ERROR);
-        }
-
-        if (request.getUser() == null) {
-            throw new ServerException(AnswerErrorCode.FAVORITE_USER_ERROR);
-        }
-    }
-
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    private void validateFavoriteDelResponse(FavoriteDelRequest request) throws ServerException {
-        if (Long.valueOf(request.getHistoryId()) == null) {
-            throw new ServerException(AnswerErrorCode.FAVORITE_HISTORY_ID_ERROR);
-        }
-
-        if (request.getUser() == null) {
-            throw new ServerException(AnswerErrorCode.FAVORITE_USER_ERROR);
-        }
-    }
-
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    private void validateGetAllAnswersSupport(UserDto userDto) throws ServerException {
-        if (userDto == null) {
+    private void validateGetAllAnswersSupport(User user) throws ServerException {
+        if (user == null) {
             throw new ServerException(AnswerErrorCode.ERROR_ANSWER_BY_USER);
         }
     }
 
-    /**
-     * -----------------------------------------------------------------------------------
-     **/
-    private void validateDeleteAnswerSupport(HelpDeleteAnswerRequest request) throws ServerException {
-        if (Long.valueOf(request.getId()) == null) {
+    private void validateDeleteAnswerSupport(DeleteHelpDtoReq request) throws ServerException {
+        if (request.getId() == 0) {
             throw new ServerException(AnswerErrorCode.ERROR_ANSWER_BY_USER);
         }
-        if (request.getUserDto() == null) {
+        if (request.getUser() == null) {
             throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
         }
     }
 
     private void validateDeleteUser(User user, String username) throws ServerException {
-        if(user == null){
+        if (user == null) {
             throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
         }
-        if(!user.getUsername().equals(username)){
+        if (!user.getUsername().equals(username)) {
             throw new ServerException(AnswerErrorCode.UPDATE_NOT_ROOT_UPDATE);
         }
     }

@@ -16,15 +16,18 @@ public class FileManager {
     public String createFile(FileDirectories directories, MultipartFile imgFile) throws ServerException {
         //Проверка и сохранение картинки
         String fileName = imgFile.getOriginalFilename();
-        if (Objects.requireNonNull(fileName).isEmpty()) return "user.jpg";
+        if (Objects.requireNonNull(fileName).isEmpty()) {
+            if(directories.equals(FileDirectories.USER_IMG))
+                return "user.jpg";
+            if(directories.equals(FileDirectories.HISTORY_IMG))
+                return "history.png";
+        }
 
         validateSuffixFileName(fileName);
         File uploadDir = new File(directories.getPath());
 
         //If the file does not exist
         if (!uploadDir.exists()) uploadDir.mkdirs();//We will create it
-
-
         String fileNameRand = UUID.randomUUID().toString().substring(3, 7) + "." + fileName;
         try {
             imgFile.transferTo(new File(directories.getPath() + fileNameRand));

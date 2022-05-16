@@ -7,6 +7,6 @@ public enum Role implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return name();//Строковое представление USER
+        return name();
     }
 }

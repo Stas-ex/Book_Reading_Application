@@ -1,207 +1,359 @@
 package com.diplom.black_fox_ex.service;
 
+import com.diplom.black_fox_ex.request.*;
+import com.diplom.black_fox_ex.repositories.CommentsRepo;
 import com.diplom.black_fox_ex.exeptions.AnswerErrorCode;
 import com.diplom.black_fox_ex.exeptions.ServerException;
+import com.diplom.black_fox_ex.repositories.HistoryRepo;
+import com.diplom.black_fox_ex.repositories.UserRepo;
+import com.diplom.black_fox_ex.repositories.TagRepo;
+import com.diplom.black_fox_ex.io.FileDirectories;
+import com.diplom.black_fox_ex.io.FileManager;
+import com.diplom.black_fox_ex.model.Comment;
 import com.diplom.black_fox_ex.model.History;
 import com.diplom.black_fox_ex.model.Tag;
 import com.diplom.black_fox_ex.model.User;
-import com.diplom.black_fox_ex.repositories.HistoryRepo;
-import com.diplom.black_fox_ex.repositories.TagRepo;
-import com.diplom.black_fox_ex.repositories.UserRepo;
-import com.diplom.black_fox_ex.request.HistoryCreateDtoReq;
-import com.diplom.black_fox_ex.request.HistoryDeleteDtoReq;
-import com.diplom.black_fox_ex.request.HistoryUpdateDtoReq;
 import com.diplom.black_fox_ex.response.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.*;
+
 @Service
 public class HistoryService {
-    @Value("${upload.path}")
-    private String uploadPath;
-
+    private final FileManager fileManager = new FileManager();
     private final HistoryRepo historyRepo;
     private final TagRepo tagRepo;
     private final UserRepo userRepo;
+    private final CommentsRepo commentsRepo;
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
 
     @Autowired
-    public HistoryService(HistoryRepo historyRepo, TagRepo tagRepo, UserRepo userRepo) {
+    public HistoryService(HistoryRepo historyRepo, TagRepo tagRepo,
+                          UserRepo userRepo, CommentsRepo commentsRepo) {
         this.historyRepo = historyRepo;
         this.tagRepo = tagRepo;
         this.userRepo = userRepo;
+        this.commentsRepo = commentsRepo;
     }
 
-    /**-----------------------------------------------------------------------------------**/
-    public HistoryCreateDtoResponse createHistory(HistoryCreateDtoReq dto) {
-        HistoryCreateDtoResponse response = new HistoryCreateDtoResponse();
+    //------------------------------------------------------------------------------------------------------//
+    public CreateHistoryDtoResp createHistory(User user, CreateHistoryDtoReq historyDto) {
+        var response = new CreateHistoryDtoResp();
         try {
-            validateCreateHistory(dto);
-            String fileName;
-            if ((fileName = createFile(dto.getFileBackgroundName())).equals("")) {
-                dto.setFileName("historyBack.png");
-            } else {
-                dto.setFileName(fileName);
-            }
-            History history = new History(dto.getNameHistory(), dto.getFileName(), dto.getBigText());
+            validateCreateHistory(user, historyDto);
+            historyDto.setFileName(fileManager.createFile(
+                    FileDirectories.HISTORY_IMG,
+                    historyDto.getImgFile())
+            );
+            History history = new History(historyDto.getTitle(),
+                    historyDto.getFileName(), historyDto.getBigText());
+            Tag tag = tagRepo.findByName(historyDto.getTag());
+            history.setTag(tag);
             historyRepo.save(history);
-            Tag tag = tagRepo.getById(Long.valueOf(dto.getTagId()));
-            if(tag == null){throw new ServerException(AnswerErrorCode.HISTORY_TAG_ERROR);}
-            history.addTag(tag);
 
-            User user = userRepo.findByUsername(dto.getUsername());
-            user.addHistory(history);
+            List<History> histories = userRepo.findAllById(user.getId());
+            histories.add(history);
+            user.setHistories(histories);
             userRepo.save(user);
 
-        } catch (IOException e) {
-            response.setError(e.getMessage());
-        } catch (ServerException e) {
-            response.setError(e.getErrorMessage());
+        } catch (ServerException ex) {
+            response.setError(ex.getErrorMessage());
+            logger.warn("User ({}) -> (createHistory) error {}.", user.getId(), ex.getErrorMessage());
+        } catch (Exception ex) {
+            logger.error("User ({}) -> (createHistory) error {}.", user.getId(), ex.getMessage());
         }
         return response;
     }
-    /**-----------------------------------------------------------------------------------**/
-    public HistoryUpdateDtoResponse updateHistory(HistoryUpdateDtoReq dtoReq) {
-        HistoryUpdateDtoResponse response = new HistoryUpdateDtoResponse();
-        try {
-            validateUpdateHistory(dtoReq);
-            String fileName;
-            if ((fileName = createFile(dtoReq.getImg())).equals("")) {
-                dtoReq.setFileName(historyRepo.findById(dtoReq.getId()).orElseThrow().getBackgroundImg());
-            } else {
-                dtoReq.setFileName(fileName);
-            }
-            History history = new History(dtoReq.getId(), dtoReq.getTitle(), dtoReq.getFileName(), dtoReq.getBigText());
-            historyRepo.save(history);
-            response.setHistoryDto(new HistoryDto(history));
 
-        } catch (IOException e) {
-            response.setError(AnswerErrorCode.HISTORY_IMG_ERROR.getMsg());
+    public UpdateHistoryDtoResp updateHistory(User user, UpdateHistoryDtoReq historyDto) {
+        var response = new UpdateHistoryDtoResp();
+        try {
+            validateUpdateHistory(user, historyDto);
+            History history = userRepo.findHistoryById(user.getId(), historyDto.getId());
+
+            if (!Objects.requireNonNull(historyDto.getImgFile().getOriginalFilename()).isEmpty())
+                historyDto.setFileName(fileManager.createFile(
+                        FileDirectories.HISTORY_IMG, historyDto.getImgFile()));
+            else
+                historyDto.setFileName(history.getBackgroundImg());
+
+            History historyUpdate = new History(historyDto);
+            historyUpdate.setTag(tagRepo.findByName(historyDto.getTag()));
+            historyRepo.save(historyUpdate);
+            response.setHistoryDto(new GetHistoryCardDtoResp(historyUpdate));
         } catch (ServerException e) {
             response.setError(e.getErrorMessage());
+            logger.warn("User ({}) -> (updateHistory) error {}.", user.getId(), e.getErrorMessage());
+        } catch (Exception ex) {
+            logger.error("User ({}) -> (updateHistory) error {}.", user.getId(), ex.getMessage());
         }
         return response;
 
     }
-    /**-----------------------------------------------------------------------------------**/
-    public HistoryDeleteDtoResponse deleteByIdAndUsername(HistoryDeleteDtoReq request) {
-        HistoryDeleteDtoResponse response =  new HistoryDeleteDtoResponse();
-        try {
-            validateDeleteByIdAndUsername(request);
 
-            History history = userRepo.findAllByUsernameAndId(request.getUsername(),request.getId());
-            User user = userRepo.findByUsername(request.getUsername());
-            validateHistoryAndUser(history,user);
-            user.removeHistory(history);
+    public DeleteHistoryDtoResp deleteHistory(DeleteHistoryDtoReq request) {
+        var response = new DeleteHistoryDtoResp();
+        try {
+            validateDeleteHistory(request);
+            User user = request.getUser();
+            History history = userRepo.findHistoryById(user.getId(), request.getId());
+
+            List<History> histories = userRepo.findAllById(user.getId());
+            histories.remove(history);
+            user.setHistories(histories);
 
             userRepo.save(user);
             historyRepo.delete(history);
+        } catch (ServerException e) {
+            response.setError(e.getErrorMessage());
+            logger.warn("User ({}) -> (deleteHistory) error {}.", request.getUser().getId(), e.getErrorMessage());
+        } catch (Exception ex) {
+            logger.error("User ({}) -> (deleteHistory) error {}.", request.getUser().getId(), ex.getMessage());
+        }
+        return response;
+    }
+
+    public GetAllHistoryResp getAllHistoryByTag(String nameTag, int numPage) {
+        var response = new GetAllHistoryResp();
+        try {
+            validateGetAllHistoryByTag(nameTag, numPage);
+            List<History> listHistory;
+
+            if (nameTag.equals("all"))
+                listHistory = historyRepo.findAll();
+            else
+                listHistory = historyRepo.findAllByTagName(nameTag);
+            List<Integer> pageNumbers = new ArrayList<>();
+            for (int i = 0; i < (listHistory.size() / 21) + 1; i++) {
+                pageNumbers.add(i);
+            }
+            response.setPageNumbers(pageNumbers);
+            response.setTags(tagRepo.findAll());
+
+            if (listHistory.size() == 0)
+                throw new ServerException(AnswerErrorCode.PAGE_IS_EMPTY);
+            else if (listHistory.size() > (numPage + 1) * 21)
+                response.setList(listHistory.subList(numPage * 21, (numPage + 1) * 21));
+            else {
+                response.setList(listHistory.subList(numPage * 21, listHistory.size()));
+            }
+        } catch (ServerException ex) {
+            response.setError(ex.getErrorMessage());
+            logger.warn("(getAllHistoryByTag) error -> {}.", ex.getErrorMessage());
+        } catch (Exception ex) {
+            logger.error("(getAllHistoryByTag) error -> {}.", ex.getMessage());
+        }
+        return response;
+    }
+
+    public GetHistoryLookPageDtoResp getHistoryById(User user, long id) {
+        var response = new GetHistoryLookPageDtoResp();
+        try {
+            validateGetHistoryById(id);
+            History history = historyRepo.findById(id).orElseThrow();
+
+            List<GetCommentsDtoResp> commentsDto = new ArrayList<>();
+            history.getComments().forEach(comment -> commentsDto.add(new GetCommentsDtoResp(comment)));
+            response.setHistoryDto(new GetHistoryLookDtoResp(history, commentsDto));
+
+            //If the like was clicked
+            if (user != null) {
+                List<History> list = userRepo.findFavoriteHistoryById(user.getId());
+                if (list.contains(history)) {
+                    response.setLikeActive("");
+                }
+            }
+        } catch (ServerException e) {
+            response.setError(e.getErrorMessage());
+            logger.warn("User ({}) , History ({}) -> (getHistoryById) error {}.", user.getId(), id, e.getErrorMessage());
+        } catch (Exception ex) {
+            logger.error("User ({}), History ({}) -> (getHistoryById) error {}.", user.getId(), id, ex.getMessage());
+        }
+        return response;
+    }
+
+    public AddCommentDtoResp addComment(User user, AddCommentDtoReq request) {
+        var responseError = new AddCommentDtoResp();
+        try {
+            validateAddComment(user, request);
+            Comment comment = new Comment(request.getBigText(), request.getColor(), user);
+            History history = historyRepo.findById(request.getId()).orElseThrow();
+            List<Comment> commentsList = userRepo.findAllCommentsByUserId(user.getId());
+
+            commentsList.add(comment);
+            history.addComments(comment);
+            user.setComments(commentsList);
+
+            commentsRepo.save(comment);
+            historyRepo.save(history);
+            userRepo.save(user);
+        } catch (ServerException e) {
+            responseError.setError(e.getErrorMessage());
+            logger.warn("User ({}), History ({}) -> (addComment) error {}.", user.getId(), request.getId(), e.getErrorMessage());
+        } catch (Exception ex) {
+            logger.error("User ({}), History ({})  -> (addComment) error {}.", user.getId(), request.getId(), ex.getMessage());
+        }
+        return responseError;
+    }
+
+    public GetProfileViewHiAllDtoResp getAllHistoryByUser(User user) {
+        GetProfileViewHiAllDtoResp response = new GetProfileViewHiAllDtoResp();
+        try {
+            validateUser(user);
+            List<GetHistoryCardDtoResp> listDto = new ArrayList<>();
+            List<History> listHistory = userRepo.findAllById(user.getId());
+            listHistory.forEach(history -> listDto.add(new GetHistoryCardDtoResp(history)));
+            response.setHistoryDto(listDto);
+            return response;
+        } catch (ServerException e) {
+            response.setError(e.getErrorMessage());
+            logger.warn("User ({}) -> (getAllHistoryByUser) error {}.", user.getId(), e.getErrorMessage());
+        } catch (Exception ex) {
+            logger.error("User ({}) -> (getAllHistoryByUser) error {}.", user.getId(), ex.getMessage());
+        }
+        return response;
+    }
+
+    public GetProfileViewHiDtoResp getHistory(User user, long id) {
+        var response = new GetProfileViewHiDtoResp();
+        try {
+            validateGetHistory(user, id);
+            List<History> list = userRepo.findAllById(user.getId());
+            History history = list.stream().filter(h -> h.getId() == id).toList().get(0);
+            if (history == null)
+                throw new ServerException(AnswerErrorCode.HISTORY_NOT_FOUND);
+            response.setHistoryDto(new GetHistoryEditDtoResp(history));
+        } catch (ServerException ex) {
+            response.setError(ex.getErrorMessage());
+            logger.warn("User ({}), History ({}) -> (getHistory) error {}.", user.getId(), id, ex.getErrorMessage());
+        } catch (Exception ex) {
+            logger.error("User ({}), History ({}) -> (getHistory) error {}.", user.getId(), id, ex.getMessage());
+        }
+        return response;
+    }
+
+    public AddFavoriteResp addFavoriteHistory(AddFavoriteHiReq request) {
+        var response = new AddFavoriteResp();
+        try {
+            validateAddFavoriteHistory(request);
+            User user = request.getUser();
+            History history = historyRepo.findById(request.getHistoryId()).orElseThrow();
+            List<History> listAllFavorite = userRepo.findFavoriteHistoryById(user.getId());
+
+            //If the user has already liked
+            if (history.getUserLike().contains(user)) {
+                history.getUserLike().remove(user);
+                listAllFavorite.remove(history);
+            } else {
+                history.getUserLike().add(user);
+                listAllFavorite.add(history);
+            }
+
+            user.setFavoriteStories(listAllFavorite);
+            historyRepo.save(history);
+            userRepo.save(user);
 
         } catch (ServerException e) {
             response.setError(e.getErrorMessage());
+            logger.warn("User ({}), History ({}) -> (addFavoriteHistory) error {}.", request.getUser().getId(), request.getHistoryId(), e.getErrorMessage());
+        } catch (Exception ex) {
+            logger.error("User ({}), History ({}) -> (addFavoriteHistory) error {}.", request.getUser().getId(), request.getHistoryId(), ex.getMessage());
         }
         return response;
     }
 
-    /**-----------------------------------------------------------------------------------**/
-    public ResponseAllHistory getAllHistory() {
-        ResponseAllHistory response = new ResponseAllHistory();
+    public DeleteFavoriteHiResp deleteFavoriteHistory(DeleteFavoriteHiDtoReq request) {
+        var response = new DeleteFavoriteHiResp();
         try {
-            List<History> list = historyRepo.findAll();
-            setMapHistoriesByList(list,response);
-            response.setTags(tagRepo.findAll());
-        }catch (ServerException ex){
-            response.setError(ex.getErrorMessage());
-            response.setTags(tagRepo.findAll());
+            validateDeleteFavoriteHistory(request);
+
+            User user = request.getUser();
+            History history = historyRepo.findById(request.getHistoryId()).orElseThrow();
+            List<History> listAllFavorite = userRepo.findFavoriteHistoryById(user.getId());
+
+            listAllFavorite.remove(history);
+            history.getUserLike().remove(user);
+            user.setFavoriteStories(listAllFavorite);
+
+            historyRepo.save(history);
+            userRepo.save(user);
+
+        } catch (ServerException e) {
+            response.setError(e.getErrorMessage());
+            logger.warn("User ({}), History ({}) -> (deleteFavoriteHistory) error {}.", request.getUser().getId(), request.getHistoryId(), e.getErrorMessage());
+        } catch (Exception ex) {
+            logger.error("User ({}), History ({}) -> (deleteFavoriteHistory) error {}.", request.getUser().getId(), request.getHistoryId(), ex.getMessage());
         }
         return response;
     }
-    /**-----------------------------------------------------------------------------------**/
-    public ResponseAllHistory getAllHistoryByTag(String nameTag) {
-        ResponseAllHistory response = new ResponseAllHistory();
-        try {
-            List<History> list = historyRepo.findAllByTagName(nameTag);
-            setMapHistoriesByList(list,response);
-            response.setTags(tagRepo.findAll());
-        }catch (ServerException ex){
-            response.setError(ex.getErrorMessage());
-            response.setTags(tagRepo.findAll());
-        }
-        return response;
+
+    public List<Tag> getAllTag() {
+        return tagRepo.findAll();
     }
-    /**-----------------------------------------------------------------------------------**/
-    private void setMapHistoriesByList(List<History> list, ResponseAllHistory response) throws ServerException {
-        ArrayList<HistoryDto> listDto = new ArrayList<>();
-        int counter = 0;
-        for (History history: list) {
-            if (listDto.size() == 21) {
-                response.getMap().put(counter, (List<HistoryDto>) listDto.clone());
-                listDto.clear();
-                counter++;
-            }
-            listDto.add(new HistoryDto(history, uploadPath));
+
+    //------------------------------------------------------------------------------------------------------//
+    private void validateGetHistoryById(long id) throws ServerException {
+        if (id == 0) {
+            throw new ServerException(AnswerErrorCode.HISTORY_ID_NOT_EXIST);
         }
-        if(listDto.size() != 0){
-            response.getMap().put(counter,listDto);
+    }
+
+    private void validateAddComment(User user, AddCommentDtoReq request) throws ServerException {
+        if (user == null) {
+            throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
         }
-        if(response.getMap().size() == 0){
+        if (request.getId() == 0) {
+            throw new ServerException(AnswerErrorCode.HISTORY_ID_NOT_EXIST);
+        }
+        if (request.getColor() == null || request.getColor().isEmpty()) {
+            throw new ServerException(AnswerErrorCode.COMMENT_COLOR_ERROR);
+        }
+        if (request.getBigText() == null || request.getBigText().length() < 10) {
+            throw new ServerException(AnswerErrorCode.COMMENT_BIG_TEXT_ERROR);
+        }
+    }
+
+    private void validateGetAllHistoryByTag(String nameTag, int numPage) throws ServerException {
+        if (nameTag == null || nameTag.isEmpty()) {
             throw new ServerException(AnswerErrorCode.HISTORY_TAG_ERROR);
         }
-    }
-
-    /**-----------------------------------------------------------------------------------**/
-    private String createFile(MultipartFile imgFile) throws IOException {
-        //Проверка и сохранение картинки
-        if (!Objects.equals(imgFile.getOriginalFilename(), "")) {
-            File uploadDir = new File(uploadPath);
-
-            //Если файла не существует
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();//Мы его создадим
-            }
-
-            String randomName = UUID.randomUUID().toString().substring(3, 7);
-            randomName += "." + imgFile.getOriginalFilename();
-            imgFile.transferTo(new File(uploadPath + randomName));
-            return randomName;
-        }
-        return "";
-    }
-    /**-----------------------------------------------------------------------------------**/
-    private void validateHistoryAndUser(History history, User user) throws ServerException {
-        if(history == null || user == null){
-            throw new ServerException(AnswerErrorCode.HISTORY_NOT_FOUND);
+        if (numPage < -1) {
+            throw new ServerException(AnswerErrorCode.HISTORY_PAGE_ERROR);
         }
     }
-    /**-----------------------------------------------------------------------------------**/
-    private void validateCreateHistory(HistoryCreateDtoReq dto) throws ServerException {
-        if (dto.getUsername() == null) {
-            throw new ServerException(AnswerErrorCode.HISTORY_USER_NOT_FOUND);
+
+    private void validateCreateHistory(User user, CreateHistoryDtoReq dto) throws ServerException {
+        if (user == null) {
+            throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
         }
-        if (dto.getNameHistory() == null || dto.getNameHistory().length() < 3) {
+        if (user.getUsername().isEmpty()) {
+            throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
+        }
+        if (dto.getTitle() == null || dto.getTitle().length() < 3) {
             throw new ServerException(AnswerErrorCode.HISTORY_TITLE_ERROR);
         }
         if (dto.getBigText() == null || dto.getBigText().length() < 20) {
             throw new ServerException(AnswerErrorCode.HISTORY_SHORT_TEXT);
         }
-        if (dto.getFileBackgroundName().isEmpty()) {
+        if (dto.getImgFile() == null) {
             throw new ServerException(AnswerErrorCode.HISTORY_IMG_ERROR);
         }
-        if(Objects.equals(dto.getTagId(), "")){
+        if (dto.getTag() == null || dto.getTag().isEmpty()) {
             throw new ServerException(AnswerErrorCode.HISTORY_TAG_ERROR);
         }
     }
-    /**-----------------------------------------------------------------------------------**/
-    private void validateUpdateHistory(HistoryUpdateDtoReq dto) throws ServerException {
-        if (Long.valueOf(dto.getId()) == null) {
-            throw new ServerException(AnswerErrorCode.HISTORY_ID_NOT_EXIST);
+
+    private void validateUpdateHistory(User user, UpdateHistoryDtoReq dto) throws ServerException {
+        if (user == null) {
+            throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
         }
-        if (dto.getUsername() == null) {
-            throw new ServerException(AnswerErrorCode.HISTORY_USER_NOT_FOUND);
+        if (dto.getTag() == null || dto.getTag().isEmpty()) {
+            throw new ServerException(AnswerErrorCode.HISTORY_TAG_ERROR);
         }
         if (dto.getTitle() == null || dto.getTitle().length() < 3) {
             throw new ServerException(AnswerErrorCode.HISTORY_TITLE_ERROR);
@@ -210,17 +362,46 @@ public class HistoryService {
             throw new ServerException(AnswerErrorCode.HISTORY_SHORT_TEXT);
         }
     }
-    /**-----------------------------------------------------------------------------------**/
-    private void validateDeleteByIdAndUsername(HistoryDeleteDtoReq request) throws ServerException {
-        if(Long.valueOf(request.getId()) == null){
+
+    private void validateDeleteHistory(DeleteHistoryDtoReq request) throws ServerException {
+        if (request.getId() == 0) {
             throw new ServerException(AnswerErrorCode.HISTORY_ID_NOT_EXIST);
         }
-        if(request.getUsername() == null){
+        if (request.getUser() == null) {
             throw new ServerException(AnswerErrorCode.HISTORY_USER_NOT_FOUND);
         }
     }
-    /**-----------------------------------------------------------------------------------**/
-    public List<Tag> getAllTag() {
-        return tagRepo.findAll();
+
+    private void validateUser(User user) throws ServerException {
+        if (user == null) {
+            throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
+        }
+    }
+
+    private void validateGetHistory(User user, long id) throws ServerException {
+        if (user == null) {
+            throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
+        }
+        if (id == 0) {
+            throw new ServerException(AnswerErrorCode.HISTORY_USER_NOT_FOUND);
+        }
+    }
+
+    private void validateAddFavoriteHistory(AddFavoriteHiReq request) throws ServerException {
+        if (request.getHistoryId() == 0) {
+            throw new ServerException(AnswerErrorCode.FAVORITE_HISTORY_ID_ERROR);
+        }
+        if (request.getUser() == null) {
+            throw new ServerException(AnswerErrorCode.FAVORITE_USER_ERROR);
+        }
+    }
+
+    private void validateDeleteFavoriteHistory(DeleteFavoriteHiDtoReq request) throws ServerException {
+        if (request.getHistoryId() == 0) {
+            throw new ServerException(AnswerErrorCode.FAVORITE_HISTORY_ID_ERROR);
+        }
+        if (request.getUser() == null) {
+            throw new ServerException(AnswerErrorCode.FAVORITE_USER_ERROR);
+        }
     }
 }

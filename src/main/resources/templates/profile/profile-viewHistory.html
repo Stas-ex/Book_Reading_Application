@@ -55,32 +55,32 @@
 <body>
 <!---------------------------------------------MENU------------------------------------------------------------------->
 <div th:replace="blocks/header :: navbar(${userMenu})"></div>
-
 <!-------------------------------------------------------------------------------------------------------------------->
 <div th:replace="profile/blocks/profile-header :: header-profile('','active','')"></div>
-<!-------------------------------------------------------------------------------------------------------------------->
+
+<h4 align="center" style="color: crimson" th:text="${errorView}"/>
+
 <div class="card-group" style="margin-left:15%; margin-right: 15%; margin-top: 2%">
-    <div th:each="elem : ${histories}">
+    <div th:each="history : ${histories}">
         <div class="card ml-2" style="width: 25rem;height:35rem; margin-top: 3%">
             <img class="card-img-top"
                  style="height: 16rem"
-                 th:src="${elem.getBackgroundImg()}"
+                 th:src="${history.getBackgroundImg()}"
                  alt="Card image cap">
             <div class="card-body">
-                <h5 class="card-title" th:text="${elem.getTitle()}"/>
-                <p class="card-text" th:text="${elem.getSmallText()}"></p>
+                <h5 class="card-title" th:text="${history.getTitle()}"/>
+                <p class="card-text" th:utext="${history.getSmallText()}"></p>
             </div>
             <div class="card-footer">
-                <a th:href="'/profile-history/' + ${elem.getId()} + '/edit'"
+                <a th:href="'/profile-history/' + ${history.getId()} + '/editPage'"
                    class="card-link btn btn-outline-warning ml-0" style="width: 40%">Edit</a>
-                <a th:href="'/history/'+${elem.getId()}+'/look'" class="card-link btn btn-outline-info ml-1"
+                <a th:href="'/history/'+${history.getId()}+'/look'" class="card-link btn btn-outline-info ml-1"
                    style="width: 20%">Look</a>
-                <a th:href="'/profile-history/' + ${elem.getId()} + '/delete'"
+                <a th:href="'/profile-history/' + ${history.getId()} + '/delete'"
                    class="card-link btn btn-outline-danger ml-5" style="width: 22%">Delete</a>
 
                 <p style="color: crimson; padding-top: 2%; font-size: 20px;"
-                   th:text="'Like is ' + ${elem.getCountLike()}" />
-
+                   th:text="'Like is ' + ${history.getCountLike()}" />
             </div>
         </div>
     </div>

@@ -386,15 +386,15 @@
     <hr/>
 
     <div class="row">
-        <div class="col-sm-6" th:each="elem : ${comments}">
-            <div th:class="'testimonial testimonial-'+${elem.getColor()}+'-bg'">
-                <div class="testimonial-section" th:text="${elem.getText()}">
+        <div class="col-sm-6" th:each="comment : ${comments}">
+            <div th:class="'testimonial testimonial-'+${comment.getColor()}+'-bg'">
+                <div class="testimonial-section" th:text="${comment.getText()}">
                 </div>
                 <div class="testimonial-desc">
-                    <img th:src="${elem.getImage()}"
+                    <img th:src="${comment.getFileName()}"
                          alt=""/>
                     <div class="testimonial-you">
-                        <div class="testimonial-you-name" th:text="${elem.getUsername()}"></div>
+                        <div class="testimonial-you-name" th:text="${comment.getUsername()}"></div>
                     </div>
                 </div>
             </div>

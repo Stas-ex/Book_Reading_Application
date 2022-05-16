@@ -1,9 +1,15 @@
 package com.diplom.black_fox_ex.model;
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 public class Tag {
     @Id
@@ -11,38 +17,14 @@ public class Tag {
     private Long id;
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tags")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tag")
+    @ToString.Exclude
     private Set<History> histories;
-
-    public Tag() {}
 
     public Tag(String name) {
         this.name = name;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<History> getHistories() {
-        return histories;
-    }
-
-    public void setHistories(Set<History> histories) {
-        this.histories = histories;
-    }
 
     @Override
     public boolean equals(Object o) {
