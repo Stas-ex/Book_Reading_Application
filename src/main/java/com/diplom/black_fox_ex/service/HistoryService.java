@@ -22,6 +22,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+/**
+ * This class performs basic actions on received history interaction requests.
+ */
 @Service
 public class HistoryService {
     private final FileManager fileManager = new FileManager();
@@ -41,7 +44,13 @@ public class HistoryService {
         this.commentsRepo = commentsRepo;
     }
 
-    //------------------------------------------------------------------------------------------------------//
+    /**
+     * History creation method
+     * @param user includes all fields of an authorized user
+     * @param historyDto contains the main parameters for create history
+     * @see #validateCreateHistory(User, CreateHistoryDtoReq) 
+     * @return dto response , with an error field
+     */
     public CreateHistoryDtoResp createHistory(User user, CreateHistoryDtoReq historyDto) {
         var response = new CreateHistoryDtoResp();
         try {
@@ -70,6 +79,13 @@ public class HistoryService {
         return response;
     }
 
+    /**
+     * History update method
+     * @param user includes all fields of an authorized user
+     * @param historyDto contains the main parameters for update history
+     * @see #validateUpdateHistory(User, UpdateHistoryDtoReq)
+     * @return dto response , with an error field
+     */
     public UpdateHistoryDtoResp updateHistory(User user, UpdateHistoryDtoReq historyDto) {
         var response = new UpdateHistoryDtoResp();
         try {
@@ -96,6 +112,12 @@ public class HistoryService {
 
     }
 
+    /**
+     * History delete method
+     * @param request contains the main parameters for delete history
+     * @see #validateDeleteHistory(DeleteHistoryDtoReq)                
+     * @return dto response , with an error field
+     */
     public DeleteHistoryDtoResp deleteHistory(DeleteHistoryDtoReq request) {
         var response = new DeleteHistoryDtoResp();
         try {
@@ -118,6 +140,13 @@ public class HistoryService {
         return response;
     }
 
+    /**
+     * Method returns all stories by tag
+     * @param nameTag includes tag name
+     * @param numPage includes number page
+     * @see #validateGetAllHistoryByTag(String, int)                
+     * @return dto response , with an error field
+     */
     public GetAllHistoryResp getAllHistoryByTag(String nameTag, int numPage) {
         var response = new GetAllHistoryResp();
         try {
@@ -151,6 +180,13 @@ public class HistoryService {
         return response;
     }
 
+    /**
+     * Method gets history by id
+     * @param user includes all fields of an authorized user
+     * @param id -> history parameter
+     * @see #validateGetHistoryById(long)          
+     * @return dto response , with an error field
+     */
     public GetHistoryLookPageDtoResp getHistoryById(User user, long id) {
         var response = new GetHistoryLookPageDtoResp();
         try {
@@ -177,6 +213,36 @@ public class HistoryService {
         return response;
     }
 
+    /**
+     * Method returns a list of saved histories from an authorized user
+     * @param user includes all fields of an authorized user
+     * @see #validateGetAllFavoriteByUser(User)
+     * @return response containing a list of the user's favorite histories
+     */
+    public GetAllFavoriteHiResp getAllFavoriteByUser(User user) {
+        GetAllFavoriteHiResp response = new GetAllFavoriteHiResp();
+        try {
+            validateGetAllFavoriteByUser(user);
+            List<GetHistoryCardDtoResp> listHistoryDto = new ArrayList<>();
+            List<History> listHistory = userRepo.findFavoriteHistoryById(user.getId());
+            listHistory.forEach(history -> listHistoryDto.add(new GetHistoryCardDtoResp(history)));
+            response.setListDto(listHistoryDto);
+        } catch (ServerException e) {
+            response.setError(e.getErrorMessage());
+            logger.warn("User ({}) -> (getAllFavoriteByUser) error {}.",user.getId(), e.getErrorMessage());
+        }catch (Exception ex){
+            logger.error("User ({}) -> (getAllFavoriteByUser) error {}.",user.getId(), ex.getMessage());
+        }
+        return response;
+    }
+
+    /**
+     * Method create comment for a story
+     * @param user includes all fields of an authorized user
+     * @param request contains the main parameters for create comment
+     * @see #validateAddComment(User, AddCommentDtoReq)                
+     * @return dto response , with an error field
+     */
     public AddCommentDtoResp addComment(User user, AddCommentDtoReq request) {
         var responseError = new AddCommentDtoResp();
         try {
@@ -201,6 +267,12 @@ public class HistoryService {
         return responseError;
     }
 
+    /**
+     * Method returns a list of all histories from an authorized user
+     * @param user includes all fields of an authorized user
+     * @see #validateUser(User)             
+     * @return list of all stories for a given users
+     */
     public GetProfileViewHiAllDtoResp getAllHistoryByUser(User user) {
         GetProfileViewHiAllDtoResp response = new GetProfileViewHiAllDtoResp();
         try {
@@ -219,6 +291,13 @@ public class HistoryService {
         return response;
     }
 
+    /**
+     * Method returns product by id
+     * @param user includes all fields of an authorized user
+     * @param id -> history parameter
+     * @see #validateGetHistory(User, long)           
+     * @return historyDto, with an error field
+     */
     public GetProfileViewHiDtoResp getHistory(User user, long id) {
         var response = new GetProfileViewHiDtoResp();
         try {
@@ -237,6 +316,12 @@ public class HistoryService {
         return response;
     }
 
+    /**
+     * The method implements adding history to the saved tab for this user
+     * @param request contains the main parameters for add favorite history
+     * @see #validateAddFavoriteHistory(AddFavoriteHiReq)                
+     * @return dto response, with an error field
+     */
     public AddFavoriteResp addFavoriteHistory(AddFavoriteHiReq request) {
         var response = new AddFavoriteResp();
         try {
@@ -267,6 +352,12 @@ public class HistoryService {
         return response;
     }
 
+    /**
+     * The method implements deleting history from the saved stories tab for this user
+     * @param request contains the main parameters for delete favorite history
+     * @see #validateAddFavoriteHistory(AddFavoriteHiReq)                
+     * @return dto response, with an error field
+     */
     public DeleteFavoriteHiResp deleteFavoriteHistory(DeleteFavoriteHiDtoReq request) {
         var response = new DeleteFavoriteHiResp();
         try {
@@ -292,11 +383,15 @@ public class HistoryService {
         return response;
     }
 
+    /**
+     * The method returns a list of all tags
+     * @return list tags
+     */
     public List<Tag> getAllTag() {
         return tagRepo.findAll();
     }
 
-    //------------------------------------------------------------------------------------------------------//
+
     private void validateGetHistoryById(long id) throws ServerException {
         if (id == 0) {
             throw new ServerException(AnswerErrorCode.HISTORY_ID_NOT_EXIST);
@@ -401,6 +496,12 @@ public class HistoryService {
             throw new ServerException(AnswerErrorCode.FAVORITE_HISTORY_ID_ERROR);
         }
         if (request.getUser() == null) {
+            throw new ServerException(AnswerErrorCode.FAVORITE_USER_ERROR);
+        }
+    }
+
+    private void validateGetAllFavoriteByUser(User user) throws ServerException {
+        if (user == null) {
             throw new ServerException(AnswerErrorCode.FAVORITE_USER_ERROR);
         }
     }

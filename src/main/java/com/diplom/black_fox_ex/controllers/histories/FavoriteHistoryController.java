@@ -37,7 +37,7 @@ public class FavoriteHistoryController {
      */
     @GetMapping
     public String startFavoriteHistory(@AuthenticationPrincipal User user, Model model) {
-        var responseDto = userService.getAllFavoriteByUser(user);
+        var responseDto = historyService.getAllFavoriteByUser(user);
         if (responseDto.getError() != null) {
             model.addAttribute("errorFavorite", responseDto.getError());
         }

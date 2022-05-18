@@ -1,176 +1,197 @@
-2022-05-16 16:16:43.132  INFO 4676 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Starting BlackFoxExApplication using Java 17.0.2 on Skuratovs-MacBook-Air.local with PID 4676 (/Users/stas_ex/IdeaProjects/Diplom_Spring/target/classes started by stas_ex in /Users/stas_ex/IdeaProjects/Diplom_Spring)
-2022-05-16 16:16:43.134  INFO 4676 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : No active profile set, falling back to default profiles: default
-2022-05-16 16:16:43.197  INFO 4676 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-core-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-api.jar
-2022-05-16 16:16:43.197  INFO 4676 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-impl-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-core.jar
-2022-05-16 16:16:43.198  INFO 4676 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2022-05-16 16:16:43.198  INFO 4676 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2022-05-16 16:16:43.981  INFO 4676 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2022-05-16 16:16:44.052  INFO 4676 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 62 ms. Found 4 JPA repository interfaces.
-2022-05-16 16:16:44.783  INFO 4676 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
-2022-05-16 16:16:44.796  INFO 4676 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2022-05-16 16:16:44.796  INFO 4676 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.54]
-2022-05-16 16:16:44.878  INFO 4676 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2022-05-16 16:16:44.879  INFO 4676 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1680 ms
-2022-05-16 16:16:45.130  INFO 4676 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2022-05-16 16:16:45.200  INFO 4676 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.32.Final
-2022-05-16 16:16:45.381  INFO 4676 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2022-05-16 16:16:45.500  INFO 4676 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2022-05-16 16:16:45.503  WARN 4676 --- [restartedMain] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2022-05-16 16:16:45.823  INFO 4676 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2022-05-16 16:16:45.881  INFO 4676 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
-2022-05-16 16:16:47.444  INFO 4676 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2022-05-16 16:16:47.467  INFO 4676 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2022-05-16 16:16:48.087  WARN 4676 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2022-05-16 16:16:48.376  INFO 4676 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/user-img/**'] with []
-2022-05-16 16:16:48.376  INFO 4676 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/history-img/**'] with []
-2022-05-16 16:16:48.416  INFO 4676 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@434c527, org.springframework.security.web.context.SecurityContextPersistenceFilter@18333230, org.springframework.security.web.header.HeaderWriterFilter@47444cba, org.springframework.security.web.csrf.CsrfFilter@37c58d88, org.springframework.security.web.authentication.logout.LogoutFilter@2f4cc6e4, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@1112e32e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@b37d905, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@28b302a2, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3d9f3f08, org.springframework.security.web.session.SessionManagementFilter@badf621, org.springframework.security.web.access.ExceptionTranslationFilter@10355f54, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@40fdf31a]
-2022-05-16 16:16:48.845  INFO 4676 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2022-05-16 16:16:48.894  INFO 4676 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-2022-05-16 16:16:48.908  INFO 4676 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Started BlackFoxExApplication in 6.155 seconds (JVM running for 12.367)
-2022-05-16 16:16:54.252  INFO 4676 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-05-16 16:16:54.252  INFO 4676 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2022-05-16 16:16:54.253  INFO 4676 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
-2022-05-16 16:16:54.310  INFO 4676 --- [http-nio-8080-exec-1] c.d.b.controllers.HomeController         : Move to main Page user: anonymous user
-2022-05-16 16:16:56.316  INFO 4676 --- [http-nio-8080-exec-4] c.d.b.controllers.HomeController         : Move to main Page user: anonymous user
-2022-05-16 16:21:26.400  INFO 4676 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2022-05-16 16:21:26.405  INFO 4676 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2022-05-16 16:21:26.416  INFO 4676 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2022-05-16 16:49:56.241  INFO 4878 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Starting BlackFoxExApplication using Java 17.0.2 on Skuratovs-Air with PID 4878 (/Users/stas_ex/IdeaProjects/Diplom_Spring/target/classes started by stas_ex in /Users/stas_ex/IdeaProjects/Diplom_Spring)
-2022-05-16 16:49:56.243  INFO 4878 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : No active profile set, falling back to default profiles: default
-2022-05-16 16:49:56.348  INFO 4878 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-core-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-api.jar
-2022-05-16 16:49:56.349  INFO 4878 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-impl-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-core.jar
-2022-05-16 16:49:56.349  INFO 4878 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2022-05-16 16:49:56.349  INFO 4878 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2022-05-16 16:49:57.565  INFO 4878 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2022-05-16 16:49:57.637  INFO 4878 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 63 ms. Found 4 JPA repository interfaces.
-2022-05-16 16:49:58.353  INFO 4878 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
-2022-05-16 16:49:58.365  INFO 4878 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2022-05-16 16:49:58.366  INFO 4878 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.54]
-2022-05-16 16:49:58.460  INFO 4878 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2022-05-16 16:49:58.460  INFO 4878 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2110 ms
-2022-05-16 16:49:58.730  INFO 4878 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2022-05-16 16:49:58.798  INFO 4878 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.32.Final
-2022-05-16 16:49:58.960  INFO 4878 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2022-05-16 16:49:59.079  INFO 4878 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2022-05-16 16:49:59.083  WARN 4878 --- [restartedMain] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2022-05-16 16:49:59.451  INFO 4878 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2022-05-16 16:49:59.479  INFO 4878 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
-2022-05-16 16:50:00.526  INFO 4878 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2022-05-16 16:50:00.538  INFO 4878 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2022-05-16 16:50:01.095  WARN 4878 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2022-05-16 16:50:01.346  INFO 4878 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/user-img/**'] with []
-2022-05-16 16:50:01.346  INFO 4878 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/history-img/**'] with []
-2022-05-16 16:50:01.388  INFO 4878 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@8470697, org.springframework.security.web.context.SecurityContextPersistenceFilter@304af83, org.springframework.security.web.header.HeaderWriterFilter@765cbf96, org.springframework.security.web.csrf.CsrfFilter@f2bab96, org.springframework.security.web.authentication.logout.LogoutFilter@50b30a9d, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@6ebe6dcf, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@67e76675, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5659a5b4, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@302a5961, org.springframework.security.web.session.SessionManagementFilter@68a42817, org.springframework.security.web.access.ExceptionTranslationFilter@45b03c30, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@8ed6523]
-2022-05-16 16:50:01.929  INFO 4878 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2022-05-16 16:50:01.991  INFO 4878 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-2022-05-16 16:50:02.012  INFO 4878 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Started BlackFoxExApplication in 6.175 seconds (JVM running for 7.447)
-2022-05-16 16:50:18.819  INFO 4878 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-05-16 16:50:18.820  INFO 4878 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2022-05-16 16:50:18.822  INFO 4878 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
-2022-05-16 16:50:22.641  WARN 4878 --- [http-nio-8080-exec-7] c.d.black_fox_ex.service.UserService     : (getAllHistoryByTag) error -> Blank page.
-2022-05-16 16:50:35.428  WARN 4878 --- [http-nio-8080-exec-3] c.d.black_fox_ex.service.UserService     : User (1) -> update error Invalid age range.
-2022-05-16 16:50:40.308  WARN 4878 --- [http-nio-8080-exec-4] c.d.black_fox_ex.service.UserService     : User (1) -> update error Have written too little about yourself.
-2022-05-16 16:50:48.066  WARN 4878 --- [http-nio-8080-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded; nested exception is java.lang.IllegalStateException: org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException: the request was rejected because its size (1116953431) exceeds the configured maximum (10485760)]
-2022-05-16 16:51:00.398  WARN 4878 --- [http-nio-8080-exec-6] c.d.black_fox_ex.service.UserService     : User (1) -> update error Invalid age range.
-2022-05-16 16:51:03.091  WARN 4878 --- [http-nio-8080-exec-7] c.d.black_fox_ex.service.UserService     : User (1) -> update error Invalid age range.
-2022-05-16 16:51:52.405  WARN 4878 --- [http-nio-8080-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded; nested exception is java.lang.IllegalStateException: org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException: the request was rejected because its size (1055365995) exceeds the configured maximum (10485760)]
-2022-05-16 16:52:03.751  WARN 4878 --- [http-nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'GET' not supported]
-2022-05-16 16:54:21.373  INFO 4878 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2022-05-16 16:54:21.378  INFO 4878 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2022-05-16 16:54:21.386  INFO 4878 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2022-05-16 17:01:45.936  INFO 4992 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Starting BlackFoxExApplication using Java 17.0.2 on Skuratovs-Air with PID 4992 (/Users/stas_ex/IdeaProjects/Diplom_Spring/target/classes started by stas_ex in /Users/stas_ex/IdeaProjects/Diplom_Spring)
-2022-05-16 17:01:45.938  INFO 4992 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : No active profile set, falling back to default profiles: default
-2022-05-16 17:01:46.034  INFO 4992 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-core-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-api.jar
-2022-05-16 17:01:46.035  INFO 4992 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-impl-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-core.jar
-2022-05-16 17:01:46.035  INFO 4992 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2022-05-16 17:01:46.036  INFO 4992 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2022-05-16 17:01:47.601  INFO 4992 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2022-05-16 17:01:47.686  INFO 4992 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 72 ms. Found 4 JPA repository interfaces.
-2022-05-16 17:01:48.461  INFO 4992 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
-2022-05-16 17:01:48.474  INFO 4992 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2022-05-16 17:01:48.475  INFO 4992 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.54]
-2022-05-16 17:01:48.563  INFO 4992 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2022-05-16 17:01:48.564  INFO 4992 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2528 ms
-2022-05-16 17:01:48.869  INFO 4992 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2022-05-16 17:01:48.933  INFO 4992 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.32.Final
-2022-05-16 17:01:49.086  INFO 4992 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2022-05-16 17:01:49.203  INFO 4992 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2022-05-16 17:01:49.206  WARN 4992 --- [restartedMain] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2022-05-16 17:01:49.555  INFO 4992 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2022-05-16 17:01:49.582  INFO 4992 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
-2022-05-16 17:01:51.164  INFO 4992 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2022-05-16 17:01:51.176  INFO 4992 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2022-05-16 17:01:51.731  WARN 4992 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2022-05-16 17:01:51.983  INFO 4992 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/user-img/**'] with []
-2022-05-16 17:01:51.983  INFO 4992 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/history-img/**'] with []
-2022-05-16 17:01:52.020  INFO 4992 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@308ad660, org.springframework.security.web.context.SecurityContextPersistenceFilter@821628e, org.springframework.security.web.header.HeaderWriterFilter@5cbec20f, org.springframework.security.web.csrf.CsrfFilter@deeb577, org.springframework.security.web.authentication.logout.LogoutFilter@5bf1baf7, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@5dde9341, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@72a6f3c6, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@234e577a, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@26fd1ca9, org.springframework.security.web.session.SessionManagementFilter@4e0534c5, org.springframework.security.web.access.ExceptionTranslationFilter@3e221430, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@715d807]
-2022-05-16 17:01:52.460  INFO 4992 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2022-05-16 17:01:52.507  INFO 4992 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-2022-05-16 17:01:52.521  INFO 4992 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Started BlackFoxExApplication in 7.071 seconds (JVM running for 8.39)
-2022-05-16 17:06:43.408  INFO 4992 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2022-05-16 17:06:43.413  INFO 4992 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2022-05-16 17:06:43.421  INFO 4992 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2022-05-16 17:07:08.391  INFO 5017 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Starting BlackFoxExApplication using Java 17.0.2 on Skuratovs-Air with PID 5017 (/Users/stas_ex/IdeaProjects/Diplom_Spring/target/classes started by stas_ex in /Users/stas_ex/IdeaProjects/Diplom_Spring)
-2022-05-16 17:07:08.394  INFO 5017 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : No active profile set, falling back to default profiles: default
-2022-05-16 17:07:08.537  INFO 5017 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-core-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-api.jar
-2022-05-16 17:07:08.538  INFO 5017 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-impl-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-core.jar
-2022-05-16 17:07:08.538  INFO 5017 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2022-05-16 17:07:08.538  INFO 5017 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2022-05-16 17:07:09.940  INFO 5017 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2022-05-16 17:07:10.018  INFO 5017 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 69 ms. Found 4 JPA repository interfaces.
-2022-05-16 17:07:10.719  INFO 5017 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
-2022-05-16 17:07:10.732  INFO 5017 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2022-05-16 17:07:10.732  INFO 5017 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.54]
-2022-05-16 17:07:10.808  INFO 5017 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2022-05-16 17:07:10.809  INFO 5017 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2270 ms
-2022-05-16 17:07:11.094  INFO 5017 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2022-05-16 17:07:11.148  INFO 5017 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.32.Final
-2022-05-16 17:07:11.293  INFO 5017 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2022-05-16 17:07:11.392  INFO 5017 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2022-05-16 17:07:11.395  WARN 5017 --- [restartedMain] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2022-05-16 17:07:11.737  INFO 5017 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2022-05-16 17:07:11.758  INFO 5017 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
-2022-05-16 17:07:12.988  INFO 5017 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2022-05-16 17:07:12.997  INFO 5017 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2022-05-16 17:07:13.575  WARN 5017 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2022-05-16 17:07:13.830  INFO 5017 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/user-img/**'] with []
-2022-05-16 17:07:13.831  INFO 5017 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/history-img/**'] with []
-2022-05-16 17:07:13.867  INFO 5017 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@20135370, org.springframework.security.web.context.SecurityContextPersistenceFilter@66a9ed42, org.springframework.security.web.header.HeaderWriterFilter@1f656744, org.springframework.security.web.csrf.CsrfFilter@2d58f084, org.springframework.security.web.authentication.logout.LogoutFilter@67036a53, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@4b2400f4, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@71bf10ea, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5d948f81, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@578daf4b, org.springframework.security.web.session.SessionManagementFilter@3d2c1b0e, org.springframework.security.web.access.ExceptionTranslationFilter@20da284, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@2b767178]
-2022-05-16 17:07:14.397  INFO 5017 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2022-05-16 17:07:14.446  INFO 5017 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-2022-05-16 17:07:14.461  INFO 5017 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Started BlackFoxExApplication in 6.622 seconds (JVM running for 8.135)
-2022-05-16 17:08:53.679  INFO 5017 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2022-05-16 17:08:53.689  INFO 5017 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2022-05-16 17:08:53.703  INFO 5017 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2022-05-16 17:08:56.680  INFO 5033 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Starting BlackFoxExApplication using Java 17.0.2 on Skuratovs-Air with PID 5033 (/Users/stas_ex/IdeaProjects/Diplom_Spring/target/classes started by stas_ex in /Users/stas_ex/IdeaProjects/Diplom_Spring)
-2022-05-16 17:08:56.685  INFO 5033 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : No active profile set, falling back to default profiles: default
-2022-05-16 17:08:56.851  INFO 5033 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-core-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-api.jar
-2022-05-16 17:08:56.852  INFO 5033 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-impl-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-core.jar
-2022-05-16 17:08:56.852  INFO 5033 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2022-05-16 17:08:56.853  INFO 5033 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2022-05-16 17:08:58.259  INFO 5033 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2022-05-16 17:08:58.348  INFO 5033 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 75 ms. Found 4 JPA repository interfaces.
-2022-05-16 17:08:59.173  INFO 5033 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
-2022-05-16 17:08:59.188  INFO 5033 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2022-05-16 17:08:59.189  INFO 5033 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.54]
-2022-05-16 17:08:59.282  INFO 5033 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2022-05-16 17:08:59.283  INFO 5033 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2429 ms
-2022-05-16 17:08:59.599  INFO 5033 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2022-05-16 17:08:59.653  INFO 5033 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.32.Final
-2022-05-16 17:08:59.801  INFO 5033 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2022-05-16 17:08:59.902  INFO 5033 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2022-05-16 17:08:59.905  WARN 5033 --- [restartedMain] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2022-05-16 17:09:00.270  INFO 5033 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2022-05-16 17:09:00.289  INFO 5033 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
-2022-05-16 17:09:01.724  INFO 5033 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2022-05-16 17:09:01.735  INFO 5033 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2022-05-16 17:09:02.297  WARN 5033 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2022-05-16 17:09:02.548  INFO 5033 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/user-img/**'] with []
-2022-05-16 17:09:02.548  INFO 5033 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/history-img/**'] with []
-2022-05-16 17:09:02.585  INFO 5033 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@784a744d, org.springframework.security.web.context.SecurityContextPersistenceFilter@24182dd3, org.springframework.security.web.header.HeaderWriterFilter@17502076, org.springframework.security.web.csrf.CsrfFilter@36f11698, org.springframework.security.web.authentication.logout.LogoutFilter@1f656744, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@d240a3d, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7cb7e5ea, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@412be6b6, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7c6f4cec, org.springframework.security.web.session.SessionManagementFilter@c810e58, org.springframework.security.web.access.ExceptionTranslationFilter@6312c78b, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@43a363a1]
-2022-05-16 17:09:03.074  INFO 5033 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2022-05-16 17:09:03.120  INFO 5033 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-2022-05-16 17:09:03.135  INFO 5033 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Started BlackFoxExApplication in 6.889 seconds (JVM running for 8.409)
-2022-05-16 17:14:41.845  INFO 5033 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2022-05-16 17:14:41.854  INFO 5033 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2022-05-16 17:14:41.864  INFO 5033 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2022-05-17 19:54:24.217  INFO 7662 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Starting BlackFoxExApplication using Java 17.0.2 on Skuratovs-Air with PID 7662 (/Users/stas_ex/IdeaProjects/Diplom_Spring/target/classes started by stas_ex in /Users/stas_ex/IdeaProjects/Diplom_Spring)
+2022-05-17 19:54:24.226  INFO 7662 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : No active profile set, falling back to default profiles: default
+2022-05-17 19:54:24.352  INFO 7662 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-core-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-api.jar
+2022-05-17 19:54:24.354  INFO 7662 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-impl-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-core.jar
+2022-05-17 19:54:24.357  INFO 7662 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-05-17 19:54:24.358  INFO 7662 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-05-17 19:54:25.543  INFO 7662 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-05-17 19:54:25.628  INFO 7662 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 71 ms. Found 4 JPA repository interfaces.
+2022-05-17 19:54:26.373  INFO 7662 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-05-17 19:54:26.386  INFO 7662 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-05-17 19:54:26.387  INFO 7662 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.54]
+2022-05-17 19:54:26.466  INFO 7662 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-05-17 19:54:26.467  INFO 7662 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2107 ms
+2022-05-17 19:54:26.775  INFO 7662 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-05-17 19:54:26.835  INFO 7662 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.32.Final
+2022-05-17 19:54:27.017  INFO 7662 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-05-17 19:54:27.132  INFO 7662 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-05-17 19:54:27.135  WARN 7662 --- [restartedMain] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2022-05-17 19:54:27.672  INFO 7662 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-05-17 19:54:27.697  INFO 7662 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-05-17 19:54:28.855  INFO 7662 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-05-17 19:54:28.914  INFO 7662 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-05-17 19:54:29.886  WARN 7662 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-05-17 19:54:30.155  INFO 7662 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/user-img/**'] with []
+2022-05-17 19:54:30.156  INFO 7662 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/history-img/**'] with []
+2022-05-17 19:54:30.191  INFO 7662 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@764f8e9e, org.springframework.security.web.context.SecurityContextPersistenceFilter@974de92, org.springframework.security.web.header.HeaderWriterFilter@1018bcf3, org.springframework.security.web.csrf.CsrfFilter@13a20aea, org.springframework.security.web.authentication.logout.LogoutFilter@1366e561, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@6b6ffd7e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@147d3bba, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2983f9f1, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4ecf3fa0, org.springframework.security.web.session.SessionManagementFilter@30111cfb, org.springframework.security.web.access.ExceptionTranslationFilter@4718435b, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@4e05fbf2]
+2022-05-17 19:54:30.747  INFO 7662 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-05-17 19:54:30.812  INFO 7662 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-05-17 19:54:30.829  INFO 7662 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Started BlackFoxExApplication in 7.346 seconds (JVM running for 8.859)
+2022-05-17 19:54:41.443  INFO 7662 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-17 19:54:41.445  INFO 7662 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-05-17 19:54:41.447  INFO 7662 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2022-05-17 19:55:28.092  WARN 7662 --- [http-nio-8080-exec-7] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 19:55:37.272  INFO 7662 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-05-17 19:55:37.279  INFO 7662 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-05-17 19:55:37.292  INFO 7662 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2022-05-17 19:57:41.884  INFO 7707 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Starting BlackFoxExApplication using Java 17.0.2 on Skuratovs-Air with PID 7707 (/Users/stas_ex/IdeaProjects/Diplom_Spring/target/classes started by stas_ex in /Users/stas_ex/IdeaProjects/Diplom_Spring)
+2022-05-17 19:57:41.886  INFO 7707 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : No active profile set, falling back to default profiles: default
+2022-05-17 19:57:42.069  INFO 7707 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-core-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-api.jar
+2022-05-17 19:57:42.071  INFO 7707 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-impl-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-core.jar
+2022-05-17 19:57:42.072  INFO 7707 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-05-17 19:57:42.073  INFO 7707 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-05-17 19:57:43.232  INFO 7707 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-05-17 19:57:43.314  INFO 7707 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 72 ms. Found 4 JPA repository interfaces.
+2022-05-17 19:57:43.983  INFO 7707 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-05-17 19:57:43.995  INFO 7707 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-05-17 19:57:43.995  INFO 7707 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.54]
+2022-05-17 19:57:44.070  INFO 7707 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-05-17 19:57:44.071  INFO 7707 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1997 ms
+2022-05-17 19:57:44.331  INFO 7707 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-05-17 19:57:44.385  INFO 7707 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.32.Final
+2022-05-17 19:57:44.517  INFO 7707 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-05-17 19:57:44.615  INFO 7707 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-05-17 19:57:44.617  WARN 7707 --- [restartedMain] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2022-05-17 19:57:44.933  INFO 7707 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-05-17 19:57:44.953  INFO 7707 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-05-17 19:57:45.898  INFO 7707 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-05-17 19:57:45.909  INFO 7707 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-05-17 19:57:46.465  WARN 7707 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-05-17 19:57:46.701  INFO 7707 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/user-img/**'] with []
+2022-05-17 19:57:46.701  INFO 7707 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/history-img/**'] with []
+2022-05-17 19:57:46.739  INFO 7707 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3d06de32, org.springframework.security.web.context.SecurityContextPersistenceFilter@29ffa04b, org.springframework.security.web.header.HeaderWriterFilter@72b010c1, org.springframework.security.web.csrf.CsrfFilter@26436552, org.springframework.security.web.authentication.logout.LogoutFilter@4752d1ff, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@5e0f25ee, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1d4e5396, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@783ae379, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1efd181a, org.springframework.security.web.session.SessionManagementFilter@7ea8550, org.springframework.security.web.access.ExceptionTranslationFilter@79a9d1b9, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@30b85347]
+2022-05-17 19:57:47.203  INFO 7707 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-05-17 19:57:47.250  INFO 7707 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-05-17 19:57:47.265  INFO 7707 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Started BlackFoxExApplication in 5.893 seconds (JVM running for 7.506)
+2022-05-17 19:57:53.545  INFO 7707 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-17 19:57:53.545  INFO 7707 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-05-17 19:57:53.547  INFO 7707 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2022-05-17 19:58:11.436  WARN 7707 --- [http-nio-8080-exec-5] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 19:58:13.405  WARN 7707 --- [http-nio-8080-exec-6] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 19:58:14.597  WARN 7707 --- [http-nio-8080-exec-7] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 19:58:15.484  WARN 7707 --- [http-nio-8080-exec-8] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 19:58:17.468  WARN 7707 --- [http-nio-8080-exec-9] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 19:58:18.227  WARN 7707 --- [http-nio-8080-exec-10] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 19:58:19.403  WARN 7707 --- [http-nio-8080-exec-1] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 19:58:20.523  WARN 7707 --- [http-nio-8080-exec-2] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 20:00:04.043  WARN 7707 --- [http-nio-8080-exec-8] c.d.black_fox_ex.service.UserService     : (registrationUser) error -> Username is too short
+2022-05-17 20:00:32.184  WARN 7707 --- [http-nio-8080-exec-9] c.d.black_fox_ex.service.UserService     : (registrationUser) error -> Password error
+2022-05-17 20:03:46.862  WARN 7707 --- [http-nio-8080-exec-5] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 20:03:50.637  WARN 7707 --- [http-nio-8080-exec-7] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 20:03:51.804  WARN 7707 --- [http-nio-8080-exec-8] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 20:03:52.579  WARN 7707 --- [http-nio-8080-exec-9] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 20:04:17.705  WARN 7707 --- [http-nio-8080-exec-3] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 20:11:40.208 ERROR 7707 --- [http-nio-8080-exec-1] c.d.black_fox_ex.service.HistoryService  : User (1), History (2) -> (addFavoriteHistory) error failed to lazily initialize a collection of role: com.diplom.black_fox_ex.model.Tag.histories, could not initialize proxy - no Session.
+2022-05-17 20:11:43.036 ERROR 7707 --- [http-nio-8080-exec-4] c.d.black_fox_ex.service.HistoryService  : User (1), History (2) -> (addFavoriteHistory) error failed to lazily initialize a collection of role: com.diplom.black_fox_ex.model.Tag.histories, could not initialize proxy - no Session.
+2022-05-17 20:11:47.037 ERROR 7707 --- [http-nio-8080-exec-10] c.d.black_fox_ex.service.HistoryService  : User (1), History (2) -> (addFavoriteHistory) error failed to lazily initialize a collection of role: com.diplom.black_fox_ex.model.Tag.histories, could not initialize proxy - no Session.
+2022-05-17 20:11:57.004 ERROR 7707 --- [http-nio-8080-exec-5] c.d.black_fox_ex.service.HistoryService  : User (1), History (2) -> (addFavoriteHistory) error failed to lazily initialize a collection of role: com.diplom.black_fox_ex.model.Tag.histories, could not initialize proxy - no Session.
+2022-05-17 20:12:10.284 ERROR 7707 --- [http-nio-8080-exec-6] c.d.black_fox_ex.service.HistoryService  : User (1), History (2) -> (addFavoriteHistory) error failed to lazily initialize a collection of role: com.diplom.black_fox_ex.model.Tag.histories, could not initialize proxy - no Session.
+2022-05-17 20:13:23.741  WARN 7707 --- [http-nio-8080-exec-8] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 20:13:26.511  WARN 7707 --- [http-nio-8080-exec-2] c.d.black_fox_ex.service.HistoryService  : (getAllHistoryByTag) error -> Blank page.
+2022-05-17 20:26:58.500  INFO 7707 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-05-17 20:26:58.506  INFO 7707 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-05-17 20:26:58.517  INFO 7707 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2022-05-17 20:28:07.262  INFO 7826 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Starting BlackFoxExApplication using Java 17.0.2 on Skuratovs-Air with PID 7826 (/Users/stas_ex/IdeaProjects/Diplom_Spring/target/classes started by stas_ex in /Users/stas_ex/IdeaProjects/Diplom_Spring)
+2022-05-17 20:28:07.264  INFO 7826 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : No active profile set, falling back to default profiles: default
+2022-05-17 20:28:07.363  INFO 7826 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-core-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-api.jar
+2022-05-17 20:28:07.364  INFO 7826 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-impl-2.3.0.jar referenced one or more files that do not exist: file:/Users/stas_ex/.m2/repository/com/sun/xml/bind/jaxb-impl/2.3.0/jaxb-core.jar
+2022-05-17 20:28:07.365  INFO 7826 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-05-17 20:28:07.366  INFO 7826 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-05-17 20:28:08.490  INFO 7826 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-05-17 20:28:08.568  INFO 7826 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 66 ms. Found 4 JPA repository interfaces.
+2022-05-17 20:28:09.219  INFO 7826 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2022-05-17 20:28:09.233  INFO 7826 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-05-17 20:28:09.233  INFO 7826 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.54]
+2022-05-17 20:28:09.312  INFO 7826 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-05-17 20:28:09.313  INFO 7826 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1945 ms
+2022-05-17 20:28:09.377  WARN 7826 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Cannot deserialize session attribute [SPRING_SECURITY_CONTEXT] for session [1DEAA282EF1D4183F944631ED164FAAE]
+2022-05-17 20:28:09.642  INFO 7826 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-05-17 20:28:09.697  INFO 7826 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.32.Final
+2022-05-17 20:28:09.830  INFO 7826 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-05-17 20:28:09.927  INFO 7826 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-05-17 20:28:09.929  WARN 7826 --- [restartedMain] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2022-05-17 20:28:10.388  INFO 7826 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-05-17 20:28:10.493  INFO 7826 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-05-17 20:28:11.557  INFO 7826 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-05-17 20:28:11.570  INFO 7826 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-05-17 20:28:12.104  WARN 7826 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-05-17 20:28:12.357  INFO 7826 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/user-img/**'] with []
+2022-05-17 20:28:12.357  INFO 7826 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='/Users/stas_ex/IdeaProjects/Diplom_Spring/src/main/resources/img/history-img/**'] with []
+2022-05-17 20:28:12.391  INFO 7826 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6ebe6dcf, org.springframework.security.web.context.SecurityContextPersistenceFilter@10b7120c, org.springframework.security.web.header.HeaderWriterFilter@32c95443, org.springframework.security.web.csrf.CsrfFilter@91f59e9, org.springframework.security.web.authentication.logout.LogoutFilter@3bf40a63, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@2e691392, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2eca172b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@142d8612, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@8470697, org.springframework.security.web.session.SessionManagementFilter@73fbd303, org.springframework.security.web.access.ExceptionTranslationFilter@6916f9f1, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6499255c]
+2022-05-17 20:28:12.801  INFO 7826 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-05-17 20:28:12.848  INFO 7826 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2022-05-17 20:28:12.863  INFO 7826 --- [restartedMain] c.d.black_fox_ex.BlackFoxExApplication   : Started BlackFoxExApplication in 6.33 seconds (JVM running for 8.064)
+2022-05-17 20:28:40.588  INFO 7826 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-05-17 20:28:40.588  INFO 7826 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-05-17 20:28:40.589  INFO 7826 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2022-05-17 20:29:06.805 ERROR 7826 --- [http-nio-8080-exec-1] w.a.UsernamePasswordAuthenticationFilter : An internal error occurred while trying to authenticate the user.
+
+org.springframework.security.authentication.InternalAuthenticationServiceException: UserDetailsService returned null, which is an interface contract violation
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.retrieveUser(DaoAuthenticationProvider.java:95) ~[spring-security-core-5.5.3.jar:5.5.3]
+	at org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider.authenticate(AbstractUserDetailsAuthenticationProvider.java:133) ~[spring-security-core-5.5.3.jar:5.5.3]
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:182) ~[spring-security-core-5.5.3.jar:5.5.3]
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:201) ~[spring-security-core-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.attemptAuthentication(UsernamePasswordAuthenticationFilter.java:85) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:222) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:212) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:103) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:89) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.csrf.CsrfFilter.doFilterInternal(CsrfFilter.java:132) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119) ~[spring-web-5.3.12.jar:5.3.12]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119) ~[spring-web-5.3.12.jar:5.3.12]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:110) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:80) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:55) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119) ~[spring-web-5.3.12.jar:5.3.12]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:336) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:211) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:183) ~[spring-security-web-5.5.3.jar:5.5.3]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:358) ~[spring-web-5.3.12.jar:5.3.12]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:271) ~[spring-web-5.3.12.jar:5.3.12]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-5.3.12.jar:5.3.12]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119) ~[spring-web-5.3.12.jar:5.3.12]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-5.3.12.jar:5.3.12]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119) ~[spring-web-5.3.12.jar:5.3.12]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-5.3.12.jar:5.3.12]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119) ~[spring-web-5.3.12.jar:5.3.12]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:189) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:197) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:540) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:135) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:357) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:382) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:895) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1722) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-9.0.54.jar:9.0.54]
+	at java.base/java.lang.Thread.run(Thread.java:833) ~[na:na]
+
+2022-05-17 20:29:22.676  WARN 7826 --- [http-nio-8080-exec-4] c.d.black_fox_ex.service.UserService     : (registrationUser) error -> Invalid age range
+2022-05-17 20:29:37.571  WARN 7826 --- [http-nio-8080-exec-5] c.d.black_fox_ex.service.UserService     : (registrationUser) error -> Syntax error when entering age
+2022-05-17 20:32:33.297 ERROR 7826 --- [http-nio-8080-exec-8] c.d.black_fox_ex.service.HistoryService  : User (5), History (6) -> (addFavoriteHistory) error failed to lazily initialize a collection of role: com.diplom.black_fox_ex.model.Tag.histories, could not initialize proxy - no Session.
+2022-05-17 20:32:34.428 ERROR 7826 --- [http-nio-8080-exec-10] c.d.black_fox_ex.service.HistoryService  : User (5), History (6) -> (addFavoriteHistory) error failed to lazily initialize a collection of role: com.diplom.black_fox_ex.model.Tag.histories, could not initialize proxy - no Session.
+2022-05-17 20:36:11.426 ERROR 7826 --- [http-nio-8080-exec-4] c.d.b.c.FileUploadExceptionAdvice        : Error handleMaxSizeException -> Maximum upload size exceeded; nested exception is java.lang.IllegalStateException: org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException: The field img exceeds its maximum permitted size of 1048576 bytes.
+2022-05-17 20:36:11.427  WARN 7826 --- [http-nio-8080-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded; nested exception is java.lang.IllegalStateException: org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException: The field img exceeds its maximum permitted size of 1048576 bytes.]
+2022-05-17 20:48:40.476  INFO 7826 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-05-17 20:48:40.482  INFO 7826 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-05-17 20:48:40.490  INFO 7826 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

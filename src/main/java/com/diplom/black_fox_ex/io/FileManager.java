@@ -10,9 +10,20 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * This class for saving downloaded files from the site
+ */
 @Component
 public class FileManager {
 
+    /**
+     * This method for saving downloaded files from the site
+     * @param directories -> path to the directory of saved images
+     * @param imgFile -> uploaded picture
+     * @see #validateSuffixFileName(String)
+     * @return file name without directory
+     * @throws ServerException for invalid data
+     */
     public String createFile(FileDirectories directories, MultipartFile imgFile) throws ServerException {
         //Проверка и сохранение картинки
         String fileName = imgFile.getOriginalFilename();
