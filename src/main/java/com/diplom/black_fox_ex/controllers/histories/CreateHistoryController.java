@@ -1,4 +1,4 @@
-package com.diplom.black_fox_ex.controllers.profile;
+package com.diplom.black_fox_ex.controllers.histories;
 
 import com.diplom.black_fox_ex.model.User;
 import com.diplom.black_fox_ex.service.HistoryService;
@@ -14,12 +14,12 @@ import org.springframework.ui.Model;
  * This is the class for interacting with the "create history" page.
  */
 @Controller
-@RequestMapping("/profile-history")
-public class ProfileCreateController {
+@RequestMapping("/history")
+public class CreateHistoryController {
     private final HistoryService historyService;
 
     @Autowired
-    public ProfileCreateController(HistoryService historyService) {
+    public CreateHistoryController(HistoryService historyService) {
         this.historyService = historyService;
     }
 
@@ -34,7 +34,7 @@ public class ProfileCreateController {
         model.addAttribute("tags", historyService.getAllTag());
         model.addAttribute("title", "Create");
         model.addAttribute("historyDto", historyDto);
-        return "history_editing";
+        return "/history/history_editing";
     }
 
     /**

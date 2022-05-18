@@ -134,11 +134,11 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && age == user.age && active == user.active && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(sex, user.sex) && Objects.equals(info, user.info) && Objects.equals(imgFile, user.imgFile) && Objects.equals(telegramUsername, user.telegramUsername) && Objects.equals(roles, user.roles) && Objects.equals(histories, user.histories) && Objects.equals(favoriteStories, user.favoriteStories) && Objects.equals(comments, user.comments) && Objects.equals(supportAnswer, user.supportAnswer);
+        return id == user.id && Objects.equals(username, user.username) && Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, email, password, age, sex, info, imgFile, active, telegramUsername, roles, histories, favoriteStories, comments, supportAnswer);
+        return Objects.hash(id, username, email, password, age, sex, info, imgFile, active, telegramUsername, roles);
     }
 }

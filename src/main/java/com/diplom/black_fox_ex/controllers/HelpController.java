@@ -57,6 +57,7 @@ public class HelpController {
             model.addAttribute("error", response.getErrors());
             return "help";
         }
+        model.addAttribute("userMenu", userService.getUserMenu(user));
         return "redirect:/help";
     }
 }

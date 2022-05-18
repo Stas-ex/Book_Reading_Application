@@ -15,7 +15,9 @@ public class GetHistoryLookDtoResp {
     public GetHistoryLookDtoResp(History history, List<GetCommentsDtoResp> commentsDto) {
         this.id = history.getId();
         this.title = history.getTitle();
-        this.bigText = history.getBigText();
+        this.bigText = history.getBigText()
+                .replaceAll("\\r","<br>")
+                .replaceAll("\\n","<br>");
         this.comments = commentsDto;
     }
 }

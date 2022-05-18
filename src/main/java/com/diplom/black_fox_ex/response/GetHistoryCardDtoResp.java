@@ -25,14 +25,12 @@ public class GetHistoryCardDtoResp {
         this.countLike = history.getCountLike();
         this.tag = history.getTag().getName();
         history.getUsers().forEach(elem -> listAuthors.add(elem.getUsername()));
-        String bigText = history.getBigText()
-                .replaceAll("\\r","<br>")
-                .replaceAll("\\n","<br>");
+        String bigText = history.getBigText();
 
-        if(bigText.length() <= 200)
+        if(bigText.length() <= 120)
             this.smallText = bigText.substring(0,history.getBigText().length() - 1);
         else
-            this.smallText = bigText.substring(0,200) + "...";
+            this.smallText = bigText.substring(0,120) + "...";
     }
 }
 

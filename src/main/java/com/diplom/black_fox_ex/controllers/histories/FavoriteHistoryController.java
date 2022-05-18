@@ -43,7 +43,7 @@ public class FavoriteHistoryController {
         }
         model.addAttribute("userMenu", userService.getUserMenu(user));
         model.addAttribute("histories", responseDto.getListDto());
-        return "favorite-history";
+        return "/history/favorite-history";
     }
 
     /**

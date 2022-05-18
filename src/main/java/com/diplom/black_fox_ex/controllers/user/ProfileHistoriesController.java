@@ -1,4 +1,4 @@
-package com.diplom.black_fox_ex.controllers.profile;
+package com.diplom.black_fox_ex.controllers.user;
 
 import com.diplom.black_fox_ex.model.User;
 import com.diplom.black_fox_ex.request.DeleteHistoryDtoReq;
@@ -58,7 +58,7 @@ public class ProfileHistoriesController {
         model.addAttribute("title", "Update");
         model.addAttribute("tags", historyService.getAllTag());
         model.addAttribute("historyDto", response.getHistoryDto());
-        return "history_editing";
+        return "/history/history_editing";
     }
 
     /**

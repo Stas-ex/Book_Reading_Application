@@ -1,4 +1,4 @@
-package com.diplom.black_fox_ex.controllers.profile;
+package com.diplom.black_fox_ex.controllers.user;
 
 import com.diplom.black_fox_ex.model.User;
 import com.diplom.black_fox_ex.request.UpdateUserDtoReq;

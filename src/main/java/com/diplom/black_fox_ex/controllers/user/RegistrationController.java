@@ -1,9 +1,8 @@
-package com.diplom.black_fox_ex.controllers;
+package com.diplom.black_fox_ex.controllers.user;
 
 import com.diplom.black_fox_ex.request.RegistrationUserDtoReq;
 import com.diplom.black_fox_ex.service.UserService;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +43,7 @@ public class RegistrationController {
             model.addAttribute("userReg", userDto);
             return "registration";
         }
-        SecurityContextHolder.getContext().setAuthentication(null);
+//        SecurityContextHolder.getContext().setAuthentication(null);
         return "redirect:/login";
     }
 }

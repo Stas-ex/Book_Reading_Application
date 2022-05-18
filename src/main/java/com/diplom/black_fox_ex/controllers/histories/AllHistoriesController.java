@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
  * This is the class for interacting with the "user history" page.
  */
 @Controller
-public class HistoriesController {
+public class AllHistoriesController {
     private final HistoryService historyService;
     private final UserService userService;
 
     @Autowired
-    public HistoriesController(HistoryService historyService, UserService userService) {
+    public AllHistoriesController(HistoryService historyService, UserService userService) {
         this.historyService = historyService;
         this.userService = userService;
     }
@@ -46,6 +46,6 @@ public class HistoriesController {
         model.addAttribute("numPage", numPage);
         model.addAttribute("nameTag", nameTag);
 
-        return "histories";
+        return "/history/histories";
     }
 }

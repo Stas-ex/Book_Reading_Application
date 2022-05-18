@@ -41,7 +41,7 @@ public class LookHistoryController {
         }
         model.addAttribute("likeActive", response.getLikeActive());
         model.addAttribute("historyLook", response.getHistoryDto());
-        return "history-look";
+        return "/history/history-look";
     }
 
     /**
