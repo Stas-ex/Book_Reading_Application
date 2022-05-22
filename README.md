@@ -1,4 +1,4 @@
-<h1 align="center"><a  href="https://github.com/Stas-ex/Diplom-web">Fanfiction site </a> </h1>
+<h1 align="center"><a  href="https://github.com/Stas-ex/Diplom_Spring">Fanfiction site </a> </h1>
 
 ## Description
 This application is intended for publishing small works.</br>
