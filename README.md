@@ -59,3 +59,12 @@ CREATE SCHEMA `spring_bd`
 
 ![](src/main/resources/img/readme-img/LinkMainPage.png)
 
+##Possible startup errors
+- Error: The image is not saved on the server<br>
+- Solution: open the file [FileDirectories.java](src/main/java/com/diplom/black_fox_ex/io/FileDirectories.java) and specify the absolute path to the presented directories in the project. 
+
+**Example for my directory**
+```
+ USER_IMG("/.../Diploma_Spring/src/main/resources/img/user-img/")
+ HISTORY_IMG("/.../Diploma_Spring/src/main/resources/img/history-img/");
+```
