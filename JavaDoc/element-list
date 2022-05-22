@@ -1,0 +1,12 @@
+com.diploma.black_fox_ex
+com.diploma.black_fox_ex.config
+com.diploma.black_fox_ex.controllers
+com.diploma.black_fox_ex.controllers.histories
+com.diploma.black_fox_ex.controllers.user
+com.diploma.black_fox_ex.exeptions
+com.diploma.black_fox_ex.io
+com.diploma.black_fox_ex.model
+com.diploma.black_fox_ex.repositories
+com.diploma.black_fox_ex.request
+com.diploma.black_fox_ex.response
+com.diploma.black_fox_ex.service
