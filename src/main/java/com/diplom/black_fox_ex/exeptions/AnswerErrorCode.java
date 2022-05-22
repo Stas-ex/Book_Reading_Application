@@ -9,7 +9,7 @@ public enum AnswerErrorCode {
     REGISTRATION_WRONG_VALIDATE_PASSWORD("Password error"),
     REGISTRATION_WRONG_VALIDATE_IMG("Such a picture does not exist"),
     REGISTRATION_WRONG_VALIDATE_INFO("Have written too little about yourself"),
-    REGISTRATION_WRONG_VALIDATE_SEX("Specify your age"),
+    REGISTRATION_WRONG_VALIDATE_SEX("Incorrect gender information"),
     REGISTRATION_USERNAME_ALREADY_EXIST("This username already exist"),
 
     UPDATE_WRONG_USERNAME("Username is too short"),

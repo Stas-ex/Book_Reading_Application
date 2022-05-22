@@ -39,8 +39,8 @@ public class RegistrationController {
     @PostMapping("/add")
     public String addNewUser(@ModelAttribute("userReg") RegistrationUserDtoReq userDto, Model model) {
         var dtoResponse = userService.registrationUser(userDto);
-        if (dtoResponse.getErrors() != null) {
-            model.addAttribute("errorReg", dtoResponse.getErrors());
+        if (dtoResponse.getError() != null) {
+            model.addAttribute("errorReg", dtoResponse.getError());
             model.addAttribute("userReg", userDto);
             return "registration";
         }

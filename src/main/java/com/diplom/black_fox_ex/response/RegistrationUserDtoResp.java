@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class RegistrationUserDtoResp {
-    private String errors;
+    private String error;
 }

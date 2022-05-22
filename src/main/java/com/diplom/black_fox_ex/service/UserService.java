@@ -91,7 +91,7 @@ public class UserService implements UserDetailsService {
             );
             userRepo.save(user);
         } catch (ServerException ex) {
-            dtoResponse.setErrors(ex.getErrorMessage());
+            dtoResponse.setError(ex.getErrorMessage());
             logger.warn("(registrationUser) error -> {}",ex.getErrorMessage());
         }catch (Exception ex){
             logger.error("(registrationUser) error: {}", ex.getMessage());

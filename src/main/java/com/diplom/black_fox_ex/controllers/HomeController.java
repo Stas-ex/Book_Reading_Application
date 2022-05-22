@@ -1,6 +1,6 @@
 package com.diplom.black_fox_ex.controllers;
 
-import com.diplom.black_fox_ex.modelю;
+import com.diplom.black_fox_ex.model.User;
 import com.diplom.black_fox_ex.service.UserService;
 
 import org.springframework.ui.Model;
