@@ -131,3 +131,24 @@
 2022-05-22 11:50:06.146  INFO 5782 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2022-05-22 11:50:06.150  INFO 5782 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2022-05-22 11:50:06.157  INFO 5782 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2022-05-22 13:34:22.753  INFO 7924 --- [main] c.d.b.BlackFoxExApplicationTests         : Starting BlackFoxExApplicationTests using Java 17.0.2 on Skuratovs-MacBook-Air.local with PID 7924 (started by stas_ex in /Users/stas_ex/IdeaProjects/Diploma_Spring)
+2022-05-22 13:34:22.759  INFO 7924 --- [main] c.d.b.BlackFoxExApplicationTests         : No active profile set, falling back to default profiles: default
+2022-05-22 13:34:23.939  INFO 7924 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-05-22 13:34:24.036  INFO 7924 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 86 ms. Found 4 JPA repository interfaces.
+2022-05-22 13:34:24.949  INFO 7924 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-05-22 13:34:25.083  INFO 7924 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.32.Final
+2022-05-22 13:34:25.416  INFO 7924 --- [main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-05-22 13:34:25.651  INFO 7924 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-05-22 13:34:25.660  WARN 7924 --- [main] com.zaxxer.hikari.util.DriverDataSource  : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2022-05-22 13:34:26.414  INFO 7924 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-05-22 13:34:26.479  INFO 7924 --- [main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-05-22 13:34:28.480  INFO 7924 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-05-22 13:34:28.496  INFO 7924 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-05-22 13:34:30.367  WARN 7924 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-05-22 13:34:31.047  INFO 7924 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='src/main/resources/img/user-img/**'] with []
+2022-05-22 13:34:31.048  INFO 7924 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure Ant [pattern='src/main/resources/img/history-img/**'] with []
+2022-05-22 13:34:31.207  INFO 7924 --- [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@377cbdae, org.springframework.security.web.context.SecurityContextPersistenceFilter@7df23848, org.springframework.security.web.header.HeaderWriterFilter@539bb233, org.springframework.security.web.csrf.CsrfFilter@4a34de5e, org.springframework.security.web.authentication.logout.LogoutFilter@25e24908, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@10280879, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@14ee143a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@674fd531, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@37a939bc, org.springframework.security.web.session.SessionManagementFilter@796613b7, org.springframework.security.web.access.ExceptionTranslationFilter@70f3bf00, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@2b30b627]
+2022-05-22 13:34:33.261  INFO 7924 --- [main] c.d.b.BlackFoxExApplicationTests         : Started BlackFoxExApplicationTests in 16.01 seconds (JVM running for 19.864)
+2022-05-22 13:34:33.732  INFO 7924 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-05-22 13:34:33.736  INFO 7924 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-05-22 13:34:33.754  INFO 7924 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

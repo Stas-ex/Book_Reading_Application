@@ -1,4 +1,4 @@
-package com.diplom.black_fox_ex;
+package com.diploma.black_fox_ex;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
