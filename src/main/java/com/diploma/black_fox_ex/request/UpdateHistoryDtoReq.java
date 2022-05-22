@@ -10,16 +10,16 @@ public class UpdateHistoryDtoReq {
     private String bigText;
     private MultipartFile imgFile;
     private String username;
-    private String fileName;
     private String tag;
 
-    public UpdateHistoryDtoReq(long id, String title, String bigText, MultipartFile imgFile, String username, String fileName, String tag) {
+    public UpdateHistoryDtoReq(long id, String title, String bigText, MultipartFile imgFile, String username, String tag) {
         this.id = id;
         this.title = title;
         this.bigText = bigText;
         this.imgFile = imgFile;
         this.username = username;
-        this.fileName = fileName;
         this.tag = tag;
     }
+
+
 }

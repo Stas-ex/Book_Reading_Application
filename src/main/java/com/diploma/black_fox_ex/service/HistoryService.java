@@ -46,23 +46,27 @@ public class HistoryService {
 
     /**
      * History creation method
-     * @param user includes all fields of an authorized user
+     *
+     * @param user       includes all fields of an authorized user
      * @param historyDto contains the main parameters for create history
-     * @see #validateCreateHistory(User, CreateHistoryDtoReq)
      * @return dto response , with an error field
+     * @see #validateCreateHistory(User, CreateHistoryDtoReq)
      */
     public CreateHistoryDtoResp createHistory(User user, CreateHistoryDtoReq historyDto) {
         var response = new CreateHistoryDtoResp();
         try {
             validateCreateHistory(user, historyDto);
-            historyDto.setFileName(fileManager.createFile(
-                    FileDirectories.HISTORY_IMG,
-                    historyDto.getImgFile())
-            );
-            History history = new History(historyDto.getTitle(),
-                    historyDto.getFileName(), historyDto.getBigText());
+
             Tag tag = tagRepo.findByName(historyDto.getTag());
-            history.setTag(tag);
+
+            if (tag == null)
+                throw new ServerException(AnswerErrorCode.HISTORY_TAG_ERROR);
+
+            String fileName = fileManager.createFile(FileDirectories.HISTORY_IMG, historyDto.getImgFile());
+
+            History history = new History(historyDto.getTitle(),
+                    fileName, historyDto.getBigText(), tag);
+
             historyRepo.save(history);
 
             List<History> histories = userRepo.findAllById(user.getId());
@@ -72,41 +76,49 @@ public class HistoryService {
 
         } catch (ServerException ex) {
             response.setError(ex.getErrorMessage());
-            logger.warn("User ({}) -> (createHistory) error {}.", user.getId(), ex.getErrorMessage());
+            logger.warn("User ({}) -> (createHistory) error {}.", user != null ? user.getId() : "null", ex.getErrorMessage());
         } catch (Exception ex) {
-            logger.error("User ({}) -> (createHistory) error {}.", user.getId(), ex.getMessage());
+            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
+            logger.error("User ({}) -> (createHistory) error {}.", user != null ? user.getId() : "null", ex.getMessage());
         }
         return response;
     }
 
     /**
      * History update method
-     * @param user includes all fields of an authorized user
+     *
+     * @param user       includes all fields of an authorized user
      * @param historyDto contains the main parameters for update history
-     * @see #validateUpdateHistory(User, UpdateHistoryDtoReq)
      * @return dto response , with an error field
+     * @see #validateUpdateHistory(User, UpdateHistoryDtoReq)
      */
     public UpdateHistoryDtoResp updateHistory(User user, UpdateHistoryDtoReq historyDto) {
         var response = new UpdateHistoryDtoResp();
         try {
             validateUpdateHistory(user, historyDto);
+            Tag tag = tagRepo.findByName(historyDto.getTag());
+            if (tag == null)
+                throw new ServerException(AnswerErrorCode.HISTORY_TAG_ERROR);
+
             History history = userRepo.findHistoryById(user.getId(), historyDto.getId());
+            if (history == null)
+                throw new ServerException(AnswerErrorCode.HISTORY_ID_NOT_EXIST);
 
-            if (!Objects.requireNonNull(historyDto.getImgFile().getOriginalFilename()).isEmpty())
-                historyDto.setFileName(fileManager.createFile(
-                        FileDirectories.HISTORY_IMG, historyDto.getImgFile()));
-            else
-                historyDto.setFileName(history.getBackgroundImg());
+            String fileName;
+            if (historyDto.getImgFile() == null || Objects.requireNonNull(historyDto.getImgFile().getOriginalFilename()).isEmpty()) {
+                fileName = history.getBackgroundImg();
+            } else {
+                fileName = fileManager.createFile(FileDirectories.HISTORY_IMG, historyDto.getImgFile());
+            }
 
-            History historyUpdate = new History(historyDto);
-            historyUpdate.setTag(tagRepo.findByName(historyDto.getTag()));
+            History historyUpdate = new History(history.getId(), historyDto.getTitle(), fileName, historyDto.getBigText(), tag);
             historyRepo.save(historyUpdate);
-            response.setHistoryDto(new GetHistoryCardDtoResp(historyUpdate));
         } catch (ServerException e) {
             response.setError(e.getErrorMessage());
-            logger.warn("User ({}) -> (updateHistory) error {}.", user.getId(), e.getErrorMessage());
+            logger.warn("User ({}) -> (updateHistory) error {}.", user != null ? user.getId() : "null", e.getErrorMessage());
         } catch (Exception ex) {
-            logger.error("User ({}) -> (updateHistory) error {}.", user.getId(), ex.getMessage());
+            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
+            logger.error("User ({}) -> (updateHistory) error {}.", user != null ? user.getId() : "null", ex.getMessage());
         }
         return response;
 
@@ -114,9 +126,10 @@ public class HistoryService {
 
     /**
      * History delete method
+     *
      * @param request contains the main parameters for delete history
-     * @see #validateDeleteHistory(DeleteHistoryDtoReq)
      * @return dto response , with an error field
+     * @see #validateDeleteHistory(DeleteHistoryDtoReq)
      */
     public DeleteHistoryDtoResp deleteHistory(DeleteHistoryDtoReq request) {
         var response = new DeleteHistoryDtoResp();
@@ -133,19 +146,21 @@ public class HistoryService {
             historyRepo.delete(history);
         } catch (ServerException e) {
             response.setError(e.getErrorMessage());
-            logger.warn("User ({}) -> (deleteHistory) error {}.", request.getUser().getId(), e.getErrorMessage());
+            logger.warn("User ({}) -> (deleteHistory) error {}.", request.getUser() != null ? request.getUser().getId() : "null", e.getErrorMessage());
         } catch (Exception ex) {
-            logger.error("User ({}) -> (deleteHistory) error {}.", request.getUser().getId(), ex.getMessage());
+            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
+            logger.error("User ({}) -> (deleteHistory) error {}.", request.getUser() != null ? request.getUser().getId() : "null", ex.getMessage());
         }
         return response;
     }
 
     /**
      * Method returns all stories by tag
+     *
      * @param nameTag includes tag name
      * @param numPage includes number page
-     * @see #validateGetAllHistoryByTag(String, int)                
      * @return dto response , with an error field
+     * @see #validateGetAllHistoryByTag(String, int)
      */
     public GetAllHistoryResp getAllHistoryByTag(String nameTag, int numPage) {
         var response = new GetAllHistoryResp();
@@ -157,6 +172,7 @@ public class HistoryService {
                 listHistory = historyRepo.findAll();
             else
                 listHistory = historyRepo.findAllByTagName(nameTag);
+
             List<Integer> pageNumbers = new ArrayList<>();
             for (int i = 0; i < (listHistory.size() / 21) + 1; i++) {
                 pageNumbers.add(i);
@@ -175,6 +191,7 @@ public class HistoryService {
             response.setError(ex.getErrorMessage());
             logger.warn("(getAllHistoryByTag) error -> {}.", ex.getErrorMessage());
         } catch (Exception ex) {
+            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
             logger.error("(getAllHistoryByTag) error -> {}.", ex.getMessage());
         }
         return response;
@@ -182,10 +199,11 @@ public class HistoryService {
 
     /**
      * Method gets history by id
+     *
      * @param user includes all fields of an authorized user
-     * @param id -> history parameter
-     * @see #validateGetHistoryById(long)          
+     * @param id   -> history parameter
      * @return dto response , with an error field
+     * @see #validateGetHistoryById(long)
      */
     public GetHistoryLookPageDtoResp getHistoryById(User user, long id) {
         var response = new GetHistoryLookPageDtoResp();
@@ -206,18 +224,20 @@ public class HistoryService {
             }
         } catch (ServerException e) {
             response.setError(e.getErrorMessage());
-            logger.warn("User ({}) , History ({}) -> (getHistoryById) error {}.", user.getId(), id, e.getErrorMessage());
+            logger.warn("User ({}) , History ({}) -> (getHistoryById) error {}.", user != null ? user.getId() : "null", id, e.getErrorMessage());
         } catch (Exception ex) {
-            logger.error("User ({}), History ({}) -> (getHistoryById) error {}.", user.getId(), id, ex.getMessage());
+            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
+            logger.error("User ({}), History ({}) -> (getHistoryById) error {}.", user != null ? user.getId() : "null", id, ex.getMessage());
         }
         return response;
     }
 
     /**
      * Method returns a list of saved histories from an authorized user
+     *
      * @param user includes all fields of an authorized user
-     * @see #validateGetAllFavoriteByUser(User)
      * @return response containing a list of the user's favorite histories
+     * @see #validateGetAllFavoriteByUser(User)
      */
     public GetAllFavoriteHiResp getAllFavoriteByUser(User user) {
         GetAllFavoriteHiResp response = new GetAllFavoriteHiResp();
@@ -229,19 +249,21 @@ public class HistoryService {
             response.setListDto(listHistoryDto);
         } catch (ServerException e) {
             response.setError(e.getErrorMessage());
-            logger.warn("User ({}) -> (getAllFavoriteByUser) error {}.",user.getId(), e.getErrorMessage());
-        }catch (Exception ex){
-            logger.error("User ({}) -> (getAllFavoriteByUser) error {}.",user.getId(), ex.getMessage());
+            logger.warn("User ({}) -> (getAllFavoriteByUser) error {}.", user != null ? user.getId() : "null", e.getErrorMessage());
+        } catch (Exception ex) {
+            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
+            logger.error("User ({}) -> (getAllFavoriteByUser) error {}.", user != null ? user.getId() : "null", ex.getMessage());
         }
         return response;
     }
 
     /**
      * Method create comment for a story
-     * @param user includes all fields of an authorized user
+     *
+     * @param user    includes all fields of an authorized user
      * @param request contains the main parameters for create comment
-     * @see #validateAddComment(User, AddCommentDtoReq)
      * @return dto response , with an error field
+     * @see #validateAddComment(User, AddCommentDtoReq)
      */
     public AddCommentDtoResp addComment(User user, AddCommentDtoReq request) {
         var responseError = new AddCommentDtoResp();
@@ -260,18 +282,20 @@ public class HistoryService {
             userRepo.save(user);
         } catch (ServerException e) {
             responseError.setError(e.getErrorMessage());
-            logger.warn("User ({}), History ({}) -> (addComment) error {}.", user.getId(), request.getId(), e.getErrorMessage());
+            logger.warn("User ({}), History ({}) -> (addComment) error {}.", user != null ? user.getId() : "null", request.getId(), e.getErrorMessage());
         } catch (Exception ex) {
-            logger.error("User ({}), History ({})  -> (addComment) error {}.", user.getId(), request.getId(), ex.getMessage());
+            responseError.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
+            logger.error("User ({}), History ({})  -> (addComment) error {}.", user != null ? user.getId() : "null", request.getId(), ex.getMessage());
         }
         return responseError;
     }
 
     /**
      * Method returns a list of all histories from an authorized user
+     *
      * @param user includes all fields of an authorized user
-     * @see #validateUser(User)             
      * @return list of all stories for a given users
+     * @see #validateUser(User)
      */
     public GetProfileViewHiAllDtoResp getAllHistoryByUser(User user) {
         GetProfileViewHiAllDtoResp response = new GetProfileViewHiAllDtoResp();
@@ -284,43 +308,47 @@ public class HistoryService {
             return response;
         } catch (ServerException e) {
             response.setError(e.getErrorMessage());
-            logger.warn("User ({}) -> (getAllHistoryByUser) error {}.", user.getId(), e.getErrorMessage());
+            logger.warn("User ({}) -> (getAllHistoryByUser) error {}.", user != null ? user.getId() : "null", e.getErrorMessage());
         } catch (Exception ex) {
-            logger.error("User ({}) -> (getAllHistoryByUser) error {}.", user.getId(), ex.getMessage());
+            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
+            logger.error("User ({}) -> (getAllHistoryByUser) error {}.", user != null ? user.getId() : "null", ex.getMessage());
         }
         return response;
     }
 
     /**
      * Method returns product by id
+     *
      * @param user includes all fields of an authorized user
-     * @param id -> history parameter
-     * @see #validateGetHistory(User, long)           
+     * @param id   -> history parameter
      * @return historyDto, with an error field
+     * @see #validateGetHistory(User, long)
      */
-    public GetProfileViewHiDtoResp getHistory(User user, long id) {
+    public GetProfileViewHiDtoResp getHistoryEditById(User user, long id) {
         var response = new GetProfileViewHiDtoResp();
         try {
             validateGetHistory(user, id);
             List<History> list = userRepo.findAllById(user.getId());
-            History history = list.stream().filter(h -> h.getId() == id).toList().get(0);
-            if (history == null)
+            List<History> historyList = list.stream().filter(h -> h.getId() == id).toList();
+            if (historyList.size() == 0)
                 throw new ServerException(AnswerErrorCode.HISTORY_NOT_FOUND);
-            response.setHistoryDto(new GetHistoryEditDtoResp(history));
+            response.setHistoryDto(new GetHistoryEditDtoResp(historyList.get(0)));
         } catch (ServerException ex) {
             response.setError(ex.getErrorMessage());
-            logger.warn("User ({}), History ({}) -> (getHistory) error {}.", user.getId(), id, ex.getErrorMessage());
+            logger.warn("User ({}), History ({}) -> (getHistory) error {}.", user != null ? user.getId() : "null", id, ex.getErrorMessage());
         } catch (Exception ex) {
-            logger.error("User ({}), History ({}) -> (getHistory) error {}.", user.getId(), id, ex.getMessage());
+            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
+            logger.error("User ({}), History ({}) -> (getHistory) error {}.", user != null ? user.getId() : "null", id, ex.getMessage());
         }
         return response;
     }
 
     /**
      * The method implements adding history to the saved tab for this user
+     *
      * @param request contains the main parameters for add favorite history
-     * @see #validateAddFavoriteHistory(AddFavoriteHiReq)
      * @return dto response, with an error field
+     * @see #validateAddFavoriteHistory(AddFavoriteHiReq)
      */
     public AddFavoriteResp addFavoriteHistory(AddFavoriteHiReq request) {
         var response = new AddFavoriteResp();
@@ -345,18 +373,20 @@ public class HistoryService {
 
         } catch (ServerException e) {
             response.setError(e.getErrorMessage());
-            logger.warn("User ({}), History ({}) -> (addFavoriteHistory) error {}.", request.getUser().getId(), request.getHistoryId(), e.getErrorMessage());
+            logger.warn("User ({}), History ({}) -> (addFavoriteHistory) error {}.", request.getUser() != null ? request.getUser().getId() : "null", request.getHistoryId(), e.getErrorMessage());
         } catch (Exception ex) {
-            logger.error("User ({}), History ({}) -> (addFavoriteHistory) error {}.", request.getUser().getId(), request.getHistoryId(), ex.getMessage());
+            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
+            logger.error("User ({}), History ({}) -> (addFavoriteHistory) error {}.", request.getUser() != null ? request.getUser().getId() : "null", request.getHistoryId(), ex.getMessage());
         }
         return response;
     }
 
     /**
      * The method implements deleting history from the saved stories tab for this user
+     *
      * @param request contains the main parameters for delete favorite history
-     * @see #validateAddFavoriteHistory(AddFavoriteHiReq)                
      * @return dto response, with an error field
+     * @see #validateAddFavoriteHistory(AddFavoriteHiReq)
      */
     public DeleteFavoriteHiResp deleteFavoriteHistory(DeleteFavoriteHiDtoReq request) {
         var response = new DeleteFavoriteHiResp();
@@ -376,15 +406,17 @@ public class HistoryService {
 
         } catch (ServerException e) {
             response.setError(e.getErrorMessage());
-            logger.warn("User ({}), History ({}) -> (deleteFavoriteHistory) error {}.", request.getUser().getId(), request.getHistoryId(), e.getErrorMessage());
+            logger.warn("User ({}), History ({}) -> (deleteFavoriteHistory) error {}.", request.getUser() != null ? request.getUser().getId() : "null", request.getHistoryId(), e.getErrorMessage());
         } catch (Exception ex) {
-            logger.error("User ({}), History ({}) -> (deleteFavoriteHistory) error {}.", request.getUser().getId(), request.getHistoryId(), ex.getMessage());
+            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
+            logger.error("User ({}), History ({}) -> (deleteFavoriteHistory) error {}.", request.getUser() != null ? request.getUser().getId() : "null", request.getHistoryId(), ex.getMessage());
         }
         return response;
     }
 
     /**
      * The method returns a list of all tags
+     *
      * @return list tags
      */
     public List<Tag> getAllTag() {
@@ -393,7 +425,7 @@ public class HistoryService {
 
 
     private void validateGetHistoryById(long id) throws ServerException {
-        if (id == 0) {
+        if (id <= 0) {
             throw new ServerException(AnswerErrorCode.HISTORY_ID_NOT_EXIST);
         }
     }
@@ -417,20 +449,20 @@ public class HistoryService {
         if (nameTag == null || nameTag.isEmpty()) {
             throw new ServerException(AnswerErrorCode.HISTORY_TAG_ERROR);
         }
-        if (numPage < -1) {
+        if (numPage < 0) {
             throw new ServerException(AnswerErrorCode.HISTORY_PAGE_ERROR);
         }
     }
 
     private void validateCreateHistory(User user, CreateHistoryDtoReq dto) throws ServerException {
-        if (user == null) {
-            throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
-        }
-        if (user.getUsername().isEmpty()) {
+        if (user == null || user.getUsername() == null) {
             throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
         }
         if (dto.getTitle() == null || dto.getTitle().length() < 3) {
             throw new ServerException(AnswerErrorCode.HISTORY_TITLE_ERROR);
+        }
+        if (historyRepo.findAllByTitle(dto.getTitle()) != null) {
+            throw new ServerException(AnswerErrorCode.HISTORY_TITLE_ALREADY_EXIST);
         }
         if (dto.getBigText() == null || dto.getBigText().length() < 20) {
             throw new ServerException(AnswerErrorCode.HISTORY_SHORT_TEXT);
@@ -444,8 +476,21 @@ public class HistoryService {
     }
 
     private void validateUpdateHistory(User user, UpdateHistoryDtoReq dto) throws ServerException {
-        if (user == null) {
+        if (dto == null) {
+            throw new ServerException(AnswerErrorCode.REQUEST_IS_NULL);
+        }
+        if (dto.getId() < 1) {
+            throw new ServerException(AnswerErrorCode.HISTORY_ID_NOT_EXIST);
+        }
+        if (user == null || user.getUsername() == null) {
             throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
+        }
+
+        List<History> historyByTitle = historyRepo.findAllByTitle(dto.getTitle());
+        History historyUpdate = historyRepo.findById(dto.getId()).orElseThrow();
+
+        if (historyByTitle != null && !dto.getTitle().equals(historyUpdate.getTitle())) {
+            throw new ServerException(AnswerErrorCode.HISTORY_TITLE_ALREADY_EXIST);
         }
         if (dto.getTag() == null || dto.getTag().isEmpty()) {
             throw new ServerException(AnswerErrorCode.HISTORY_TAG_ERROR);
@@ -459,7 +504,7 @@ public class HistoryService {
     }
 
     private void validateDeleteHistory(DeleteHistoryDtoReq request) throws ServerException {
-        if (request.getId() == 0) {
+        if (request.getId() < 0) {
             throw new ServerException(AnswerErrorCode.HISTORY_ID_NOT_EXIST);
         }
         if (request.getUser() == null) {
@@ -477,7 +522,7 @@ public class HistoryService {
         if (user == null) {
             throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
         }
-        if (id == 0) {
+        if (id <= 0) {
             throw new ServerException(AnswerErrorCode.HISTORY_USER_NOT_FOUND);
         }
     }
@@ -503,6 +548,9 @@ public class HistoryService {
     private void validateGetAllFavoriteByUser(User user) throws ServerException {
         if (user == null) {
             throw new ServerException(AnswerErrorCode.FAVORITE_USER_ERROR);
+        }
+        if (user.getId() <= 0) {
+            throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
         }
     }
 }

@@ -1,8 +1,8 @@
 package com.diploma.black_fox_ex.io;
 
 public enum FileDirectories {
-    USER_IMG("src/main/resources/img/user-img/"),
-    HISTORY_IMG("src/main/resources/img/history-img/");
+    USER_IMG("/Users/stas_ex/IdeaProjects/Diploma_Spring/src/main/resources/img/user-img/"),
+    HISTORY_IMG("/Users/stas_ex/IdeaProjects/Diploma_Spring/src/main/resources/img/history-img/");
 
     private String path;
     FileDirectories(String msg) {

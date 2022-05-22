@@ -16,10 +16,10 @@ public class History {
     private long id;
     private String title;
 
-    @Column(length=300)
+    @Column(length = 300)
     private String backgroundImg;
 
-    @Column(length=15000)
+    @Column(length = 15000)
     private String bigText;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "histories")
@@ -29,7 +29,7 @@ public class History {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "comment_id")
     @ToString.Exclude
-    private List<Comment> comments=new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "favoriteStories")
     @ToString.Exclude
@@ -38,7 +38,8 @@ public class History {
     @ManyToOne(fetch = FetchType.EAGER)
     private Tag tag;
 
-    public History() {}
+    public History() {
+    }
 
     public History(String title, String backgroundImg, String bigText) {
         this.title = title;
@@ -46,18 +47,22 @@ public class History {
         this.bigText = bigText;
     }
 
-    public History(UpdateHistoryDtoReq historyDto) {
-        this.id = historyDto.getId();
-        this.title = historyDto.getTitle();
-        this.backgroundImg = historyDto.getFileName();
-        this.bigText = historyDto.getBigText();
+    public History(String title, String backgroundImg, String bigText, Tag tag) {
+        this(title, backgroundImg, bigText);
+        this.tag = tag;
     }
 
-    public void addComments(Comment comments){
+    public History(long id, String title, String backgroundImg, String bigText, Tag tag) {
+        this(title, backgroundImg, bigText, tag);
+        this.id = id;
+    }
+
+    public void addComments(Comment comments) {
         this.comments.add(comments);
     }
-    public long getCountLike(){
-        return  getUserLike().size();
+
+    public long getCountLike() {
+        return getUserLike().size();
     }
 
 

@@ -79,7 +79,7 @@
 
 </head>
 <body>
-<form th:action="'/profile-history/' + ${id != null ? id + '/' : ''} + ${title.toLowerCase()}" method="post" enctype="multipart/form-data">
+<form th:action="'/history/' + ${id != null ? id + '/' : ''} + ${title.toLowerCase()}" method="post" enctype="multipart/form-data">
     <div class="wrapper">
         <h2 th:text="${title} + ' history'"></h2>
         <textarea spellcheck="false" placeholder="Start writing history now!" name="bigText" required th:text="${historyDto.getBigText()}"></textarea>

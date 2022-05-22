@@ -35,6 +35,7 @@ public enum AnswerErrorCode {
     HISTORY_IMG_ERROR("Failed to upload picture!"),
     HISTORY_TAG_ERROR("Error you did not specify a tag!"),
     HISTORY_TITLE_ERROR("The title of the story is too short!"),
+    HISTORY_TITLE_ALREADY_EXIST("This title already exists"),
     HISTORY_USER_NOT_FOUND("User does not exist!"),
     HISTORY_NOT_FOUND("History does not exist!"),
     HISTORY_PAGE_ERROR("There is no such page"),
@@ -45,7 +46,10 @@ public enum AnswerErrorCode {
 
     FAVORITE_USER_ERROR("User does not exist"),
     FAVORITE_HISTORY_ID_ERROR("History id error"),
-    ERROR_ANSWER_BY_USER("Sorry, you have no support answers");
+    ERROR_ANSWER_BY_USER("Sorry, you have no support answers"),
+
+    REQUEST_IS_NULL("Error! Server request is null"),
+    EXCEPTION_ERROR("Big error");
 
 
     private String msg;

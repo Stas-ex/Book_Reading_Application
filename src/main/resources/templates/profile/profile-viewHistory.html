@@ -72,7 +72,7 @@
                 <p class="card-text" th:utext="${history.getSmallText()}"></p>
             </div>
             <div class="card-footer">
-                <a th:href="'/profile-history/' + ${history.getId()} + '/editPage'"
+                <a th:href="'/history/' + ${history.getId()} + '/editPage'"
                    class="card-link btn btn-outline-warning ml-0" style="width: 40%">Edit</a>
                 <a th:href="'/history/'+${history.getId()}+'/look'" class="card-link btn btn-outline-info ml-1"
                    style="width: 20%">Look</a>

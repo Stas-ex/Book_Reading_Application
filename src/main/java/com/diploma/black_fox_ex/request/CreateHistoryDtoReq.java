@@ -9,13 +9,11 @@ public class CreateHistoryDtoReq {
     private MultipartFile imgFile;
     private String bigText;
     private String tag;
-    private String fileName;
 
-    public CreateHistoryDtoReq(String title, MultipartFile imgFile, String bigText, String tag, String fileName) {
+    public CreateHistoryDtoReq(String title, MultipartFile imgFile, String bigText, String tag) {
         this.title = title;
         this.imgFile = imgFile;
         this.bigText = bigText;
         this.tag = tag;
-        this.fileName = fileName;
     }
 }

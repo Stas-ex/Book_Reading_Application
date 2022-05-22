@@ -5,5 +5,4 @@ import lombok.Data;
 @Data
 public class UpdateHistoryDtoResp {
     private String error;
-    private GetHistoryCardDtoResp historyDto;
 }

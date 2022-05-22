@@ -11,4 +11,6 @@ public interface HistoryRepo extends JpaRepository<History, Long> {
 
     @Query("SELECT h FROM History h JOIN h.tag t WHERE t.name = :name  GROUP BY h.id")
     List<History> findAllByTagName(@Param("name")String name);
+
+    List<History> findAllByTitle(String title);
 }

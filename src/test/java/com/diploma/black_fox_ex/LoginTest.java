@@ -41,13 +41,13 @@ public class LoginTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("http://localhost/login"));
     }
-    @Test
-    public void correctLoginTest() throws Exception{
-        this.mockMvc.perform(formLogin().user("stas").password("Ghj100cnfc750"))
-                .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
-    }
+//    @Test
+//    public void correctLoginTest() throws Exception{
+//        this.mockMvc.perform(formLogin().user("stas").password("Ghj100cnfc750"))
+//                .andDo(print())
+//                .andExpect(status().is3xxRedirection())
+//                .andExpect(redirectedUrl("/"));
+//    }
 
     @Test
     public void badCredentials() throws Exception {

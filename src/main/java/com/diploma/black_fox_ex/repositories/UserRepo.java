@@ -13,6 +13,8 @@ import java.util.List;
 
 public interface UserRepo extends JpaRepository<User, Long> {
     User findByUsername(String name);
+    @Query("select u from User u where u.id = :id")
+    User findById(long id);
 
     @Query("select h from User u join u.favoriteStories h where u.id = :id")
     List<History> findFavoriteHistoryById(@Param("id")long id);

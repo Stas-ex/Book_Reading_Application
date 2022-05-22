@@ -38,7 +38,7 @@ public class HelpController {
             model.addAttribute("error", response.getErrors());
 
         model.addAttribute("answers", response.getAnswers());
-        model.addAttribute("user", userService.getUserMenu(user));
+        model.addAttribute("userMenu", userService.getUserMenu(user));
         return "help";
     }
 
