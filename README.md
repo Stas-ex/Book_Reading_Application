@@ -1,91 +1,61 @@
-<h1 align="center">Fanfiction site</h1>
-
-<p align="center">
-<img src="src/main/resources/img/readme-img/Picture 2.png" width="45%" >
-<img src="src/main/resources/img/readme-img/Picture 1.png" width="45%">
-</p>
-
-
-<h2 align="center"><a  href="https://github.com/Stas-ex/Diplom-web">Git Diplom-web</a></h2>
+<h1 align="center"><a  href="https://github.com/Stas-ex/Diplom-web">Fanfiction site </a> </h1>
 
 ## Description
+This application is intended for publishing small works.</br>
+Users who first visited the site have limited access.
+They can view the <b>Main</b> page.<br><br>
+The page navigator is a pop-up menu located in the left corner of the browser. To open in full width, you must click on the icon located in the upper left corner.
 
-**NOW WITH DRAG AND DROP**
-
+**MAIN PAGE**
 <p align="center">
-<img src="https://media.giphy.com/media/7OWdOQupgCClrZb19P/giphy.gif" width="90%"></p>
+<img src="src/main/resources/img/readme-img/MainPage.png" width="50%"/>
+<img src="src/main/resources/img/readme-img/Menu.png" width="41%"/>
+</p>
 
-Solitaire implemented by scratch on vue.js. It contains 3 types of solitaire namely spider(which was made famous by microsoft back when I was a kid) ,spider 4 suit and klondike. I've learned web development myself without any course or coaching so don't expect too much from the source code xD.
+Below are the pages of viewing works:
 
-**This project is inspired by [AadumKhor](https://github.com/AadumKhor) Go check out his flutter implementation of the same [Here](https://github.com/AadumKhor/Solitaire_Flutter)** .
+**WORK VIEW PAGE**
+<p align="center">
+<img src="src/main/resources/img/readme-img/histories.png" width="45%"/>
+<img src="src/main/resources/img/readme-img/history-look.png" width="45%"/>
+</p>
 
-## How to play
+The left page is a page for viewing all works, a feature is filtering works by tags, as well as dividing the viewing of works into pages. (21 works are placed on one page)
+<br><br>
+The right picture shows the page for viewing works.
+Of the features, you can add to favorites and description comments, the possibility of consideration only by authorized users.
+## How to write a work?
+- **Register** an account.
+- **Sign in**
+- On the user page, click on the **"Create Story"** button
+- **Create** it in the constructor
+- And **publish**
+- As easy as pie!
+<p align="center">
 
-### Drag and Drop [__Chrome,Opera__]:-
-
-- **Drag** the card or the card pile you want to move.
-- **Drop** the dragged card pile on the target and if the move is legal card will move
-- Note:- Drag and Drop doesn't work for properly for **firefox** due to their lack of support to html Drag and drop API - https://bugzilla.mozilla.org/show_bug.cgi?id=505521 .
-
-### Click edition [__Mobile,Firefox,Chrome,Safari,Opera__]-
-
-- **Click** on the card or card pile you want to move .The pile turns to **blue**.
-- **Click** on the
-  destination card and if the move is legal the cards will
-  stack below the target.
+![](src/main/resources/img/readme-img/CreateHistry.png)
+</p>
 
 ## About the project.
+**BACKEND**<br>
+The server part of the application is written in Java. During the development, the universal Spring boot framework was used. The mechanisms for building authentication and authorization systems, as well as other security features, are represented by Spring Security.
+MySQL was used as a DBMS.
 
-### Drag and Drop
+**FRONTEND**<br>
+The following languages were used to develop the visual part of the application:
+- **Html** - a standardized document markup language for viewing web pages in a browser.
+- **CSS** - a formal language for describing the appearance of a document written using a markup language.
+- **JavaScript** is a multi-paradigm programming language.
 
-- Drag and drop is implemented with native html5 drag and drop api with @drag, @dragend, @dragenter eventlisteners on the Card.vue component.
-- Libraries like Vue.draggable were not used as i had to write most of the drag and drop logic according to the solitaire game type and I also had to **MOVE** the stack of cards.
-- Ghost image in drag is removed instead the **whole stack** of card moves with cursor change.
-
-### CSS
-
-- Each and every card is 100% css except the SVG of the suit in the center of the card,which is made by illustrator tool.
-
-  <p align="center"><img  src="./readme_assets/4.png" width="30%"></p>
-
-### 3 mode menu
-
-Choose from 3 variants of solitaire form the main menu
-
-<p align="center"><img  src="./readme_assets/menu.png" width="70%"></p>
-
-# Variants
-
-## **Klondike**
-
-<p align="center">
-<img  src="./readme_assets/3.png" width="80%">
-</p>
-<!-- <img src="./readme_assets/3.png" width="50%"> -->
-
-## **Spider 4 Suit**
-
-<p align="center">
-<img  src="./readme_assets/5.png" width="80%">
-</p>
-
-## **Spider 1 Suit**
-
-<p align="center">
-<img  src="./readme_assets/1.png" width="80%">
-</p>
-
+The main part of the program was developed using the **Bootstrap** framework.
 ## Project setup
-
+- Create database _spring_bd_
 ```
-npm install
-npm run serve
+CREATE SCHEMA `spring_bd`
 ```
+- Database initialization : Run Sql code written in file [V1__Init_DB.sql](src/main/resources/db/migration/V1__Init_DB.sql)
+- Start project
+- Follow the link in the browser: http://localhost:8080/
 
-## Future scope
+![](src/main/resources/img/readme-img/LinkMainPage.png)
 
-- Add winning animation.
-
-## Support on Beerpay
-
-Hey dude! Help me out for a couple of :beers:!
