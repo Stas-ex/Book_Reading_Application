@@ -35,7 +35,7 @@ public class ProfileHistoriesController {
         if (historyDtoResp.getError() != null)
             model.addAttribute("errorView", historyDtoResp.getError());
         else
-            model.addAttribute("histories", historyDtoResp.getHistoryDto());
+            model.addAttribute("histories", historyDtoResp.getHistoryListDto());
         return "/profile/profile-viewHistory";
     }
 

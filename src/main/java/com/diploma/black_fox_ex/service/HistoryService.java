@@ -304,7 +304,7 @@ public class HistoryService {
             List<GetHistoryCardDtoResp> listDto = new ArrayList<>();
             List<History> listHistory = userRepo.findAllById(user.getId());
             listHistory.forEach(history -> listDto.add(new GetHistoryCardDtoResp(history)));
-            response.setHistoryDto(listDto);
+            response.setHistoryListDto(listDto);
             return response;
         } catch (ServerException e) {
             response.setError(e.getErrorMessage());
@@ -434,7 +434,7 @@ public class HistoryService {
         if (user == null) {
             throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
         }
-        if (request.getId() == 0) {
+        if (request.getId() <= 0) {
             throw new ServerException(AnswerErrorCode.HISTORY_ID_NOT_EXIST);
         }
         if (request.getColor() == null || request.getColor().isEmpty()) {
@@ -461,7 +461,7 @@ public class HistoryService {
         if (dto.getTitle() == null || dto.getTitle().length() < 3) {
             throw new ServerException(AnswerErrorCode.HISTORY_TITLE_ERROR);
         }
-        if (historyRepo.findAllByTitle(dto.getTitle()) != null) {
+        if (!historyRepo.findAllByTitle(dto.getTitle()).isEmpty()) {
             throw new ServerException(AnswerErrorCode.HISTORY_TITLE_ALREADY_EXIST);
         }
         if (dto.getBigText() == null || dto.getBigText().length() < 20) {
@@ -486,17 +486,21 @@ public class HistoryService {
             throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
         }
 
+        if (dto.getImgFile() == null) {
+            throw new ServerException(AnswerErrorCode.HISTORY_IMG_ERROR);
+        }
+
         List<History> historyByTitle = historyRepo.findAllByTitle(dto.getTitle());
         History historyUpdate = historyRepo.findById(dto.getId()).orElseThrow();
 
-        if (historyByTitle != null && !dto.getTitle().equals(historyUpdate.getTitle())) {
+        if (!historyByTitle.isEmpty() && historyUpdate.getId() != historyByTitle.get(0).getId()) {
             throw new ServerException(AnswerErrorCode.HISTORY_TITLE_ALREADY_EXIST);
-        }
-        if (dto.getTag() == null || dto.getTag().isEmpty()) {
-            throw new ServerException(AnswerErrorCode.HISTORY_TAG_ERROR);
         }
         if (dto.getTitle() == null || dto.getTitle().length() < 3) {
             throw new ServerException(AnswerErrorCode.HISTORY_TITLE_ERROR);
+        }
+        if (dto.getTag() == null || dto.getTag().isEmpty()) {
+            throw new ServerException(AnswerErrorCode.HISTORY_TAG_ERROR);
         }
         if (dto.getBigText() == null || dto.getBigText().length() < 20) {
             throw new ServerException(AnswerErrorCode.HISTORY_SHORT_TEXT);
@@ -504,7 +508,7 @@ public class HistoryService {
     }
 
     private void validateDeleteHistory(DeleteHistoryDtoReq request) throws ServerException {
-        if (request.getId() < 0) {
+        if (request.getId() <= 0) {
             throw new ServerException(AnswerErrorCode.HISTORY_ID_NOT_EXIST);
         }
         if (request.getUser() == null) {
@@ -513,7 +517,7 @@ public class HistoryService {
     }
 
     private void validateUser(User user) throws ServerException {
-        if (user == null) {
+        if (user == null || user.getId() <= 0) {
             throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
         }
     }
@@ -528,7 +532,7 @@ public class HistoryService {
     }
 
     private void validateAddFavoriteHistory(AddFavoriteHiReq request) throws ServerException {
-        if (request.getHistoryId() == 0) {
+        if (request.getHistoryId() <= 0) {
             throw new ServerException(AnswerErrorCode.FAVORITE_HISTORY_ID_ERROR);
         }
         if (request.getUser() == null) {
@@ -537,7 +541,7 @@ public class HistoryService {
     }
 
     private void validateDeleteFavoriteHistory(DeleteFavoriteHiDtoReq request) throws ServerException {
-        if (request.getHistoryId() == 0) {
+        if (request.getHistoryId() <= 0) {
             throw new ServerException(AnswerErrorCode.FAVORITE_HISTORY_ID_ERROR);
         }
         if (request.getUser() == null) {

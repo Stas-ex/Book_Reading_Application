@@ -6,5 +6,5 @@ import java.util.List;
 @Data
 public class GetProfileViewHiAllDtoResp {
     private String error;
-    private List<GetHistoryCardDtoResp> historyDto;
+    private List<GetHistoryCardDtoResp> historyListDto;
 }
