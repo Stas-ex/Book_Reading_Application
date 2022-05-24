@@ -22,6 +22,16 @@ public class SupportAnswer {
     @ToString.Exclude
     private User user;
 
+    public SupportAnswer(long id) {
+        this.id = id;
+    }
+
+    public SupportAnswer(long id, String answer, User user) {
+        this.id = id;
+        this.answer = answer;
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

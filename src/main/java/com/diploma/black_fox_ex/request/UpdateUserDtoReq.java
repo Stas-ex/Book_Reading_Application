@@ -22,7 +22,8 @@ public class UpdateUserDtoReq {
         private Set<Role> roles;
 
 
-    public UpdateUserDtoReq(String username, String email, String password, String age, String info, MultipartFile img, String sex, String telegramUsername, Set<Role> roles) {
+    public UpdateUserDtoReq(String username, String email, String password, String age, String info,
+                            MultipartFile img, String sex, String telegramUsername) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -30,7 +31,6 @@ public class UpdateUserDtoReq {
         this.info = info;
         this.imgFile = img;
         this.active = true;
-        this.roles = roles;
         this.telegramUsername = telegramUsername;
         this.sex = sex;
     }

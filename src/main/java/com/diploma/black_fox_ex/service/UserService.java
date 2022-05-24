@@ -121,9 +121,9 @@ public class UserService implements UserDetailsService {
             userRepo.save(userOld);
         } catch (ServerException ex) {
             response.setErrors(ex.getErrorMessage());
-            logger.warn("User ({}) -> (updateUser) error -> {}.",userOld.getId(), ex.getErrorMessage());
+            logger.warn("User ({}) -> (updateUser) error -> {}.", userOld != null ? userOld.getId() : "null", ex.getErrorMessage());
         }catch (Exception ex){
-            logger.error("User ({}) -> (updateUser) error -> {}.", userOld.getId(), ex.getMessage());
+            logger.error("User ({}) -> (updateUser) error -> {}.", userOld != null ? userOld.getId() : "null", ex.getMessage());
         }
         return response;
     }
@@ -142,9 +142,9 @@ public class UserService implements UserDetailsService {
             userRepo.delete(user);
         } catch (ServerException ex) {
             deleteResp.setError(ex.getErrorMessage());
-            logger.warn("User ({}) -> (deleteUser) error -> {}.",user.getId(), ex.getErrorMessage());
+            logger.warn("User ({}) -> (deleteUser) error -> {}.",user != null ? user.getId() : "null", ex.getErrorMessage());
         }catch (Exception ex){
-            logger.error("User ({}) -> (deleteUser) error -> {}.",user.getId(), ex.getMessage());
+            logger.error("User ({}) -> (deleteUser) error -> {}.",user != null ? user.getId() : "null", ex.getMessage());
         }
         return deleteResp;
     }
@@ -162,10 +162,10 @@ public class UserService implements UserDetailsService {
             List<SupportAnswer> listSupp = userRepo.findSupportAnswerById(user.getId());
             response.setAnswers(listSupp);
         } catch (ServerException e) {
-            response.setErrors(e.getMessage());
-            logger.warn("User ({}) -> (getAllAnswersSupportByUserDto) error {}.",user.getId(), e.getErrorMessage());
+            response.setErrors(e.getErrorMessage());
+            logger.warn("User ({}) -> (getAllAnswersSupportByUserDto) error {}.",user != null ? user.getId() : "null", e.getErrorMessage());
         }catch (Exception ex){
-            logger.error("User ({}) -> (getAllAnswersSupportByUserDto) error {}.",user.getId(), ex.getMessage());
+            logger.error("User ({}) -> (getAllAnswersSupportByUserDto) error {}.",user != null ? user.getId() : "null", ex.getMessage());
         }
         return response;
     }
@@ -185,10 +185,10 @@ public class UserService implements UserDetailsService {
             userRepo.save(user);
         } catch (ServerException e) {
             response.setErrors(e.getErrorMessage());
-            logger.warn("User ({}) -> (deleteAnswerByUser) error {}.",request.getUser().getId(), e.getErrorMessage());
+            logger.warn("User ({}) -> (deleteAnswerByUser) error {}.",request.getUser() != null ? request.getUser().getId() : "null", e.getErrorMessage());
         }
         catch (Exception ex){
-            logger.error("User ({}) -> (deleteAnswerByUser) error {}.",request.getUser().getId(), ex.getMessage());
+            logger.error("User ({}) -> (deleteAnswerByUser) error {}.",request.getUser() != null ? request.getUser().getId() : "null", ex.getMessage());
         }
         return response;
     }
@@ -270,7 +270,7 @@ public class UserService implements UserDetailsService {
     }
 
     private void validateDeleteAnswerSupport(DeleteHelpDtoReq request) throws ServerException {
-        if (request.getId() == 0) {
+        if (request.getId() <= 0) {
             throw new ServerException(AnswerErrorCode.ERROR_ANSWER_BY_USER);
         }
         if (request.getUser() == null) {
