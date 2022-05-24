@@ -69,4 +69,5 @@ CREATE SCHEMA `spring_bd`
  HISTORY_IMG("/.../Diploma_Spring/src/main/resources/img/history-img/");
 ```
 ##You can contact me:
+
 <a href ="https://t.me/StaseEx"><img src="https://github.com/Mybono/Mybono/raw/main/assets/telegran%2035%20px.png"/></a>

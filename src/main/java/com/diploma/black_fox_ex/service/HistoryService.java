@@ -101,11 +101,9 @@ public class HistoryService {
                 throw new ServerException(AnswerErrorCode.HISTORY_TAG_ERROR);
 
             History history = userRepo.findHistoryById(user.getId(), historyDto.getId());
-            if (history == null)
-                throw new ServerException(AnswerErrorCode.HISTORY_ID_NOT_EXIST);
 
             String fileName;
-            if (historyDto.getImgFile() == null || Objects.requireNonNull(historyDto.getImgFile().getOriginalFilename()).isEmpty()) {
+            if (Objects.requireNonNull(historyDto.getImgFile().getOriginalFilename()).isEmpty()) {
                 fileName = history.getBackgroundImg();
             } else {
                 fileName = fileManager.createFile(FileDirectories.HISTORY_IMG, historyDto.getImgFile());
@@ -491,9 +489,12 @@ public class HistoryService {
         }
 
         List<History> historyByTitle = historyRepo.findAllByTitle(dto.getTitle());
-        History historyUpdate = historyRepo.findById(dto.getId()).orElseThrow();
+        Optional<History> historyUpdate = historyRepo.findById(dto.getId());
 
-        if (!historyByTitle.isEmpty() && historyUpdate.getId() != historyByTitle.get(0).getId()) {
+        if (historyUpdate.isEmpty())
+            throw new ServerException(AnswerErrorCode.HISTORY_ID_NOT_EXIST);
+
+        if (!historyByTitle.isEmpty() && historyUpdate.get().getId() != historyByTitle.get(0).getId()) {
             throw new ServerException(AnswerErrorCode.HISTORY_TITLE_ALREADY_EXIST);
         }
         if (dto.getTitle() == null || dto.getTitle().length() < 3) {

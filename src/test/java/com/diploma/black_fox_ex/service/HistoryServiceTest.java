@@ -146,13 +146,15 @@ class HistoryServiceTest {
 
         //Create update
         var dtoTrue = new UpdateHistoryDtoReq(1, "Best Title Update", "text text text text text text", multipartFile, user.getUsername(), "Fantasy");
+        var dtoTrue2 = new UpdateHistoryDtoReq(1, "Best Title Update", "text text text text text text", multipartFile, user.getUsername(), "Fantasy");
         var dtoIdErr = new UpdateHistoryDtoReq(0, "Best Title Update", "text text text text text text", multipartFile, user.getUsername(), "Fantasy");
         var dtoImgErr = new UpdateHistoryDtoReq(1, "Best Title Update", "text text text text text text", null, user.getUsername(), "Fantasy");
         var dtoTagNull = new UpdateHistoryDtoReq(1, "Best Title Update", "text text text text text text", multipartFile, user.getUsername(), null);
         var dtoTagErr = new UpdateHistoryDtoReq(1, "Best Title Update", "text text text text text text", multipartFile, user.getUsername(), "tag");
         var dtoTitleShortErr = new UpdateHistoryDtoReq(1, "11", "text text text text text text", multipartFile, user.getUsername(), "Fantasy");
         var dtoTitleExistErr = new UpdateHistoryDtoReq(1, "Title repeat", "text text text text text text", multipartFile, user.getUsername(), "Fantasy");
-        var dtoBigTextErr = new UpdateHistoryDtoReq(1, "Best Title Update", "small", multipartFile, user.getUsername(), "Fantasy");
+        var dtoBigTextErr = new UpdateHistoryDtoReq(1, "Best Title Update jksfd", "small", multipartFile, user.getUsername(), "Fantasy");
+        var dtoHistoryErr = new UpdateHistoryDtoReq(2, "Best Title Update", "small", multipartFile, user.getUsername(), "Fantasy");
 
 
         var respNullReq = historyService.updateHistory(user, null);
@@ -164,7 +166,10 @@ class HistoryServiceTest {
         var respTagNull = historyService.updateHistory(user, dtoTagNull);
         var respImgErr = historyService.updateHistory(user, dtoImgErr);
         var respTagErr = historyService.updateHistory(user, dtoTagErr);
+        var respHistoryErr = historyService.updateHistory(user, dtoHistoryErr);
+
         var respTrue = historyService.updateHistory(user, dtoTrue);
+        var respTrue2 = historyService.updateHistory(user, dtoTrue2);
 
         assertEquals(respNullReq.getError(), AnswerErrorCode.REQUEST_IS_NULL.getMsg());
         assertEquals(respIdErr.getError(), AnswerErrorCode.HISTORY_ID_NOT_EXIST.getMsg());
@@ -175,9 +180,11 @@ class HistoryServiceTest {
         assertEquals(respTagNull.getError(), AnswerErrorCode.HISTORY_TAG_ERROR.getMsg());
         assertEquals(respTagErr.getError(), AnswerErrorCode.HISTORY_TAG_ERROR.getMsg());
         assertEquals(respImgErr.getError(), AnswerErrorCode.HISTORY_IMG_ERROR.getMsg());
+        assertEquals(respHistoryErr.getError(), AnswerErrorCode.HISTORY_ID_NOT_EXIST.getMsg());
         assertNull(respTrue.getError());
+        assertNull(respTrue2.getError());
 
-        Mockito.verify(historyRepo, Mockito.times(1)).save(any());
+        Mockito.verify(historyRepo, Mockito.times(2)).save(any());
     }
 
     @Test

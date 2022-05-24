@@ -40,7 +40,11 @@ class UserServiceTest {
 
     @Test
     void loadUserByUsername() {
-
+        User user = new User();
+        user.setUsername("Stanislav");
+        Mockito.doReturn(user).when(userRepo).findByUsername("Stanislav");
+        var userDetails = userService.loadUserByUsername("Stanislav");
+        assertEquals(userDetails.getUsername(),user.getUsername());
     }
 
     @Test
