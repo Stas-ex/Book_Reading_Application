@@ -23,34 +23,34 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "f_username")
+    @Column(name = "f_username", length = 30)
     private String username;
 
-    @Column(name = "f_email")
+    @Column(name = "f_email", length = 50)
     private String email;
 
-    @Column(name = "f_password")
+    @Column(name = "f_password", length = 30)
     private String password;
 
-    @Column(name = "f_age")
+    @Column(name = "f_age", length = 30)
     private Byte age;
 
-    @Column(name = "f_sex")
+    @Column(name = "f_sex", length = 10)
     private String sex;
 
     @Column(name = "f_info", length = 1000)
     private String info;
 
-    @Column(name = "f_filename")
+    @Column(name = "f_filename", length = 30)
     private String imgFile;
 
     @Column(name = "f_active")
-    private boolean active;
+    private Boolean active;
 
-    @Column(name = "f_telegram")
+    @Column(name = "f_telegram", length = 50)
     private String telegramUsername;
 
-    @Column(name = "f_role")
+    @Column(name = "f_role", length = 10)
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -114,7 +114,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isActive();
+        return active;
     }
 
     @Override

@@ -8,12 +8,14 @@ create table comment
     comment_id  bigint,
     primary key (id)
 );
+
 create table hibernate_sequence
 (
     next_val bigint
 );
-insert into hibernate_sequence
-values (1);
+
+insert into hibernate_sequence values (1);
+
 create table history
 (
     id             bigint not null,
@@ -23,6 +25,7 @@ create table history
     tag_id         bigint,
     primary key (id)
 );
+
 create table support_answer
 (
     id      bigint not null,
@@ -30,41 +33,48 @@ create table support_answer
     user_id bigint,
     primary key (id)
 );
+
 create table tag
 (
     id   bigint not null,
     name varchar(255),
     primary key (id)
 );
+
 create table user
 (
-    id                bigint  not null,
-    active            bit     not null,
-    age               integer not null,
-    email             varchar(255),
-    img_file          varchar(300),
-    info              varchar(1000),
-    password          varchar(255),
-    sex               varchar(255),
-    telegram_username varchar(255),
-    username          varchar(255),
+    id         bigint not null,
+    f_active   bit,
+    f_age      tinyint,
+    f_email    varchar(50),
+    f_filename varchar(30),
+    f_info     varchar(1000),
+    f_password varchar(30),
+    f_role     varchar(10),
+    f_sex      varchar(10),
+    f_telegram varchar(50),
+    f_username varchar(30),
     primary key (id)
 );
+
 create table user_favorite
 (
     users_id    bigint not null,
     favorite_id bigint not null
 );
+
 create table user_history
 (
     user_id    bigint not null,
     history_id bigint not null
 );
+
 create table user_role
 (
     user_id bigint not null,
     roles   varchar(255)
 );
+
 create table user_support_answer
 (
     user_id           bigint not null,
@@ -79,5 +89,5 @@ values (1, 'Detective'),
        (4, 'Novel'),
        (5, 'Scientific'),
        (6, 'Humor');
-insert into hibernate_sequence values (7);
 
+insert into hibernate_sequence values (7);
