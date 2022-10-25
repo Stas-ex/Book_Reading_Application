@@ -1,6 +1,5 @@
 package com.diploma.black_fox_ex.model;
 
-import com.diploma.black_fox_ex.request.UpdateHistoryDtoReq;
 import lombok.*;
 
 import javax.persistence.*;

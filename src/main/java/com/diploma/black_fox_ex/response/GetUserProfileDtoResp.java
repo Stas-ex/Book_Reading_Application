@@ -9,7 +9,7 @@ public class GetUserProfileDtoResp {
     private String username;
     private String email;
     private String password;
-    private int age;
+    private Byte age;
     private String sex;
     private String info;
     private String imgFile;

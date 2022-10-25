@@ -1,8 +1,8 @@
 package com.diploma.black_fox_ex.controllers.histories;
 
 import com.diploma.black_fox_ex.model.User;
-import com.diploma.black_fox_ex.request.AddFavoriteHiReq;
-import com.diploma.black_fox_ex.request.DeleteFavoriteHiDtoReq;
+import com.diploma.black_fox_ex.dto.AddFavoriteHiReq;
+import com.diploma.black_fox_ex.dto.DeleteFavoriteHiDtoReq;
 import com.diploma.black_fox_ex.service.HistoryService;
 import com.diploma.black_fox_ex.service.UserService;
 

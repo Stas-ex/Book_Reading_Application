@@ -13,7 +13,7 @@ import com.diploma.black_fox_ex.model.History;
 import com.diploma.black_fox_ex.model.Tag;
 import com.diploma.black_fox_ex.model.User;
 
-import com.diploma.black_fox_ex.request.*;
+import com.diploma.black_fox_ex.dto.*;
 import com.diploma.black_fox_ex.response.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

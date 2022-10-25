@@ -1,4 +1,4 @@
-package com.diploma.black_fox_ex.request;
+package com.diploma.black_fox_ex.dto;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;

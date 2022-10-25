@@ -1,8 +1,7 @@
 package com.diploma.black_fox_ex.controllers.user;
 
 import com.diploma.black_fox_ex.model.User;
-import com.diploma.black_fox_ex.request.DeleteHistoryDtoReq;
-import com.diploma.black_fox_ex.request.UpdateHistoryDtoReq;
+import com.diploma.black_fox_ex.dto.DeleteHistoryDtoReq;
 import com.diploma.black_fox_ex.service.HistoryService;
 
 import org.springframework.beans.factory.annotation.Autowired;

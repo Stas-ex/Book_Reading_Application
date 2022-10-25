@@ -49,10 +49,9 @@ The following languages were used to develop the visual part of the application:
 
 The main part of the program was developed using the **Bootstrap** framework.
 ## Project setup
-- Create database _spring_bd_
-```
-CREATE SCHEMA `spring_bd`
-```
+//////Create database _spring_bd_
+///////CREATE SCHEMA spring_bd
+
 - Database initialization : Run Sql code written in file [V1__Init_DB.sql](src/main/resources/db/migration/V1__Init_DB.sql)
 - Start project
 - Follow the link in the browser: http://localhost:8080/

@@ -18,7 +18,7 @@ create table history
 (
     id             bigint not null,
     background_img varchar(300),
-    big_text       varchar(15000),
+    big_text       text,
     title          varchar(255),
     tag_id         bigint,
     primary key (id)

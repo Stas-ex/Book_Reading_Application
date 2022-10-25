@@ -2,7 +2,7 @@ package com.diploma.black_fox_ex.controllers;
 
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.service.UserService;
-import com.diploma.black_fox_ex.request.DeleteHelpDtoReq;
+import com.diploma.black_fox_ex.dto.DeleteHelpDtoReq;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestMapping;

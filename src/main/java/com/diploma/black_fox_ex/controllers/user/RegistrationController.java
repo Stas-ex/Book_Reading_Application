@@ -1,13 +1,18 @@
 package com.diploma.black_fox_ex.controllers.user;
 
-import com.diploma.black_fox_ex.request.RegistrationUserDtoReq;
+import com.diploma.black_fox_ex.dto.UserDto;
 import com.diploma.black_fox_ex.service.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
 
 /**
  * This is the class for interacting with the registration page.
@@ -18,33 +23,39 @@ public class RegistrationController {
     private final UserService userService;
 
     @Autowired
-    public RegistrationController(UserService userService) {this.userService = userService;}
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * The function for going to the registration page
+     *
      * @param userDto that accepts user input
      * @return the 'registration' page
      */
     @GetMapping
-    public String registration(@ModelAttribute("userReg") RegistrationUserDtoReq userDto) {
+    public String registration(@ModelAttribute("userReg") UserDto userDto) {
         return "registration";
     }
 
     /**
-     *
      * @param userDto that accepts user input
-     * @param model for creating attributes sent to the server as a response
+     * @param model   for creating attributes sent to the server as a response
      * @return to original page in case of error, otherwise to the login page
      */
     @PostMapping("/add")
-    public String addNewUser(@ModelAttribute("userReg") RegistrationUserDtoReq userDto, Model model) {
-        var dtoResponse = userService.registrationUser(userDto);
-        if (dtoResponse.getError() != null) {
-            model.addAttribute("errorReg", dtoResponse.getError());
-            model.addAttribute("userReg", userDto);
+    public String addNewUser(@Valid @ModelAttribute("userReg") UserDto userDto,
+                             BindingResult valid,
+                             Model model) {
+        if (userService.isExistUser(userDto.getUsername())) {
+            valid.addError(new ObjectError("username", "{registration.user.already.exist}"));
+        }
+        if (valid.hasErrors()) {
+            model.addAttribute("warnings", valid.getAllErrors());
             return "registration";
         }
-        SecurityContextHolder.getContext().setAuthentication(null);
+
+        userService.registrationUser(userDto);
         return "redirect:/login";
     }
 }

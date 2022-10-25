@@ -1,25 +1,25 @@
-package com.diploma.black_fox_ex.request;
+package com.diploma.black_fox_ex.dto;
 
 import com.diploma.black_fox_ex.model.Role;
-import org.springframework.web.multipart.MultipartFile;
-import java.util.Set;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Set;
 
 
 @Data
 public class UpdateUserDtoReq {
-        private String username;
-        private String email;
-        private String password;
-        private String age;
-        private String sex;
-        private String info;
-        private MultipartFile imgFile;
-        private boolean active;
-        private String fileName;
-        private String telegramUsername;
-        private Set<Role> roles;
+    private String username;
+    private String email;
+    private String password;
+    private String age;
+    private String sex;
+    private String info;
+    private MultipartFile imgFile;
+    private boolean active;
+    private String fileName;
+    private String telegramUsername;
+    private Set<Role> roles;
 
 
     public UpdateUserDtoReq(String username, String email, String password, String age, String info,

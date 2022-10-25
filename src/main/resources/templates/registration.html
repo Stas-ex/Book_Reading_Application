@@ -12,16 +12,16 @@
 
 
     <style>
-        body{
+        body {
             background: black url("https://phonoteka.org/uploads/posts/2021-05/1622408081_14-phonoteka_org-p-art-minimalizm-neon-krasivo-21.jpg") repeat;
             background-attachment: fixed;
             background-size: 200vh;
         }
-        .container-form{
+        .container-form {
             color: white;
             text-shadow: 2px 2px 10px gray;
         }
-        .btn{
+        .btn {
             width: 40%;
             margin-left: 10%;
             box-shadow: 2px 2px 10px white;
@@ -32,108 +32,122 @@
 <body>
 
 <div class="container-form">
-<h1 align="center" style="font-size: 200%; margin-top: 3%;">Registration form:</h1>
+    <h1 align="center" style="font-size: 200%; margin-top: 3%;">Registration form:</h1>
 
-<form th:action="'/registration/add'" method="post" enctype="multipart/form-data" class="p-4" style="margin-left: 25%; margin-top: 2%">
-    <div class="form-row">
-        <div class="col-md-4 mb-3">
-            <label for="usernameId">Username</label>
-            <input type="text" class="form-control" id="usernameId" name="username" placeholder="Stanislav" required
-                   th:value="${userReg.getUsername()}">
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <label for="age">Age</label>
-            <input type="text" class="form-control " id="age" name="age" placeholder="21" required
-                   th:value="${userReg.getAge()}">
-            <div class="invalid-feedback">
-                Please provide a valid age.
+    <div th:each="warning : ${warnings}">
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <img src="..." class="rounded me-2" alt="...">
+                    <strong class="me-auto" th:value="${warning.getObjectName()}"></strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+                </div>
+                <div class="toast-body" th:value="${warning.getDefaultMessage()}"></div>
             </div>
         </div>
     </div>
 
-    <div class="form-row">
-        <div class="col-md-4 mb-3">
-            <label for="email">Email</label>
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroupPrepend3">@</span>
-                </div>
-                <input type="text" class="form-control " id="email" name="email"
-                       placeholder="user@mail.ru" aria-describedby="inputGroupPrepend3" required
-                       th:value="${userReg.getEmail()}">
+    <form th:action="'/registration/add'" method="post" enctype="multipart/form-data" class="p-4"
+          style="margin-left: 25%; margin-top: 2%">
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label for="usernameId" class="form-label">Username</label>
+                <input type="text" class="form-control"
+                       th:classappend="${warnings != null && warnings.containsKey('username')} ? 'is-invalid' : ' '"
+                       id="usernameId" name="username" placeholder="Stanislav" th:value="${userReg.getUsername()}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="age">Age</label>
+                <input type="number" class="form-control " id="age" name="age" placeholder="21"
+                       th:value="${userReg.getAge()}">
                 <div class="invalid-feedback">
-                    Please choose a email.
+                    Please provide a valid age.
                 </div>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
-            <label for="passwordId">Password</label>
-            <input type="password" class="form-control " id="passwordId" name="password" placeholder="********"
-                   required th:value="${userReg.getPassword()}">
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-        </div>
-    </div>
 
-    <div class="form-row">
-        <div class="col-md-8 mb-3">
-            <label for="img">Img</label>
-            <input type="file" name="img" id="img" class="form-control">
-            <div class="invalid-feedback">
-                Please provide a valid img.
-            </div>
-        </div>
-    </div>
-    <div class="form-row">
-        <div class="col-md-8 mb-3">
-            <label for="info">Info</label>
-            <textarea class="form-control" id="info" name="info" rows="3"
-                      placeholder="I love to paint and eat cookies with milk" th:utext="${userReg.getInfo()}"></textarea>
-            <div class="invalid-feedback">
-                Please provide a valid info.
-            </div>
-        </div>
-    </div>
-
-
-    <div class="form-row">
-        <div class="col-md-4 mb-3">
-            <label>Sex</label>
-            <div class="input-group">
-                <div class="form-check form-check-inline ">
-                    <input class="form-check-input" type="radio" name="sex" id="inlineRadio1"
-                           value="guy" checked>
-                    <label class="form-check-label" for="inlineRadio1">Guy</label>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label for="email">Email</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroupPrepend3">@</span>
+                    </div>
+                    <input type="text" class="form-control " id="email" name="email"
+                           placeholder="user@mail.ru" aria-describedby="inputGroupPrepend3"
+                           th:value="${userReg.getEmail()}">
+                    <div class="invalid-feedback">
+                        Please choose a email.
+                    </div>
                 </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="sex" id="inlineRadio2"
-                           value="lady">
-                    <label class="form-check-label" for="inlineRadio2">lady</label>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="passwordId">Password</label>
+                <input type="password" class="form-control " id="passwordId" name="password" placeholder="********"
+                       th:value="${userReg.getPassword()}">
+                <div class="valid-feedback">
+                    Looks good!
                 </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-md-8 mb-3">
+                <label for="img">Img</label>
+                <input type="file" name="img" id="img" class="form-control">
                 <div class="invalid-feedback">
-                    Please choose a sex.
+                    Please provide a valid img.
                 </div>
             </div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="form-check">
-            <input class="form-check-input is-valid" type="checkbox" value="" id="invalidCheck3" required>
-            <label class="form-check-label" for="invalidCheck3">
-                I agree to the processing of personal data
-            </label>
-            <div class="invalid-feedback">
-                You must agree before submitting.
+        <div class="form-row">
+            <div class="col-md-8 mb-3">
+                <label for="info">Info</label>
+                <textarea class="form-control" id="info" name="info" rows="3"
+                          placeholder="I love to paint and eat cookies with milk"
+                          th:utext="${userReg.getInfo()}"></textarea>
+                <div class="invalid-feedback">
+                    Please provide a valid info.
+                </div>
             </div>
         </div>
-    </div>
-    <h4 style="color: crimson; margin: 5%" th:text="${errorReg}" />
-    <button class="btn btn-warning" type="submit"  align="center">Register</button>
-</form>
+
+
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label>Sex</label>
+                <div class="input-group">
+                    <div class="form-check form-check-inline ">
+                        <input class="form-check-input" type="radio" name="sex" id="inlineRadio1"
+                               value="guy">
+                        <label class="form-check-label" for="inlineRadio1">Guy</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="sex" id="inlineRadio2"
+                               value="lady">
+                        <label class="form-check-label" for="inlineRadio2">lady</label>
+                    </div>
+                    <div class="invalid-feedback">
+                        Please choose a sex.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input class="form-check-input is-valid" type="checkbox" value="" id="invalidCheck3" required>
+                <label class="form-check-label" for="invalidCheck3">
+                    I agree to the processing of personal data
+                </label>
+                <div class="invalid-feedback">
+                    You must agree before submitting.
+                </div>
+            </div>
+        </div>
+
+        <!--    <h4 style="color: crimson; margin: 5%" th:text="${errorReg}" />-->
+        <button class="btn btn-warning" type="submit" align="center">Register</button>
+    </form>
 
 </div>
 <!-------------------------------------------------------------------------------------------------------------------->

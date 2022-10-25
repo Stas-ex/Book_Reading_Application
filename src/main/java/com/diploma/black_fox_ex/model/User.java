@@ -1,69 +1,81 @@
 package com.diploma.black_fox_ex.model;
 
-import com.diploma.black_fox_ex.request.UpdateUserDtoReq;
-import lombok.*;
+import com.diploma.black_fox_ex.dto.UserDto;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Entity
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
+
+    @Column(name = "f_username")
     private String username;
+
+    @Column(name = "f_email")
     private String email;
+
+    @Column(name = "f_password")
     private String password;
-    private int age;
+
+    @Column(name = "f_age")
+    private Byte age;
+
+    @Column(name = "f_sex")
     private String sex;
 
-    @Column(length = 1000)
+    @Column(name = "f_info", length = 1000)
     private String info;
 
-    @Column(length = 300)
+    @Column(name = "f_filename")
     private String imgFile;
 
+    @Column(name = "f_active")
     private boolean active;
+
+    @Column(name = "f_telegram")
     private String telegramUsername;
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "f_role")
     @Enumerated(EnumType.STRING)
-    private Set<Role> roles;
+    private Role role;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_history",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "history_id"))
-    @ToString.Exclude
     private List<History> histories = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_favorite",
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "favorite_id"))
-    @ToString.Exclude
     private List<History> favoriteStories = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "comments_id")
-    @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
     private List<SupportAnswer> supportAnswer = new ArrayList<>();
 
-    public User(String username, String email, String password,
-                int age, String sex, String info, String imgFile,
-                String telegramUsername, boolean active) {
+    public User(String username, String email, String password, Byte age,
+                String sex, String info, String imgFile,
+                String telegramUsername) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -72,37 +84,18 @@ public class User implements UserDetails {
         this.info = info;
         this.imgFile = imgFile;
         this.telegramUsername = telegramUsername;
-        this.active = active;
+        this.role = Role.USER;
     }
 
-    public User(String username, String email, String password,
-                int age, String sex, String info, String imgFile,
-                boolean active) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.age = age;
-        this.sex = sex;
-        this.info = info;
-        this.imgFile = imgFile;
-        this.active = active;
-        supportAnswer = new ArrayList<>();
-    }
-
-    public void updateUserByDto(UpdateUserDtoReq userDto) {
-        this.email = userDto.getEmail();
-        this.password = userDto.getPassword();
-        this.age = Integer.parseInt(userDto.getAge());
-        this.sex = userDto.getSex();
-        this.info = userDto.getInfo();
-        this.telegramUsername = userDto.getTelegramUsername();
-        this.imgFile = userDto.getFileName();
+    public User(UserDto userDto, String filename) {
+        this(userDto.getUsername(), userDto.getEmail(), userDto.getPassword(),
+                userDto.getAge(), userDto.getSex(), userDto.getInfo(),
+                filename, userDto.getTelegram());
     }
 
     public void removeSupportAnswer(long id) {
         supportAnswer.removeIf(elem -> elem.getId() == id);
     }
-
 
     @Override
     public boolean isAccountNonExpired() {
@@ -127,18 +120,5 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id && Objects.equals(username, user.username) && Objects.equals(password, user.password);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username, email, password, age, sex, info, imgFile, active, telegramUsername, roles);
     }
 }

@@ -1,9 +1,9 @@
 package com.diploma.black_fox_ex.controllers.histories;
 
 import com.diploma.black_fox_ex.model.User;
-import com.diploma.black_fox_ex.request.UpdateHistoryDtoReq;
+import com.diploma.black_fox_ex.dto.UpdateHistoryDtoReq;
 import com.diploma.black_fox_ex.service.HistoryService;
-import com.diploma.black_fox_ex.request.CreateHistoryDtoReq;
+import com.diploma.black_fox_ex.dto.CreateHistoryDtoReq;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.diploma.black_fox_ex.controllers.user;
 
 import com.diploma.black_fox_ex.model.User;
-import com.diploma.black_fox_ex.request.UpdateUserDtoReq;
+import com.diploma.black_fox_ex.dto.UpdateUserDtoReq;
 import com.diploma.black_fox_ex.service.UserService;
 
 import org.springframework.security.core.context.SecurityContextHolder;

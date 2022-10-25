@@ -8,7 +8,7 @@ import com.diploma.black_fox_ex.repositories.CommentsRepo;
 import com.diploma.black_fox_ex.repositories.HistoryRepo;
 import com.diploma.black_fox_ex.repositories.TagRepo;
 import com.diploma.black_fox_ex.repositories.UserRepo;
-import com.diploma.black_fox_ex.request.*;
+import com.diploma.black_fox_ex.dto.*;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +90,7 @@ class HistoryServiceTest {
     @Test
     void createHistory() throws IOException {
         User user = new User();
-        user.setId(1);
+        user.setId(1L);
         user.setUsername("stanislav");
         FileInputStream fis = new FileInputStream("src/main/resources/img/history-img/history.png");
         MockMultipartFile multipartFile = new MockMultipartFile("file", fis);
@@ -133,7 +133,7 @@ class HistoryServiceTest {
         FileInputStream fis = new FileInputStream("src/main/resources/img/history-img/history.png");
         MockMultipartFile multipartFile = new MockMultipartFile("file", fis);
         User user = new User();
-        user.setId(1);
+        user.setId(1L);
         user.setUsername("Stanislav");
 
         History hiRepeat = new History("Title repeat", "img", "bigText");
@@ -190,7 +190,7 @@ class HistoryServiceTest {
     @Test
     void deleteHistory() {
         User user = new User();
-        user.setId(1);
+        user.setId(1L);
 
         var dtoTrue = new DeleteHistoryDtoReq(1, new User());
         var dtoIdErr = new DeleteHistoryDtoReq(-1, new User());
@@ -244,7 +244,7 @@ class HistoryServiceTest {
     @Test
     void getHistoryById() {
         User user = new User();
-        user.setId(1);
+        user.setId(1L);
         Optional<History> history = Optional.of(new History("Title", "img.jpg", "Bigtext"));
         Mockito.doReturn(history).when(historyRepo).findById(1L);
         var respIdErr = historyService.getHistoryById(user, 0);
@@ -269,7 +269,7 @@ class HistoryServiceTest {
         ).when(userRepo).findFavoriteHistoryById(1);
 
         var dtoUserId = historyService.getAllFavoriteByUser(user);
-        user.setId(1);
+        user.setId(1L);
         var dtoUserNull = historyService.getAllFavoriteByUser(null);
         var dtoTrue = historyService.getAllFavoriteByUser(user);
 
@@ -282,7 +282,7 @@ class HistoryServiceTest {
     @Test
     void getHistoryEditById() {
         User user = new User();
-        user.setId(1);
+        user.setId(1L);
 
         History history1 = new History("H1", " ", " ");
         history1.setTag(new Tag("tag"));
@@ -348,7 +348,7 @@ class HistoryServiceTest {
 
         var respTrue = historyService.getAllHistoryByUser(user);
         var respUserErr = historyService.getAllHistoryByUser(null);
-        user.setId(-100);
+        user.setId(-100L);
         var respUserIdErr = historyService.getAllHistoryByUser(user);
 
         assertNull(respTrue.getError());
