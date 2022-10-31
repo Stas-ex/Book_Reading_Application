@@ -30,22 +30,22 @@ public enum AnswerErrorCode {
 
     FILE_CREATE_ERROR("Failed to download file"),
 
-    HISTORY_ID_NOT_EXIST("There is no history with such an id!"),
-    HISTORY_SHORT_TEXT("Too short story text!"),
-    HISTORY_IMG_ERROR("Failed to upload picture!"),
-    HISTORY_TAG_ERROR("Error you did not specify a tag!"),
-    HISTORY_TITLE_ERROR("The title of the story is too short!"),
-    HISTORY_TITLE_ALREADY_EXIST("This title already exists"),
-    HISTORY_USER_NOT_FOUND("User does not exist!"),
-    HISTORY_NOT_FOUND("History does not exist!"),
-    HISTORY_PAGE_ERROR("There is no such page"),
+    BOOK_ID_NOT_EXIST("There is no book with such an id!"),
+    BOOK_SHORT_TEXT("Too short book text!"),
+    BOOK_IMG_ERROR("Failed to upload picture!"),
+    BOOK_TAG_ERROR("Error you did not specify a genre!"),
+    BOOK_TITLE_ERROR("The title of the book is too short!"),
+    BOOK_TITLE_ALREADY_EXIST("This title already exists"),
+    BOOK_USER_NOT_FOUND("User does not exist!"),
+    BOOK_NOT_FOUND("Book does not exist!"),
+    BOOK_PAGE_ERROR("There is no such page"),
     PAGE_IS_EMPTY("Blank page"),
 
     COMMENT_BIG_TEXT_ERROR("Your comment is too small"),
     COMMENT_COLOR_ERROR("Error color!"),
 
     FAVORITE_USER_ERROR("User does not exist"),
-    FAVORITE_HISTORY_ID_ERROR("History id error"),
+    FAVORITE_BOOK_ID_ERROR("Book id error"),
     ERROR_ANSWER_BY_USER("Sorry, you have no support answers"),
 
     REQUEST_IS_NULL("Error! Server request is null"),
@@ -53,6 +53,7 @@ public enum AnswerErrorCode {
 
 
     private String msg;
+
     AnswerErrorCode(String msg) {
         setMsg(msg);
     }
@@ -62,7 +63,7 @@ public enum AnswerErrorCode {
     }
 
     public void setMsg(String msg) {
-        if(msg.length() != 0) {
+        if (msg.length() != 0) {
             this.msg = msg;
         }
     }

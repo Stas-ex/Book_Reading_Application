@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data
 public class GetAllFavoriteHiResp {
+
+    private List<GetBookCardDtoResp> listDto;
     private String error;
-    private List<GetHistoryCardDtoResp> listDto;
 }

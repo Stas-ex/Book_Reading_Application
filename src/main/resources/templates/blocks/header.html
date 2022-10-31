@@ -303,69 +303,69 @@
     <div class="sidebar">
         <div class="logo-details">
             <a th:href="'/'"><i class='bx bxl-gitlab icon'></i></a>
-                <div class="logo_name">Black-Fox</div>
-                <i class='bx bx-menu' id="btn"></i>
+            <div class="logo_name">Black-Fox</div>
+            <i class='bx bx-menu' id="btn"></i>
         </div>
-<!--        <ul class="nav-list">-->
-<!--            <li>-->
-<!--                <i class='bx bx-search'></i>-->
-<!--                <input type="text" placeholder="Search...">-->
-<!--                <span class="tooltip">Search</span>-->
-<!--            </li>-->
-<!--            <li>-->
-                <a href="/">
-                    <i class='bx bx-home-smile'></i>
-                    <span class="links_name">Home</span>
-                </a>
-                <span class="tooltip">Home</span>
-            </li>
-            <li>
-                <a th:href="@{/profile}">
-                    <i class='bx bx-user-circle'></i>
-                    <span class="links_name">Profile</span>
-                </a>
-                <span class="tooltip">Profile</span>
-            </li>
-            <li>
-                <a th:href="'/histories/all/0'">
-                    <i class='bx bx-ghost'></i>
-                    <span class="links_name">Stories</span>
-                </a>
-                <span class="tooltip">Stories</span>
-            </li>
-            <li>
-                <a th:href="@{/favorite}">
-                    <i class='bx bx-heart'></i>
-                    <span class="links_name">Saved</span>
-                </a>
-                <span class="tooltip">Saved</span>
-            </li>
-            <li>
-                <a th:href="@{/about}">
-                    <i class='bx bx-mask'></i>
-                    <span class="links_name">About us</span>
-                </a>
-                <span class="tooltip">About us</span>
-            </li>
-            <li>
-                <a href="/help">
-                    <i class='bx bx-meteor'></i>
-                    <span class="links_name">Help</span>
-                </a>
-                <span class="tooltip">Help</span>
-            </li>
+        <!--        <ul class="nav-list">-->
+        <!--            <li>-->
+        <!--                <i class='bx bx-search'></i>-->
+        <!--                <input type="text" placeholder="Search...">-->
+        <!--                <span class="tooltip">Search</span>-->
+        <!--            </li>-->
+        <!--            <li>-->
+        <a href="/">
+            <i class='bx bx-home-smile'></i>
+            <span class="links_name">Home</span>
+        </a>
+        <span class="tooltip">Home</span>
+        </li>
+        <li>
+            <a th:href="@{/profile}">
+                <i class='bx bx-user-circle'></i>
+                <span class="links_name">Profile</span>
+            </a>
+            <span class="tooltip">Profile</span>
+        </li>
+        <li>
+            <a th:href="'/books/all/0'">
+                <i class='bx bx-ghost'></i>
+                <span class="links_name">Books</span>
+            </a>
+            <span class="tooltip">Books</span>
+        </li>
+        <li>
+            <a th:href="@{/favorite}">
+                <i class='bx bx-heart'></i>
+                <span class="links_name">Saved</span>
+            </a>
+            <span class="tooltip">Saved</span>
+        </li>
+        <li>
+            <a th:href="@{/about}">
+                <i class='bx bx-mask'></i>
+                <span class="links_name">About us</span>
+            </a>
+            <span class="tooltip">About us</span>
+        </li>
+        <li>
+            <a href="/help">
+                <i class='bx bx-meteor'></i>
+                <span class="links_name">Help</span>
+            </a>
+            <span class="tooltip">Help</span>
+        </li>
 
-            <li class="profile">
-                <div class="profile-details">
-                    <img th:if="${user != null}" th:src="${user.getImgFile()}" alt="profileImg">
-                    <div class="name_job">
-                        <div class="name" th:if="${user != null}" th:text="${user.getUsername()}"></div>
-                        <div class="job" th:if="${user != null}" th:text="${user.getEmail()}"></div>
-                    </div>
+        <li class="profile">
+            <div class="profile-details">
+                <img th:if="${user != null}" th:src="${user.getImgFile()}" alt="profileImg">
+                <div class="name_job">
+                    <div class="name" th:if="${user != null}" th:text="${user.getUsername()}"></div>
+                    <div class="job" th:if="${user != null}" th:text="${user.getEmail()}"></div>
                 </div>
-                <a th:if="${user != null}" th:href="'/profile/exit'"><i class='bx bx-log-out' id="log_out"></i></a>
-                <a th:if="${user == null}" th:href="'/profile'"><i class='bx bx-log-out' id="log_out1"></i></a>
-            </li>
+            </div>
+            <a th:if="${user != null}" th:href="'/profile/exit'"><i class='bx bx-log-out' id="log_out"></i></a>
+            <a th:if="${user == null}" th:href="'/profile'"><i class='bx bx-log-out' id="log_out1"></i></a>
+        </li>
         </ul>
     </div>
     <script>

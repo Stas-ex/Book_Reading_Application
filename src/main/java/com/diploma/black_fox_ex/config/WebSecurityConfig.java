@@ -25,7 +25,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web.ignoring()
                 .antMatchers(FileDirectories.USER_IMG.getPath() + "**")
-                .antMatchers(FileDirectories.HISTORY_IMG.getPath() + "**");
+                .antMatchers(FileDirectories.BOOK_IMG.getPath() + "**");
     }
 
     @Override
@@ -34,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()//Первый раз зашел
                 .antMatchers("/", "/registration",
                         "/registration/add", "/about",
-                        "/history/**/look", "/histories/**"
+                        "/book/**/look", "/books/**"
                 )
                 .permitAll()
                 .anyRequest().authenticated()

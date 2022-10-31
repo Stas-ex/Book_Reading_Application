@@ -1,10 +1,11 @@
 package com.diploma.black_fox_ex.io;
 
 public enum FileDirectories {
-    USER_IMG("/Users/stas_ex/IdeaProjects/Diploma_Spring/src/main/resources/img/user-img/"),
-    HISTORY_IMG("/Users/stas_ex/IdeaProjects/Diploma_Spring/src/main/resources/img/history-img/");
+    USER_IMG("/Users/stas_ex/Diploma_Spring/src/main/resources/img/user-img/"),
+    BOOK_IMG("/Users/stas_ex/Diploma_Spring/src/main/resources/img/book-img/");
 
     private String path;
+
     FileDirectories(String msg) {
         setPath(msg);
     }
@@ -13,9 +14,9 @@ public enum FileDirectories {
         return path;
     }
 
-    public void setPath(String msg) {
-        if(msg.length() != 0) {
-            this.path = msg;
+    public void setPath(String path) {
+        if (path.length() != 0) {
+            this.path = path;
         }
     }
 }

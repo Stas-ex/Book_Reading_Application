@@ -7,7 +7,7 @@ import com.diploma.black_fox_ex.exeptions.AnswerErrorCode;
 import com.diploma.black_fox_ex.exeptions.ServerException;
 import com.diploma.black_fox_ex.io.FileDirectories;
 import com.diploma.black_fox_ex.io.FileManager;
-import com.diploma.black_fox_ex.model.SupportAnswer;
+import com.diploma.black_fox_ex.model.Support;
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.repositories.UserRepo;
 import com.diploma.black_fox_ex.response.*;
@@ -32,7 +32,6 @@ public class UserService implements UserDetailsService {
     private final FileManager fileManager = new FileManager();
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    private final String USERNAME_PATTERN = "^[A-z]{3,20}";
     private final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,15})";
     private final String EMAIL_PATTERN = "([A-z0-9_.-]+)@([A-z0-9_.-]+).([A-z]{2,8})";
     private final String TELEGRAM_PATTERN = ".*\\B@(?=\\w{5,32}\\b)[a-zA-Z0-9]+(?:_[a-zA-Z0-9]+)*.*";
@@ -82,7 +81,6 @@ public class UserService implements UserDetailsService {
      * User registration method
      *
      * @param dto contains the main parameters for registration user
-     * @see #validateRegistrationUser(UserDto)
      */
     public void registrationUser(UserDto dto) {
         try {
@@ -111,7 +109,7 @@ public class UserService implements UserDetailsService {
                 userDto.setFileName(fileManager.createFile(FileDirectories.USER_IMG, userDto.getImgFile()));
             else
                 userDto.setFileName(userOld.getImgFile());
-//            userOld.updateUserByDto(userDto);
+            userOld.update(userDto);
             userRepo.save(userOld);
         } catch (ServerException ex) {
             response.setErrors(ex.getErrorMessage());
@@ -155,7 +153,7 @@ public class UserService implements UserDetailsService {
         GetAllHelpsResp response = new GetAllHelpsResp();
         try {
             validateGetAllAnswersSupport(user);
-            List<SupportAnswer> listSupp = userRepo.findSupportAnswerById(user.getId());
+            List<Support> listSupp = userRepo.findSupportAnswerById(user.getId());
             response.setAnswers(listSupp);
         } catch (ServerException e) {
             response.setErrors(e.getErrorMessage());
@@ -215,40 +213,12 @@ public class UserService implements UserDetailsService {
 
         int age;
         try {
-            age = Integer.parseInt(userDto.getAge());
+            age = userDto.getAge();
         } catch (Exception ex) {
             throw new ServerException(AnswerErrorCode.UPDATE_WRONG_AGE_SYNTAX);
         }
         if (age > 110 || age < 3) {
             throw new ServerException(AnswerErrorCode.UPDATE_WRONG_AGE_RANGE);
-        }
-    }
-
-    private void validateRegistrationUser(UserDto dto) throws ServerException {
-        if (!Pattern.matches(USERNAME_PATTERN, dto.getUsername())) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_USERNAME);
-        }
-
-        if (userRepo.findByUsername(dto.getUsername()) != null) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_USERNAME_ALREADY_EXIST);
-        }
-        if (!dto.getEmail().matches(EMAIL_PATTERN)) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VALIDATE_EMAIL);
-        }
-        if (!Pattern.matches(PASSWORD_PATTERN, dto.getPassword())) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VALIDATE_PASSWORD);
-        }
-        if (dto.getSex() == null || Objects.equals(dto.getSex(), "")) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VALIDATE_SEX);
-        }
-        if (dto.getInfo() == null || dto.getInfo().length() < 10) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VALIDATE_INFO);
-        }
-        if (dto.getImg() == null) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_VALIDATE_IMG);
-        }
-        if (dto.getAge() >= 110 || dto.getAge() <= 3) {
-            throw new ServerException(AnswerErrorCode.REGISTRATION_WRONG_AGE_RANGE);
         }
     }
 

@@ -16,18 +16,18 @@ Below are the pages of viewing works:
 
 **WORK VIEW PAGE**
 <p align="center">
-<img src="src/main/resources/img/readme-img/histories.png" width="45%"/>
-<img src="src/main/resources/img/readme-img/history-look.png" width="45%"/>
+<img src="src/main/resources/img/readme-img/book.png" width="45%"/>
+<img src="src/main/resources/img/readme-img/book-look.png" width="45%"/>
 </p>
 
-The left page is a page for viewing all works, a feature is filtering works by tags, as well as dividing the viewing of works into pages. (21 works are placed on one page)
+The left page is a page for viewing all works, a feature is filtering works by genres, as well as dividing the viewing of works into pages. (21 works are placed on one page)
 <br><br>
 The right picture shows the page for viewing works.
 Of the features, you can add to favorites and description comments, the possibility of consideration only by authorized users.
 ## How to write a work?
 - **Register** an account.
 - **Sign in**
-- On the user page, click on the **"Create Story"** button
+- On the user page, click on the **"Create Book"** button
 - **Create** it in the constructor
 - And **publish**
 - As easy as pie!
@@ -65,7 +65,7 @@ The main part of the program was developed using the **Bootstrap** framework.
 **Example for my directory**
 ```
  USER_IMG("/.../Diploma_Spring/src/main/resources/img/user-img/")
- HISTORY_IMG("/.../Diploma_Spring/src/main/resources/img/history-img/");
+ BOOK_IMG("/.../Diploma_Spring/src/main/resources/img/book-img/");
 ```
 
 ##You can contact me:

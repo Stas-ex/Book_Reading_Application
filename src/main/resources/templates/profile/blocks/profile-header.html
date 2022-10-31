@@ -1,22 +1,25 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
-<div th:fragment="header-profile (main,myStories,createStory)">
+<div th:fragment="header-profile (main,myBooks,createBook)">
     <style>
         .menu {
             margin: 3% 25%;
             width: 50%;
             font-size: 20px;
         }
-        a{
+
+        a {
             text-decoration: none; /* Отменяем подчеркивание у ссылки */
             color: white;
             transition: 0.4s;
         }
-        a:hover{
+
+        a:hover {
             text-decoration: none; /* Отменяем подчеркивание у ссылки */
             color: white;
         }
-        .active:hover{
+
+        .active:hover {
             text-decoration: none; /* Отменяем подчеркивание у ссылки */
             color: white;
         }
@@ -29,10 +32,10 @@
                 <a th:class="'nav-link' + ${main}" th:href="@{/profile}">Profile</a>
             </li>
             <li class="nav-item">
-                <a th:class="'nav-link' + ${myStories}" th:href="@{/profile-history}">My stories</a>
+                <a th:class="'nav-link' + ${myBooks}" th:href="@{/profile-books}">My books</a>
             </li>
             <li class="nav-item">
-                <a th:class="'nav-link' + ${createStory}" th:href="@{/history/createPage}">Create story</a>
+                <a th:class="'nav-link' + ${createBook}" th:href="@{/book/createPage}">Create book</a>
             </li>
         </ul>
     </div>

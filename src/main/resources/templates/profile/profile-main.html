@@ -12,41 +12,47 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
-        body{
+
+        body {
             background: #1d1b31 url("https://phonoteka.org/uploads/posts/2021-05/1622264420_4-phonoteka_org-p-arti-v-stile-minimalizm-krasivo-5.png") no-repeat;
             background-attachment: fixed; /* Фиксируем фон веб-страницы */
         }
 
-        h1{
+        h1 {
             font-family: 'Roboto', sans-serif;
             /*font-size: 150%;*/
             color: white;
         }
-        .form-row{
+
+        .form-row {
             font-family: 'Roboto', sans-serif;
         }
-        img{
-            object-fit:cover;
+
+        img {
+            object-fit: cover;
             box-shadow: 2px 2px 10px black;
         }
-        .form-container{
+
+        .form-container {
             text-shadow: 3px 3px 15px cornflowerblue;
             color: white;
         }
 
-        .btn{
+        .btn {
             box-shadow: 2px 2px 10px black;
             margin: 5px;
             transition: 0.4s;
         }
-        .btn:hover{
+
+        .btn:hover {
             box-shadow: 2px 2px 12px white;
         }
 
-        .input{
+        .input {
             box-shadow: 2px 2px 10px black;
         }
-        .input:hover{
+
+        .input:hover {
             box-shadow: 2px 2px 10px cornflowerblue;
         }
     </style>
@@ -65,120 +71,123 @@
 <div class="form-container">
 
 
-<form th:action="'/profile/update'" method="post" enctype="multipart/form-data" class="p-2"
-      style="margin-left: 25%; margin-right: 5%">
+    <form th:action="'/profile/update'" method="post" enctype="multipart/form-data" class="p-2"
+          style="margin-left: 25%; margin-right: 5%">
 
-    <div  style="margin-left: 10%;" class="form-row col-md-6 ">
-        <h1 style=" font-size: 38px">Welcome to profile!</h1>
-    </div>
-    <div class="form-row  mt-3">
-        <img th:src="${userProfile.getImgFile()}" style=" padding:0;margin-left: 5%" class="col-md-6 col-sm-9">
-    </div>
-    <div class="form-row mt-4">
-        <div class="col-md-4 mb-3">
-            <label for="usernameId">Username</label>
-            <input type="text" class="form-control input" id="usernameId" name="username" th:value="${userProfile.getUsername()}"
-                   readonly="">
-            <div class="valid-feedback">
-                Looks good!
-            </div>
+        <div style="margin-left: 10%;" class="form-row col-md-6 ">
+            <h1 style=" font-size: 38px">Welcome to profile!</h1>
         </div>
-        <div class="col-md-4 mb-3">
-            <label for="age">Age</label>
-            <input type="text" class="form-control input " id="age" name="age" th:value="${userProfile.getAge()}" required>
-            <div class="invalid-feedback">
-                Please provide a valid age.
-            </div>
+        <div class="form-row  mt-3">
+            <img th:src="${userProfile.getImgFile()}" style=" padding:0;margin-left: 5%" class="col-md-6 col-sm-9">
         </div>
-    </div>
-
-    <div class="form-row">
-        <div class="col-md-4 mb-3">
-            <label for="email">Email</label>
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text input" id="inputGroupPrepend3">@</span>
+        <div class="form-row mt-4">
+            <div class="col-md-4 mb-3">
+                <label for="usernameId">Username</label>
+                <input type="text" class="form-control input" id="usernameId" name="username"
+                       th:value="${userProfile.getUsername()}"
+                       readonly="">
+                <div class="valid-feedback">
+                    Looks good!
                 </div>
-                <input type="email" class="form-control input" id="email" name="email"
-                       th:value="${userProfile.getEmail()}" aria-describedby="inputGroupPrepend3" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="age">Age</label>
+                <input type="text" class="form-control input " id="age" name="age" th:value="${userProfile.getAge()}"
+                       required>
                 <div class="invalid-feedback">
-                    Please choose a email.
+                    Please provide a valid age.
                 </div>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
-            <label for="passwordId">Password</label>
-            <input type="password" class="form-control input" id="passwordId" name="password"
-                   th:value="${userProfile.getPassword()}"
-                   value="Otto" required>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-        </div>
-    </div>
 
-    <div class="form-row">
-        <div class="col-md-8 mb-3">
-            <label for="img">Img</label>
-            <input type="file" name="img" id="img" class="form-control input">
-            <div class="invalid-feedback">
-                Please provide a valid img.
-            </div>
-        </div>
-    </div>
-    <div class="form-row">
-        <div class="col-md-8 mb-3">
-            <label for="info">Info</label>
-            <textarea class="form-control input" id="info" name="info" rows="3"
-                      th:text="${userProfile.getInfo()}"></textarea>
-            <div class="invalid-feedback">
-                Please provide a valid info.
-            </div>
-        </div>
-    </div>
-    <div class="form-row">
-        <div class="col-md-8 mb-3">
-            <label for="telegramUsername">Telegram account</label>
-            <input type="text" name="telegramUsername" id="telegramUsername" class="form-control input" placeholder="@User" th:value="${userProfile.getTelegramUsername()}">
-            <div class="invalid-feedback">
-                Enter your telegram account to link.
-            </div>
-        </div>
-    </div>
-    <div class="form-row">
-        <div class="col-md-4 mb-3">
-            <label>Sex</label>
-            <div class="input-group">
-                <div class="form-check form-check-inline ">
-                    <input class="form-check-input" type="radio" name="sex" id="inlineRadio1"
-                           value="guy" th:checked="${userProfile.getSex().equals('guy')}">
-                    <label class="form-check-label" for="inlineRadio1">Guy</label>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label for="email">Email</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text input" id="inputGroupPrepend3">@</span>
+                    </div>
+                    <input type="email" class="form-control input" id="email" name="email"
+                           th:value="${userProfile.getEmail()}" aria-describedby="inputGroupPrepend3" required>
+                    <div class="invalid-feedback">
+                        Please choose a email.
+                    </div>
                 </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="sex" id="inlineRadio2"
-                           value="lady" th:checked="${userProfile.getSex().equals('lady')}">
-                    <label class="form-check-label" for="inlineRadio2">lady</label>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="passwordId">Password</label>
+                <input type="password" class="form-control input" id="passwordId" name="password"
+                       th:value="${userProfile.getPassword()}"
+                       value="Otto" required>
+                <div class="valid-feedback">
+                    Looks good!
                 </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="col-md-8 mb-3">
+                <label for="img">Img</label>
+                <input type="file" name="img" id="img" class="form-control input">
                 <div class="invalid-feedback">
-                    Please choose a sex.
+                    Please provide a valid img.
                 </div>
             </div>
         </div>
-    </div>
-
-
-    <h4 style="color: #FDF4E9; margin: 5%" th:text="${errorProfile}"/>
-    <div class="form-row">
-        <div class="col-md-8 mb-3">
-            <button class="btn btn-primary" type="submit" style="width: 28%;color: white" align="center">Update
-            </button>
-            <a th:href="'/profile' +'/delete'" class="btn btn-danger" style="width: 28%; color: white">Delete
-                profile</a>
-            <a th:href="'/profile/exit'" class="btn btn-dark" style="width:28%; color: white">Exit
-                profile</a>
+        <div class="form-row">
+            <div class="col-md-8 mb-3">
+                <label for="info">Info</label>
+                <textarea class="form-control input" id="info" name="info" rows="3"
+                          th:text="${userProfile.getInfo()}"></textarea>
+                <div class="invalid-feedback">
+                    Please provide a valid info.
+                </div>
+            </div>
         </div>
-    </div>
-</form>
+        <div class="form-row">
+            <div class="col-md-8 mb-3">
+                <label for="telegramUsername">Telegram account</label>
+                <input type="text" name="telegramUsername" id="telegramUsername" class="form-control input"
+                       placeholder="@User" th:value="${userProfile.getTelegramUsername()}">
+                <div class="invalid-feedback">
+                    Enter your telegram account to link.
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label>Sex</label>
+                <div class="input-group">
+                    <div class="form-check form-check-inline ">
+                        <input class="form-check-input" type="radio" name="sex" id="inlineRadio1"
+                               value="man" th:checked="${userProfile.getSex().equals('man')}">
+                        <label class="form-check-label" for="inlineRadio1">Man</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="sex" id="inlineRadio2"
+                               value="woman" th:checked="${userProfile.getSex().equals('woman')}">
+                        <label class="form-check-label" for="inlineRadio2">Woman</label>
+                    </div>
+                    <div class="invalid-feedback">
+                        Please choose a sex.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <h4 style="color: #FDF4E9; margin: 5%" th:text="${errorProfile}"/>
+        <div class="form-row">
+            <div class="col-md-8 mb-3">
+                <button class="btn btn-primary" type="submit" style="width: 28%;color: white" align="center">Update
+                </button>
+                <a th:href="'/profile' +'/delete'" class="btn btn-danger" style="width: 28%; color: white">Delete
+                    profile</a>
+                <a th:href="'/profile/exit'" class="btn btn-dark" style="width:28%; color: white">Exit
+                    profile</a>
+            </div>
+        </div>
+    </form>
 </div>
 <!-------------------------------------------------------------------------------------------------------------------->
 <footer th:insert="blocks/footer"></footer>

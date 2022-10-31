@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.12.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <property name="smallTextType" value="varchar(30)" dbms="mysql"/>
+    <property name="idType" value="bigint" dbms="mysql"/>
+
+    <changeSet id="20221026_create_users" author="skuratov_stanislav">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users"/>
+            </not>
+        </preConditions>
+        <createTable tableName="users">
+            <column autoIncrement="true" computed="false" name="id" type="${idType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column computed="false" name="f_active" type="boolean"/>
+            <column computed="false" name="f_age" type="tinyint"/>
+            <column computed="false" name="f_email" type="${smallTextType}"/>
+            <column computed="false" name="f_filename" type="varchar(1000)"/>
+            <column computed="false" name="f_info" type="varchar(1000)"/>
+            <column computed="false" name="f_password" type="${smallTextType}"/>
+            <column computed="false" name="f_role" type="${smallTextType}"/>
+            <column computed="false" name="f_sex" type="${smallTextType}"/>
+            <column computed="false" name="f_telegram" type="${smallTextType}"/>
+            <column computed="false" name="f_username" type="${smallTextType}"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20221026_create_book" author="skuratov_stanislav">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="book"/>
+            </not>
+        </preConditions>
+        <createTable tableName="book">
+            <column autoIncrement="true" computed="false" name="id" type="${idType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column computed="false" name="f_title" type="${smallTextType}"/>
+            <column computed="false" name="f_background_img" type="${smallTextType}"/>
+            <column computed="false" name="f_big_text" type="varchar(15000)"/>
+            <column computed="false" name="f_genre" type="${smallTextType}"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20221026_create_comment" author="skuratov_stanislav">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="comment"/>
+            </not>
+        </preConditions>
+        <createTable tableName="comment">
+            <column autoIncrement="true" computed="false" name="id" type="${idType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column computed="false" name="f_color" type="${smallTextType}"/>
+            <column computed="false" name="f_text" type="varchar(1000)"/>
+            <column computed="false" name="fk_book_id" type="${idType}">
+                <constraints nullable="false"/>
+            </column>
+            <column computed="false" name="fk_user_id" type="${idType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="comment" baseColumnNames="fk_user_id"
+                                 constraintName="FKmgf96aacmqw9k22fxbbd52wyt" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="comment" baseColumnNames="fk_book_id"
+                                 constraintName="FK68j47hywfqagktvwbxn3bxd8x" referencedTableName="book"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="20221026_create_support" author="skuratov_stanislav">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="support"/>
+            </not>
+        </preConditions>
+        <createTable tableName="support">
+            <column autoIncrement="true" computed="false" name="id" type="${idType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column computed="false" name="f_ask" type="varchar(1000)"/>
+            <column computed="false" name="f_answer" type="varchar(1000)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20221026_create_user_book_favorite" author="skuratov_stanislav">
+        <createTable tableName="user_book_favorite">
+            <column computed="false" name="fk_users_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column computed="false" name="fk_book_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="user_book_favorite" baseColumnNames="fk_book_id"
+                                 constraintName="FK9yhlikxvhcgkuwqerwq0rhair" referencedTableName="book"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="user_book_favorite" baseColumnNames="fk_users_id"
+                                 constraintName="FKbt6flinqy9c1m08997vomjlaj" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="20221026_create_users_book_added" author="skuratov_stanislav">
+        <createTable tableName="users_book_added">
+            <column computed="false" name="fk_user_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column computed="false" name="fk_book_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="users_book_added" baseColumnNames="fk_user_id"
+                                 constraintName="FKlpserdhshniwvaefaaf2pjbbc" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="users_book_added" baseColumnNames="fk_book_id"
+                                 constraintName="FK7k4yk3pnelod89ixwqlv0hb8y" referencedTableName="book"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="20221026_create_users_support" author="skuratov_stanislav">
+        <createTable tableName="users_support">
+            <column computed="false" name="fk_user_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column computed="false" name="fk_support_id" type="${idType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="users_support" baseColumnNames="fk_user_id"
+                                 constraintName="FKehkt3b4ia7vvi157uvl5nqr9o" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="users_support" baseColumnNames="fk_support_id"
+                                 constraintName="FKfbntxc1e7ykbb77fhfk6cvorl" referencedTableName="support"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -18,20 +18,21 @@ public class FileManager {
 
     /**
      * This method for saving downloaded files from the site
+     *
      * @param directories -> path to the directory of saved images
-     * @param imgFile -> uploaded picture
-     * @see #validateSuffixFileName(String)
+     * @param imgFile     -> uploaded picture
      * @return file name without directory
      * @throws ServerException for invalid data
+     * @see #validateSuffixFileName(String)
      */
     public String createFile(FileDirectories directories, MultipartFile imgFile) throws ServerException {
         //Проверка и сохранение картинки
         String fileName = imgFile.getOriginalFilename();
         if (Objects.requireNonNull(fileName).isEmpty()) {
-            if(directories.equals(FileDirectories.USER_IMG))
+            if (directories.equals(FileDirectories.USER_IMG))
                 return "user.jpg";
-            if(directories.equals(FileDirectories.HISTORY_IMG))
-                return "history.png";
+            if (directories.equals(FileDirectories.BOOK_IMG))
+                return "book.png";
         }
 
         validateSuffixFileName(fileName);
@@ -50,10 +51,9 @@ public class FileManager {
 
     private void validateSuffixFileName(String fileName) throws ServerException {
         String[] fileNameSplit = fileName.split("\\.");
-        String suffix = fileNameSplit[fileNameSplit.length-1];
-        if(!suffix.equals("jpg") && !suffix.equals("png") && !suffix.equals("jpeg")){
+        String suffix = fileNameSplit[fileNameSplit.length - 1];
+        if (!suffix.equals("jpg") && !suffix.equals("png") && !suffix.equals("jpeg")) {
             throw new ServerException(AnswerErrorCode.FILE_CREATE_ERROR);
         }
     }
-
 }

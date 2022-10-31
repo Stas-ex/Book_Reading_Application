@@ -1,6 +1,7 @@
 package com.diploma.black_fox_ex.controllers.user;
 
 import com.diploma.black_fox_ex.dto.UserDto;
+import com.diploma.black_fox_ex.model.constant.Sex;
 import com.diploma.black_fox_ex.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,8 @@ public class RegistrationController {
      * @return the 'registration' page
      */
     @GetMapping
-    public String registration(@ModelAttribute("userReg") UserDto userDto) {
+    public String registration(@ModelAttribute("userReg") UserDto userDto, Model model) {
+        model.addAttribute("genders", Sex.values());
         return "registration";
     }
 
@@ -51,6 +53,7 @@ public class RegistrationController {
             valid.addError(new ObjectError("username", "{registration.user.already.exist}"));
         }
         if (valid.hasErrors()) {
+            model.addAttribute("genders", Sex.values());
             model.addAttribute("warnings", valid.getAllErrors());
             return "registration";
         }

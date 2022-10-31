@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Black-Fox [Registration]</title>
+    <title th:text="#{registration.title}"></title>
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -17,10 +17,12 @@
             background-attachment: fixed;
             background-size: 200vh;
         }
+
         .container-form {
             color: white;
             text-shadow: 2px 2px 10px gray;
         }
+
         .btn {
             width: 40%;
             margin-left: 10%;
@@ -31,108 +33,78 @@
 <body>
 
 <div class="container-form">
-    <h1 align="center" style="font-size: 200%; margin-top: 3%;">Registration form:</h1>
+    <h1 align="center" style="font-size: 200%; margin-top: 3%;" th:text="#{registration.title}"></h1>
 
     <form th:action="'/registration/add'" method="post" enctype="multipart/form-data" class="p-4"
           style="margin-left: 25%; margin-top: 2%">
         <div class="form-row">
             <div class="col-md-4 mb-3">
-                <label for="usernameId" class="form-label">Username</label>
+                <label for="usernameId" class="form-label" th:text="#{registration.field.username}"></label>
                 <input type="text" class="form-control"
                        id="usernameId" name="username" placeholder="Stanislav" th:value="${userReg.getUsername()}">
             </div>
             <div class="col-md-4 mb-3">
-                <label for="age">Age</label>
+                <label for="age" th:text="#{registration.field.age}"></label>
                 <input type="number" class="form-control " id="age" name="age" placeholder="21"
                        th:value="${userReg.getAge()}">
-                <div class="invalid-feedback">
-                    Please provide a valid age.
-                </div>
             </div>
         </div>
 
         <div class="form-row">
             <div class="col-md-4 mb-3">
-                <label for="email">Email</label>
+                <label for="email" th:text="#{registration.field.email}"></label>
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroupPrepend3">@</span>
                     </div>
-                    <input type="text" class="form-control " id="email" name="email"
-                           placeholder="user@mail.ru" aria-describedby="inputGroupPrepend3"
-                           th:value="${userReg.getEmail()}">
-                    <div class="invalid-feedback">
-                        Please choose a email.
-                    </div>
+                    <input type="email" class="form-control " id="email" name="email"
+                           placeholder="user@mail.ru" aria-describedby="inputGroupPrepend3" th:value="${userReg.getEmail()}">
                 </div>
             </div>
             <div class="col-md-4 mb-3">
-                <label for="passwordId">Password</label>
-                <input type="password" class="form-control " id="passwordId" name="password" placeholder="********"
-                       th:value="${userReg.getPassword()}">
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
+                <label for="passwordId" th:text="#{registration.field.password}"></label>
+                <input type="password" class="form-control " id="passwordId"
+                       name="password" placeholder="********" th:value="${userReg.getPassword()}">
             </div>
         </div>
 
         <div class="form-row">
             <div class="col-md-8 mb-3">
-                <label for="img">Img</label>
+                <label for="img" th:text="#{registration.field.img}"></label>
                 <input type="file" name="img" id="img" class="form-control">
-                <div class="invalid-feedback">
-                    Please provide a valid img.
-                </div>
             </div>
         </div>
         <div class="form-row">
             <div class="col-md-8 mb-3">
-                <label for="info">Info</label>
+                <label for="info" th:text="#{registration.field.info}"></label>
                 <textarea class="form-control" id="info" name="info" rows="3"
-                          placeholder="I love to paint and eat cookies with milk"
-                          th:utext="${userReg.getInfo()}"></textarea>
-                <div class="invalid-feedback">
-                    Please provide a valid info.
-                </div>
+                          placeholder="I love to paint and eat cookies with milk" th:utext="${userReg.getInfo()}"></textarea>
             </div>
         </div>
 
 
         <div class="form-row">
             <div class="col-md-4 mb-3">
-                <label>Sex</label>
+                <label th:text="#{registration.field.sex}"></label>
                 <div class="input-group">
-                    <div class="form-check form-check-inline ">
-                        <input class="form-check-input" type="radio" name="sex" id="inlineRadio1"
-                               value="guy">
-                        <label class="form-check-label" for="inlineRadio1">Guy</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="sex" id="inlineRadio2"
-                               value="lady">
-                        <label class="form-check-label" for="inlineRadio2">lady</label>
-                    </div>
-                    <div class="invalid-feedback">
-                        Please choose a sex.
+                    <div class="form-check form-check-inline" th:each="gender: ${genders}">
+                        <input class="form-check-input" type="radio" name="sex" id="exampleRadios1" th:value="${gender.getTitle()}">
+                        <label class="form-check-label" for="exampleRadios1" th:text="#{'sex.' + ${gender.getTitle()}}"></label>
                     </div>
                 </div>
             </div>
         </div>
         <div class="form-group">
             <div class="form-check">
-                <input class="form-check-input is-valid" type="checkbox" value="" id="invalidCheck3" required>
-                <label class="form-check-label" for="invalidCheck3">
-                    I agree to the processing of personal data
-                </label>
-                <div class="invalid-feedback">
-                    You must agree before submitting.
-                </div>
+                <input class="form-check-input is-valid" type="checkbox" id="invalidCheck3" required>
+                <label class="form-check-label" for="invalidCheck3" th:text="#{registration.checkbox.personal_data}"></label>
             </div>
         </div>
+
         <div th:each="warning : ${warnings}">
-            <h5 style="color: crimson; margin: 5%" th:text="${warning.getDefaultMessage()}"/>
+            <h5 style="color: crimson; margin: 5%" th:text="#{${warning.getDefaultMessage()}}"></h5>
         </div>
-        <button class="btn btn-warning" type="submit" align="center">Register</button>
+        <button class="btn btn-warning" type="submit" align="center" th:text="#{registration.btn_reg}"/>
     </form>
 
 </div>

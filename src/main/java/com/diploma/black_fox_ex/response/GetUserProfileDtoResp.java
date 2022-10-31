@@ -21,7 +21,7 @@ public class GetUserProfileDtoResp {
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.age = user.getAge();
-        this.sex = user.getSex();
+        this.sex = user.getSex().getTitle();
         this.info = user.getInfo();
         this.imgFile = FileDirectories.USER_IMG.getPath() + user.getImgFile();
         this.telegramUsername = user.getTelegramUsername();
