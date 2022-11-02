@@ -24,7 +24,7 @@
             <column computed="false" name="f_email" type="${smallTextType}"/>
             <column computed="false" name="f_filename" type="varchar(1000)"/>
             <column computed="false" name="f_info" type="varchar(1000)"/>
-            <column computed="false" name="f_password" type="${smallTextType}"/>
+            <column computed="false" name="f_password" type="varchar(200)"/>
             <column computed="false" name="f_role" type="${smallTextType}"/>
             <column computed="false" name="f_sex" type="${smallTextType}"/>
             <column computed="false" name="f_telegram" type="${smallTextType}"/>

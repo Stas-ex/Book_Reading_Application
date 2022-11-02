@@ -1,13 +1,19 @@
 package com.diploma.black_fox_ex.io;
 
+import org.springframework.core.io.FileSystemResource;
+
+import java.io.IOException;
+
 public enum FileDirectories {
-    USER_IMG("/Users/stas_ex/Diploma_Spring/src/main/resources/img/user-img/"),
-    BOOK_IMG("/Users/stas_ex/Diploma_Spring/src/main/resources/img/book-img/");
+
+    USER_IMG("src/main/resources/img/user-img"),
+    BOOK_IMG("src/main/resources/img/user-img"),
+    IMG("src/main/resources/img");
 
     private String path;
 
-    FileDirectories(String msg) {
-        setPath(msg);
+    FileDirectories(String path) {
+        setPath(path);
     }
 
     public String getPath() {
@@ -16,7 +22,11 @@ public enum FileDirectories {
 
     public void setPath(String path) {
         if (path.length() != 0) {
-            this.path = path;
+            try {
+                this.path = new FileSystemResource(path).getURL().getPath();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

@@ -36,7 +36,7 @@ public class User implements UserDetails {
     @Column(name = "f_email", length = 30)
     private String email;
 
-    @Column(name = "f_password", length = 30)
+    @Column(name = "f_password", length = 200)
     private String password;
 
     @Column(name = "f_age")
@@ -94,8 +94,8 @@ public class User implements UserDetails {
 
     public User(UserDto userDto, String filename) {
         this(userDto.getUsername(), userDto.getEmail(), userDto.getPassword(),
-                userDto.getAge(), Sex.valueOf(userDto.getSex().toUpperCase()), userDto.getInfo(),
-                filename, userDto.getTelegram());
+                userDto.getAge().byteValue(), Sex.valueOf(userDto.getSex().toUpperCase()),
+                userDto.getInfo(), filename, userDto.getTelegram());
     }
 
     public void update(UpdateUserDtoReq userDto) {

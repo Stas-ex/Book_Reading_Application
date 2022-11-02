@@ -13,7 +13,7 @@
 
     <style>
         body {
-            background: black url("https://phonoteka.org/uploads/posts/2021-05/1622408081_14-phonoteka_org-p-art-minimalizm-neon-krasivo-21.jpg") repeat;
+            background: black;
             background-attachment: fixed;
             background-size: 200vh;
         }
@@ -27,6 +27,10 @@
             width: 40%;
             margin-left: 10%;
             box-shadow: 2px 2px 10px white;
+        }
+
+        .msg {
+            color: indianred;
         }
     </style>
 </head>
@@ -58,9 +62,11 @@
                         <span class="input-group-text" id="inputGroupPrepend3">@</span>
                     </div>
                     <input type="email" class="form-control " id="email" name="email"
-                           placeholder="user@mail.ru" aria-describedby="inputGroupPrepend3" th:value="${userReg.getEmail()}">
+                           placeholder="user@mail.ru" aria-describedby="inputGroupPrepend3"
+                           th:value="${userReg.getEmail()}">
                 </div>
             </div>
+
             <div class="col-md-4 mb-3">
                 <label for="passwordId" th:text="#{registration.field.password}"></label>
                 <input type="password" class="form-control " id="passwordId"
@@ -78,7 +84,8 @@
             <div class="col-md-8 mb-3">
                 <label for="info" th:text="#{registration.field.info}"></label>
                 <textarea class="form-control" id="info" name="info" rows="3"
-                          placeholder="I love to paint and eat cookies with milk" th:utext="${userReg.getInfo()}"></textarea>
+                          placeholder="I love to paint and eat cookies with milk"
+                          th:utext="${userReg.getInfo()}"></textarea>
             </div>
         </div>
 
@@ -88,8 +95,10 @@
                 <label th:text="#{registration.field.sex}"></label>
                 <div class="input-group">
                     <div class="form-check form-check-inline" th:each="gender: ${genders}">
-                        <input class="form-check-input" type="radio" name="sex" id="exampleRadios1" th:value="${gender.getTitle()}">
-                        <label class="form-check-label" for="exampleRadios1" th:text="#{'sex.' + ${gender.getTitle()}}"></label>
+                        <input class="form-check-input" type="radio" name="sex" id="exampleRadios1"
+                               th:value="${gender.getTitle()}">
+                        <label class="form-check-label" for="exampleRadios1"
+                               th:text="#{'sex.' + ${gender.getTitle()} }"></label>
                     </div>
                 </div>
             </div>
@@ -97,16 +106,16 @@
         <div class="form-group">
             <div class="form-check">
                 <input class="form-check-input is-valid" type="checkbox" id="invalidCheck3" required>
-                <label class="form-check-label" for="invalidCheck3" th:text="#{registration.checkbox.personal_data}"></label>
+                <label class="form-check-label" for="invalidCheck3"
+                       th:text="#{registration.checkbox.personal_data}"></label>
             </div>
         </div>
 
         <div th:each="warning : ${warnings}">
-            <h5 style="color: crimson; margin: 5%" th:text="#{${warning.getDefaultMessage()}}"></h5>
+            <h5 class="msg" th:text="#{${warning.getDefaultMessage()}}"></h5>
         </div>
         <button class="btn btn-warning" type="submit" align="center" th:text="#{registration.btn_reg}"/>
     </form>
-
 </div>
 <!-------------------------------------------------------------------------------------------------------------------->
 

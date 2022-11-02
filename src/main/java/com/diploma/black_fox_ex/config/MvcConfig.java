@@ -15,9 +15,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(FileDirectories.USER_IMG.getPath() + "**")
-                .addResourceLocations("file://" + FileDirectories.USER_IMG.getPath());
-        registry.addResourceHandler(FileDirectories.BOOK_IMG.getPath() + "**")
-                .addResourceLocations("file://" + FileDirectories.BOOK_IMG.getPath());
+        registry.addResourceHandler(FileDirectories.IMG.getPath() + "**")
+                .addResourceLocations("file://" + FileDirectories.IMG.getPath());
     }
 }

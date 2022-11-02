@@ -22,7 +22,7 @@ public class UpdateUserDtoReq {
     private Set<Role> roles;
 
 
-    public UpdateUserDtoReq(String username, String email, String password, Byte age, String info,
+    public UpdateUserDtoReq(String username, String email, String password, byte age, String info,
                             MultipartFile img, String sex, String telegramUsername) {
         this.username = username;
         this.email = email;

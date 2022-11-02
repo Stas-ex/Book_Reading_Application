@@ -50,14 +50,13 @@ public class RegistrationController {
                              BindingResult valid,
                              Model model) {
         if (userService.isExistUser(userDto.getUsername())) {
-            valid.addError(new ObjectError("username", "{registration.user.already.exist}"));
+            valid.addError(new ObjectError("username", "registration.user.already.exist"));
         }
         if (valid.hasErrors()) {
             model.addAttribute("genders", Sex.values());
             model.addAttribute("warnings", valid.getAllErrors());
             return "registration";
         }
-
         userService.registrationUser(userDto);
         return "redirect:/login";
     }

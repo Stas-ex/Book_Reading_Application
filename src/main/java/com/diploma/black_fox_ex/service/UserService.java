@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,9 +29,12 @@ import java.util.regex.Pattern;
  */
 @Service
 public class UserService implements UserDetailsService {
-    private final UserRepo userRepo;
-    private final FileManager fileManager = new FileManager();
+
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
+    private final UserRepo userRepo;
+    private final PasswordEncoder passwordEncoder;
+    private final FileManager fileManager = new FileManager();
 
     private final String PASSWORD_PATTERN = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,15})";
     private final String EMAIL_PATTERN = "([A-z0-9_.-]+)@([A-z0-9_.-]+).([A-z]{2,8})";
@@ -38,8 +42,9 @@ public class UserService implements UserDetailsService {
 
 
     @Autowired
-    public UserService(UserRepo userRepo) {
+    public UserService(UserRepo userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -85,6 +90,7 @@ public class UserService implements UserDetailsService {
     public void registrationUser(UserDto dto) {
         try {
             String filename = fileManager.createFile(FileDirectories.USER_IMG, dto.getImg());
+            dto.setPassword(passwordEncoder.encode(dto.getPassword()));
             var user = new User(dto, filename);
             userRepo.save(user);
 
