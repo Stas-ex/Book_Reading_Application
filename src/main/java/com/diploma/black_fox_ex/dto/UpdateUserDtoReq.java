@@ -18,12 +18,12 @@ public class UpdateUserDtoReq {
     private MultipartFile imgFile;
     private boolean active;
     private String fileName;
-    private String telegramUsername;
+    private String telegram;
     private Set<Role> roles;
 
 
     public UpdateUserDtoReq(String username, String email, String password, byte age, String info,
-                            MultipartFile img, String sex, String telegramUsername) {
+                            MultipartFile img, String sex, String telegram) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -31,7 +31,7 @@ public class UpdateUserDtoReq {
         this.info = info;
         this.imgFile = img;
         this.active = true;
-        this.telegramUsername = telegramUsername;
+        this.telegram = telegram;
         this.sex = sex;
     }
 }

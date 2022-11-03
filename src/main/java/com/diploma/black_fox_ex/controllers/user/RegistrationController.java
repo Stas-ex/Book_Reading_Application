@@ -47,11 +47,13 @@ public class RegistrationController {
      */
     @PostMapping("/add")
     public String addNewUser(@Valid @ModelAttribute("userReg") UserDto userDto,
-                             BindingResult valid,
-                             Model model) {
+                             BindingResult valid, Model model) {
         if (userService.isExistUser(userDto.getUsername())) {
-            valid.addError(new ObjectError("username", "registration.user.already.exist"));
+            valid.addError(new ObjectError(
+                    "username", "registration.user.already.exist")
+            );
         }
+
         if (valid.hasErrors()) {
             model.addAttribute("genders", Sex.values());
             model.addAttribute("warnings", valid.getAllErrors());

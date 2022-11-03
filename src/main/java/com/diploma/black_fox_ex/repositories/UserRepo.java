@@ -13,6 +13,8 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     User findByUsername(String name);
 
+    User findByEmail(String email);
+
     @Query("select h from User u join u.favorite h where u.id = :id")
     List<Book> findFavoriteBookById(@Param("id") long id);
 

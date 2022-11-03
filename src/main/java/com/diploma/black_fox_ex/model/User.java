@@ -1,6 +1,5 @@
 package com.diploma.black_fox_ex.model;
 
-import com.diploma.black_fox_ex.dto.UpdateUserDtoReq;
 import com.diploma.black_fox_ex.dto.UserDto;
 import com.diploma.black_fox_ex.model.constant.Role;
 import com.diploma.black_fox_ex.model.constant.Sex;
@@ -13,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 
@@ -28,7 +28,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "f_active")
-    private boolean active;
+    private Boolean active;
 
     @Column(name = "f_username", length = 30)
     private String username;
@@ -53,7 +53,10 @@ public class User implements UserDetails {
     private String imgFile;
 
     @Column(name = "f_telegram", length = 30)
-    private String telegramUsername;
+    private String telegram;
+
+    @Column(name = "f_deletion_date")
+    private Date date_delete;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "f_role", length = 30)
@@ -79,7 +82,7 @@ public class User implements UserDetails {
 
     public User(String username, String email, String password, Byte age,
                 Sex sex, String info, String imgFile,
-                String telegramUsername) {
+                String telegram) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -87,26 +90,26 @@ public class User implements UserDetails {
         this.sex = sex;
         this.info = info;
         this.imgFile = imgFile;
-        this.telegramUsername = telegramUsername;
+        this.telegram = telegram;
         this.active = true;
         this.role = Role.USER;
     }
 
-    public User(UserDto userDto, String filename) {
+    public User(UserDto userDto) {
         this(userDto.getUsername(), userDto.getEmail(), userDto.getPassword(),
                 userDto.getAge().byteValue(), Sex.valueOf(userDto.getSex().toUpperCase()),
-                userDto.getInfo(), filename, userDto.getTelegram());
+                userDto.getInfo(), userDto.getFilename(), userDto.getTelegram());
     }
 
-    public void update(UpdateUserDtoReq userDto) {
+    public void update(UserDto userDto) {
         this.username = userDto.getUsername();
         this.email = userDto.getEmail();
         this.password = userDto.getPassword();
-        this.age = userDto.getAge();
-        this.sex = Sex.valueOf(userDto.getSex());
+        this.age = userDto.getAge().byteValue();
+        this.sex = Sex.valueOf(userDto.getSex().toUpperCase());
         this.info = userDto.getInfo();
-        this.imgFile = userDto.getFileName();
-        this.telegramUsername = userDto.getTelegramUsername();
+        this.imgFile = userDto.getFilename();
+        this.telegram = userDto.getTelegram();
     }
 
     public void removeSupportAnswer(long id) {
@@ -120,7 +123,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return active;
     }
 
     @Override

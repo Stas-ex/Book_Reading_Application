@@ -1,7 +1,6 @@
 package com.diploma.black_fox_ex.io;
 
 import com.diploma.black_fox_ex.exeptions.AnswerErrorCode;
-import com.diploma.black_fox_ex.exeptions.ServerException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,10 +21,9 @@ public class FileManager {
      * @param directories -> path to the directory of saved images
      * @param imgFile     -> uploaded picture
      * @return file name without directory
-     * @throws ServerException for invalid data
      * @see #validateSuffixFileName(String)
      */
-    public String createFile(FileDirectories directories, MultipartFile imgFile) throws ServerException {
+    public String createFile(FileDirectories directories, MultipartFile imgFile) {
         //Проверка и сохранение картинки
         String fileName = imgFile.getOriginalFilename();
         if (Objects.requireNonNull(fileName).isEmpty()) {
@@ -44,16 +42,16 @@ public class FileManager {
         try {
             imgFile.transferTo(new File(directories.getPath() + fileNameRand));
         } catch (IOException e) {
-            throw new ServerException(AnswerErrorCode.FILE_CREATE_ERROR);
+            throw new RuntimeException(AnswerErrorCode.FILE_CREATE_ERROR.getMsg());
         }
         return fileNameRand;
     }
 
-    private void validateSuffixFileName(String fileName) throws ServerException {
+    private void validateSuffixFileName(String fileName) {
         String[] fileNameSplit = fileName.split("\\.");
         String suffix = fileNameSplit[fileNameSplit.length - 1];
         if (!suffix.equals("jpg") && !suffix.equals("png") && !suffix.equals("jpeg")) {
-            throw new ServerException(AnswerErrorCode.FILE_CREATE_ERROR);
+            throw new RuntimeException(AnswerErrorCode.FILE_CREATE_ERROR.getMsg());
         }
     }
 }

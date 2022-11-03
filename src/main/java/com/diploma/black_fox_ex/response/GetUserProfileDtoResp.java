@@ -13,7 +13,7 @@ public class GetUserProfileDtoResp {
     private String sex;
     private String info;
     private String imgFile;
-    private String telegramUsername;
+    private String telegram;
 
 
     public GetUserProfileDtoResp(User user) {
@@ -24,6 +24,6 @@ public class GetUserProfileDtoResp {
         this.sex = user.getSex().getTitle();
         this.info = user.getInfo();
         this.imgFile = FileDirectories.USER_IMG.getPath() + user.getImgFile();
-        this.telegramUsername = user.getTelegramUsername();
+        this.telegram = user.getTelegram();
     }
 }

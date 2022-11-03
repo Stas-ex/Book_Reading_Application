@@ -5,12 +5,12 @@ import com.diploma.black_fox_ex.model.User;
 import lombok.Data;
 
 @Data
-public class GetUserMenuDtoResp {
+public class UserMenuDTO {
     private String username;
     private String imgFile;
     private String email;
 
-    public GetUserMenuDtoResp(User user) {
+    public UserMenuDTO(User user) {
         this.username = user.getUsername();
         this.imgFile = FileDirectories.USER_IMG.getPath() + user.getImgFile();
         this.email = user.getEmail();

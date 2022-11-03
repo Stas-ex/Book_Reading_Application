@@ -33,14 +33,19 @@ public class AuthProvider implements AuthenticationProvider {
 
         User user = (User) userService.loadUserByUsername(username);
 
-        if (user != null && (user.getUsername().equals(username) || user.getEmail().equals(username))) {
+        if (user != null && user.getActive() && (user.getUsername().equals(username) ||
+                user.getEmail().equals(username))) {
+
             if (!passwordEncoder.matches(password, user.getPassword())) {
                 throw new BadCredentialsException("Wrong password");
             }
+
             Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
             return new UsernamePasswordAuthenticationToken(user, password, authorities);
-        } else
+
+        } else {
             throw new BadCredentialsException("Username not found");
+        }
     }
 
     @Override
