@@ -6,9 +6,9 @@ import java.io.IOException;
 
 public enum FileDirectories {
 
-    USER_IMG("src/main/resources/img/user-img"),
-    BOOK_IMG("src/main/resources/img/user-img"),
-    IMG("src/main/resources/img");
+    USER_IMG_DIR("src/main/resources/img/user-img/"),
+    BOOK_IMG_DIR("src/main/resources/img/book-img/"),
+    IMG("src/main/resources/img/");
 
     private String path;
 

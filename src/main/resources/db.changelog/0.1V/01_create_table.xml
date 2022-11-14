@@ -7,7 +7,7 @@
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
 
     <property name="smallTextType" value="varchar(30)" dbms="mysql"/>
-    <property name="idType" value="bigint" dbms="mysql"/>
+    <property name="keyType" value="bigint" dbms="mysql"/>
 
     <changeSet id="20221026_create_users" author="skuratov_stanislav">
         <preConditions onFail="MARK_RAN">
@@ -16,7 +16,7 @@
             </not>
         </preConditions>
         <createTable tableName="users">
-            <column autoIncrement="true" computed="false" name="id" type="${idType}">
+            <column autoIncrement="true" computed="false" name="id" type="${keyType}">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column computed="false" name="f_active" type="boolean"/>
@@ -39,14 +39,23 @@
             </not>
         </preConditions>
         <createTable tableName="book">
-            <column autoIncrement="true" computed="false" name="id" type="${idType}">
+            <column autoIncrement="true" computed="false" name="id" type="${keyType}">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column computed="false" name="f_title" type="${smallTextType}"/>
             <column computed="false" name="f_background_img" type="${smallTextType}"/>
-            <column computed="false" name="f_big_text" type="varchar(15000)"/>
+            <column computed="false" name="f_big_text" type="mediumtext"/>
             <column computed="false" name="f_genre" type="${smallTextType}"/>
+            <column computed="false" name="fk_author_id" type="${keyType}">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+        <addForeignKeyConstraint baseTableName="book" baseColumnNames="fk_author_id"
+                                 constraintName="FKmgf96aacmqw9k56fxbbd32wyt" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="book" baseColumnNames="fko_added_book_id"
+                                 constraintName="FKmgf14aacmqw9k56fxbbd32wyt" referencedTableName="users"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
     <changeSet id="20221026_create_comment" author="skuratov_stanislav">
@@ -56,15 +65,15 @@
             </not>
         </preConditions>
         <createTable tableName="comment">
-            <column autoIncrement="true" computed="false" name="id" type="${idType}">
+            <column autoIncrement="true" computed="false" name="id" type="${keyType}">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column computed="false" name="f_color" type="${smallTextType}"/>
             <column computed="false" name="f_text" type="varchar(1000)"/>
-            <column computed="false" name="fk_book_id" type="${idType}">
+            <column computed="false" name="fk_book_id" type="${keyType}">
                 <constraints nullable="false"/>
             </column>
-            <column computed="false" name="fk_user_id" type="${idType}">
+            <column computed="false" name="fk_user_id" type="${keyType}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -83,20 +92,22 @@
             </not>
         </preConditions>
         <createTable tableName="support">
-            <column autoIncrement="true" computed="false" name="id" type="${idType}">
+            <column autoIncrement="true" computed="false" name="id" type="${keyType}">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column computed="false" name="f_ask" type="varchar(1000)"/>
             <column computed="false" name="f_answer" type="varchar(1000)"/>
+            <column computed="false" name="f_date" type="datetime"/>
+            <column computed="false" name="fk_user_id" type="${keyType}"/>
         </createTable>
     </changeSet>
 
     <changeSet id="20221026_create_user_book_favorite" author="skuratov_stanislav">
         <createTable tableName="user_book_favorite">
-            <column computed="false" name="fk_users_id" type="${idType}">
+            <column computed="false" name="fk_users_id" type="${keyType}">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column computed="false" name="fk_book_id" type="${idType}">
+            <column computed="false" name="fk_book_id" type="${keyType}">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
         </createTable>
@@ -108,29 +119,12 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="20221026_create_users_book_added" author="skuratov_stanislav">
-        <createTable tableName="users_book_added">
-            <column computed="false" name="fk_user_id" type="${idType}">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column computed="false" name="fk_book_id" type="${idType}">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-        </createTable>
-        <addForeignKeyConstraint baseTableName="users_book_added" baseColumnNames="fk_user_id"
-                                 constraintName="FKlpserdhshniwvaefaaf2pjbbc" referencedTableName="users"
-                                 referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="users_book_added" baseColumnNames="fk_book_id"
-                                 constraintName="FK7k4yk3pnelod89ixwqlv0hb8y" referencedTableName="book"
-                                 referencedColumnNames="id"/>
-    </changeSet>
-
     <changeSet id="20221026_create_users_support" author="skuratov_stanislav">
         <createTable tableName="users_support">
-            <column computed="false" name="fk_user_id" type="${idType}">
+            <column computed="false" name="fk_user_id" type="${keyType}">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column computed="false" name="fk_support_id" type="${idType}">
+            <column computed="false" name="fk_support_id" type="${keyType}">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
         </createTable>

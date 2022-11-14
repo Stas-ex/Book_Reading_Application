@@ -1,6 +1,5 @@
 package com.diploma.black_fox_ex.io;
 
-import com.diploma.black_fox_ex.exeptions.AnswerErrorCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,43 +14,36 @@ import java.util.UUID;
 @Component
 public class FileManager {
 
+    private final String USER_IMG = "user.jpeg";
+    private final String BOOK_IMG = "book.jpeg";
+
     /**
      * This method for saving downloaded files from the site
      *
      * @param directories -> path to the directory of saved images
      * @param imgFile     -> uploaded picture
      * @return file name without directory
-     * @see #validateSuffixFileName(String)
      */
     public String createFile(FileDirectories directories, MultipartFile imgFile) {
-        //Проверка и сохранение картинки
-        String fileName = imgFile.getOriginalFilename();
-        if (Objects.requireNonNull(fileName).isEmpty()) {
-            if (directories.equals(FileDirectories.USER_IMG))
-                return "user.jpg";
-            if (directories.equals(FileDirectories.BOOK_IMG))
-                return "book.png";
+        if (imgFile == null || Objects.requireNonNull(imgFile.getOriginalFilename()).isEmpty()) {
+            if (directories.equals(FileDirectories.USER_IMG_DIR))
+                return USER_IMG;
+            if (directories.equals(FileDirectories.BOOK_IMG_DIR))
+                return BOOK_IMG;
+            throw new RuntimeException("Image file catalog not found.");
         }
 
-        validateSuffixFileName(fileName);
-        File uploadDir = new File(directories.getPath());
+        String filename = getRandomFilename(imgFile.getOriginalFilename());
 
-        //If the file does not exist
-        if (!uploadDir.exists()) uploadDir.mkdirs();//We will create it
-        String fileNameRand = UUID.randomUUID().toString().substring(3, 7) + "." + fileName;
         try {
-            imgFile.transferTo(new File(directories.getPath() + fileNameRand));
+            imgFile.transferTo(new File(directories.getPath() + filename));
         } catch (IOException e) {
-            throw new RuntimeException(AnswerErrorCode.FILE_CREATE_ERROR.getMsg());
+            throw new RuntimeException("Error to create image. ", e);
         }
-        return fileNameRand;
+        return filename;
     }
 
-    private void validateSuffixFileName(String fileName) {
-        String[] fileNameSplit = fileName.split("\\.");
-        String suffix = fileNameSplit[fileNameSplit.length - 1];
-        if (!suffix.equals("jpg") && !suffix.equals("png") && !suffix.equals("jpeg")) {
-            throw new RuntimeException(AnswerErrorCode.FILE_CREATE_ERROR.getMsg());
-        }
+    private String getRandomFilename(String filename) {
+        return UUID.randomUUID().toString().substring(3, 7) + "." + filename;
     }
 }

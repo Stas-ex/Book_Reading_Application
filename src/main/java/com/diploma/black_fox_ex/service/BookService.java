@@ -1,39 +1,50 @@
 package com.diploma.black_fox_ex.service;
 
+import com.diploma.black_fox_ex.dto.AddCommentDtoReq;
+import com.diploma.black_fox_ex.dto.DeleteFavoriteBookDtoReq;
+import com.diploma.black_fox_ex.dto.PageSplitView;
+import com.diploma.black_fox_ex.dto.book.AbstractBookDTO;
+import com.diploma.black_fox_ex.dto.book.BookEditDTO;
+import com.diploma.black_fox_ex.dto.book.BookReqDTO;
+import com.diploma.black_fox_ex.dto.book.ReferenceBookDTO;
+import com.diploma.black_fox_ex.exeptions.AnswerErrorCode;
+import com.diploma.black_fox_ex.exeptions.ServerException;
+import com.diploma.black_fox_ex.io.FileDirectories;
+import com.diploma.black_fox_ex.io.FileManager;
 import com.diploma.black_fox_ex.model.Book;
+import com.diploma.black_fox_ex.model.Comment;
+import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.model.constant.Genre;
 import com.diploma.black_fox_ex.repositories.BookRepo;
 import com.diploma.black_fox_ex.repositories.CommentsRepo;
-import com.diploma.black_fox_ex.exeptions.AnswerErrorCode;
-import com.diploma.black_fox_ex.exeptions.ServerException;
 import com.diploma.black_fox_ex.repositories.UserRepo;
-import com.diploma.black_fox_ex.io.FileDirectories;
-import com.diploma.black_fox_ex.io.FileManager;
-import com.diploma.black_fox_ex.model.Comment;
-import com.diploma.black_fox_ex.model.User;
-
-import com.diploma.black_fox_ex.dto.*;
-import com.diploma.black_fox_ex.response.*;
+import com.diploma.black_fox_ex.response.AddCommentDtoResp;
+import com.diploma.black_fox_ex.response.DeleteFavoriteHiResp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class performs basic actions on received book interaction requests.
  */
 @Service
-public class BookService {
+public class BookService extends AbstractService {
 
-    private static final Logger logger = LoggerFactory.getLogger(BookService.class);
+    private final static Logger logger = LoggerFactory.getLogger(BookService.class);
 
-    private final FileManager fileManager = new FileManager();
-    private final CommentsRepo commentsRepo;
+    int MAX_SYMBOLS = 1800;
+    public final int PAGE_BOOKS_SIZE = 50;
+
     private final BookRepo bookRepo;
     private final UserRepo userRepo;
-
+    private final CommentsRepo commentsRepo;
+    private final FileManager fileManager;
 
     @Autowired
     public BookService(BookRepo bookRepo, UserRepo userRepo,
@@ -41,216 +52,62 @@ public class BookService {
         this.bookRepo = bookRepo;
         this.userRepo = userRepo;
         this.commentsRepo = commentsRepo;
+        fileManager = new FileManager();
     }
 
-    /**
-     * Book creation method
-     *
-     * @param user    includes all fields of an authorized user
-     * @param bookDto contains the main parameters for create book
-     * @return dto response , with an error field
-     * @see #validateCreateBook(User, CreateBookDtoReq)
-     */
-    public CreateBookDtoResp createBook(User user, CreateBookDtoReq bookDto) {
-        var response = new CreateBookDtoResp();
-        try {
-            validateCreateBook(user, bookDto);
-
-            Genre genre = Genre.valueOf(bookDto.getGenre());
-
-            if (genre == null)
-                throw new ServerException(AnswerErrorCode.BOOK_TAG_ERROR);
-
-            String fileName = fileManager.createFile(FileDirectories.BOOK_IMG, bookDto.getImgFile());
-
-            Book book = new Book(bookDto.getTitle(),
-                    fileName, bookDto.getBigText(), genre);
-
-            bookRepo.save(book);
-
-            List<Book> books = userRepo.findAllById(user.getId());
-            books.add(book);
-            user.setBooks(books);
-            userRepo.save(user);
-
-        } catch (ServerException ex) {
-            response.setError(ex.getErrorMessage());
-            logger.warn("User ({}) -> (createBook) error {}.", user != null ? user.getId() : "null", ex.getErrorMessage());
-        } catch (Exception ex) {
-            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
-            logger.error("User ({}) -> (createBook) error {}.", user != null ? user.getId() : "null", ex.getMessage());
-        }
-        return response;
+    public void createBook(Long authorId, BookReqDTO bookReqDto) {
+        String filename = fileManager.createFile(FileDirectories.BOOK_IMG_DIR, bookReqDto.getImgFile());
+        User author = userRepo.getById(authorId);
+        Book book = new Book(bookReqDto, filename, author);
+        bookRepo.save(book);
     }
 
-    /**
-     * Book update method
-     *
-     * @param user     includes all fields of an authorized user
-     * @param booksDto contains the main parameters for update bookes
-     * @return dto response , with an error field
-     * @see #validateUpdateBook(User, UpdateBooksDtoReq)
-     */
-    public UpdateBookDtoResp updateBook(User user, UpdateBooksDtoReq booksDto) {
-        var response = new UpdateBookDtoResp();
-        try {
-            validateUpdateBook(user, booksDto);
-            Genre genre = Genre.valueOf(booksDto.getGenre());
-            if (genre == null)
-                throw new ServerException(AnswerErrorCode.BOOK_TAG_ERROR);
+    public void updateBook(Long bookId, BookReqDTO bookReqDTO, User user) {
+        Book book = bookRepo.getById(bookId);
+        validationAccessUser(book, user);
 
-            Book book = userRepo.findBookById(user.getId(), booksDto.getId());
+        String filePath = fileManager.createFile(FileDirectories.BOOK_IMG_DIR, bookReqDTO.getImgFile());
+        filePath = filePath.equals("book.jpeg") ? book.getFilenameBg() : filePath;
 
-            String fileName;
-            if (Objects.requireNonNull(booksDto.getImgFile().getOriginalFilename()).isEmpty()) {
-                fileName = book.getBackgroundImg();
-            } else {
-                fileName = fileManager.createFile(FileDirectories.BOOK_IMG, booksDto.getImgFile());
-            }
-
-            Book bookUpdate = new Book(book.getId(), booksDto.getTitle(), fileName, booksDto.getBigText(), genre);
-            bookRepo.save(bookUpdate);
-        } catch (ServerException e) {
-            response.setError(e.getErrorMessage());
-            logger.warn("User ({}) -> (updateBook) error {}.", user != null ? user.getId() : "null", e.getErrorMessage());
-        } catch (Exception ex) {
-            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
-            logger.error("User ({}) -> (updateBook) error {}.", user != null ? user.getId() : "null", ex.getMessage());
-        }
-        return response;
-
+        book.updateBook(bookReqDTO, filePath);
+        bookRepo.save(book);
     }
 
-    /**
-     * Book delete method
-     *
-     * @param request contains the main parameters for delete book
-     * @return dto response , with an error field
-     * @see #validateDeleteBook(DeleteBookDtoReq) ()
-     */
-    public DeleteBookDtoResp deleteBook(DeleteBookDtoReq request) {
-        var response = new DeleteBookDtoResp();
-        try {
-            validateDeleteBook(request);
-            User user = request.getUser();
-            Book book = userRepo.findBookById(user.getId(), request.getId());
-
-            List<Book> books = userRepo.findAllById(user.getId());
-            books.remove(book);
-            user.setBooks(books);
-
-            userRepo.save(user);
-            bookRepo.delete(book);
-        } catch (ServerException e) {
-            response.setError(e.getErrorMessage());
-            logger.warn("User ({}) -> (deleteBook) error {}.", request.getUser() != null ? request.getUser().getId() : "null", e.getErrorMessage());
-        } catch (Exception ex) {
-            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
-            logger.error("User ({}) -> (deleteBook) error {}.", request.getUser() != null ? request.getUser().getId() : "null", ex.getMessage());
-        }
-        return response;
+    public void deleteBook(Long id, User user) {
+        Book book = bookRepo.getById(id);
+        validationAccessUser(book, user);
+        book.setDateTimeDelete(LocalDateTime.now());
+        bookRepo.save(book);
     }
 
-    /**
-     * Method returns all books by genre
-     *
-     * @param nameGenre includes genre name
-     * @param numPage   includes number page
-     * @return dto response , with an error field
-     * @see #validateGetAllBookByGenre(String, int)
-     */
-    public GetAllBookResp getAllBookByGenre(String nameGenre, int numPage) {
-        var response = new GetAllBookResp();
-        try {
-            validateGetAllBookByGenre(nameGenre, numPage);
-            List<Book> listBook;
+    public PageSplitView<List<ReferenceBookDTO>> getAllBookByGenre(String genreName, int numPage) {
+        validateGetAllBookByGenre(genreName, numPage);
+        List<Long> booksId = getBooksIdByGenre(genreName, numPage, PAGE_BOOKS_SIZE * 3);
 
-            if (nameGenre.equals("all"))
-                listBook = bookRepo.findAll();
-            else
-                listBook = bookRepo.findByGenre(Genre.valueOf(nameGenre));
-
-            List<Integer> pageNumbers = new ArrayList<>();
-            for (int i = 0; i < (listBook.size() / 21) + 1; i++) {
-                pageNumbers.add(i);
-            }
-            response.setPageNumbers(pageNumbers);
-
-            if (listBook.size() == 0)
-                throw new ServerException(AnswerErrorCode.PAGE_IS_EMPTY);
-            else if (listBook.size() > (numPage + 1) * 21)
-                response.setList(listBook.subList(numPage * 21, (numPage + 1) * 21));
-            else {
-                response.setList(listBook.subList(numPage * 21, listBook.size()));
-            }
-        } catch (ServerException ex) {
-            response.setError(ex.getErrorMessage());
-            logger.warn("(getAllBookByGenre) error -> {}.", ex.getErrorMessage());
-        } catch (Exception ex) {
-            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
-            logger.error("(getAllBookByGenre) error -> {}.", ex.getMessage());
-        }
-        return response;
+        return getPageSplitViewByBookIds(booksId, numPage);
     }
 
-    /**
-     * Method gets book by id
-     *
-     * @param user includes all fields of an authorized user
-     * @param id   -> book parameter
-     * @return dto response , with an error field
-     * @see #validateGetBookById(long)
-     */
-    public GetBookLookPageDtoResp getBookById(User user, long id) {
-        var response = new GetBookLookPageDtoResp();
-        try {
-            validateGetBookById(id);
-            Book book = bookRepo.findById(id).orElseThrow();
+    public PageSplitView<AbstractBookDTO> getLookBookById(Long bookId, int numPage) {
+        int fromSymbols = (numPage - 1) * MAX_SYMBOLS;
+        int toSymbols = numPage * MAX_SYMBOLS;
 
-            List<GetCommentsDtoResp> commentsDto = new ArrayList<>();
-            book.getComments().forEach(comment -> commentsDto.add(new GetCommentsDtoResp(comment)));
-            response.setBookDto(new GetBookLookDtoResp(book, commentsDto));
+        var pageCount = bookRepo.getPageCountByBookId(bookId, MAX_SYMBOLS);
+        var dtoBook = bookRepo.getSplitBookDTO(bookId, fromSymbols, toSymbols);
+        var pages = getPageNumbers(numPage, pageCount);
 
-            //If the like was clicked
-            if (user != null) {
-                List<Book> list = userRepo.findFavoriteBookById(user.getId());
-                if (list.contains(book)) {
-                    response.setLikeActive("");
-                }
-            }
-        } catch (ServerException e) {
-            response.setError(e.getErrorMessage());
-            logger.warn("User ({}) , Book ({}) -> (getBookById) error {}.", user != null ? user.getId() : "null", id, e.getErrorMessage());
-        } catch (Exception ex) {
-            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
-            logger.error("User ({}), Book ({}) -> (getBookById) error {}.", user != null ? user.getId() : "null", id, ex.getMessage());
-        }
-        return response;
+        return new PageSplitView<>(dtoBook, pages);
     }
 
-    /**
-     * Method returns a list of saved books from an authorized user
-     *
-     * @param user includes all fields of an authorized user
-     * @return response containing a list of the user's favorite books
-     * @see #validateGetAllFavoriteByUser(User)
-     */
-    public GetAllFavoriteHiResp getAllFavoriteByUser(User user) {
-        GetAllFavoriteHiResp response = new GetAllFavoriteHiResp();
-        try {
-            validateGetAllFavoriteByUser(user);
-            List<GetBookCardDtoResp> listBookDto = new ArrayList<>();
-            List<Book> listBook = userRepo.findFavoriteBookById(user.getId());
-            listBook.forEach(book -> listBookDto.add(new GetBookCardDtoResp(book)));
-            response.setListDto(listBookDto);
-        } catch (ServerException e) {
-            response.setError(e.getErrorMessage());
-            logger.warn("User ({}) -> (getAllFavoriteByUser) error {}.", user != null ? user.getId() : "null", e.getErrorMessage());
-        } catch (Exception ex) {
-            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
-            logger.error("User ({}) -> (getAllFavoriteByUser) error {}.", user != null ? user.getId() : "null", ex.getMessage());
-        }
-        return response;
+    //If the like was clicked
+    public boolean isLikeUserId(Long bookId, User user) {
+        return user != null && bookRepo.getLikesIdByBookId(bookId).contains(user.getId());
+    }
+
+
+    public PageSplitView<List<ReferenceBookDTO>> getAllFavoriteBooksByUser(User user, int numPage) {
+        var booksId = bookRepo.getFavoriteBooksId(user, getSkipRows(numPage), PAGE_BOOKS_SIZE * 3);
+
+        return getPageSplitViewByBookIds(booksId, numPage);
     }
 
     /**
@@ -282,95 +139,35 @@ public class BookService {
         return responseError;
     }
 
-    /**
-     * Method returns a list of all books from an authorized user
-     *
-     * @param user includes all fields of an authorized user
-     * @return list of all books for a given users
-     * @see #validateUser(User)
-     */
-    public GetProfileViewBooksAllDtoResp getAllBookByUser(User user) {
-        GetProfileViewBooksAllDtoResp response = new GetProfileViewBooksAllDtoResp();
-        try {
-            validateUser(user);
-            List<GetBookCardDtoResp> listDto = new ArrayList<>();
-            List<Book> listBook = userRepo.findAllById(user.getId());
-            listBook.forEach(book -> listDto.add(new GetBookCardDtoResp(book)));
-            response.setBooksDto(listDto);
-            return response;
-        } catch (ServerException e) {
-            response.setError(e.getErrorMessage());
-            logger.warn("User ({}) -> (getAllBookByUser) error {}.", user != null ? user.getId() : "null", e.getErrorMessage());
-        } catch (Exception ex) {
-            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
-            logger.error("User ({}) -> (getAllBookByUser) error {}.", user != null ? user.getId() : "null", ex.getMessage());
-        }
-        return response;
+
+    public PageSplitView<List<ReferenceBookDTO>> getAllBookByUser(User user, int numPage) {
+        var booksId = bookRepo.getBooksIdByUser(user, getSkipRows(numPage), PAGE_BOOKS_SIZE * 3);
+        return getPageSplitViewByBookIds(booksId, numPage);
     }
 
-    /**
-     * Method returns product by id
-     *
-     * @param user includes all fields of an authorized user
-     * @param id   -> book parameter
-     * @return bookDto, with an error field
-     * @see #validateGetBook(User, long)
-     */
-    public GetProfileViewHiDtoResp getBookEditById(User user, long id) {
-        var response = new GetProfileViewHiDtoResp();
-        try {
-            validateGetBook(user, id);
-            List<Book> list = userRepo.findAllById(user.getId());
-            List<Book> bookList = list.stream().filter(h -> h.getId() == id).toList();
-            if (bookList.size() == 0)
-                throw new ServerException(AnswerErrorCode.BOOK_NOT_FOUND);
-            response.setBookDto(new GetBookEditDtoResp(bookList.get(0)));
-        } catch (ServerException ex) {
-            response.setError(ex.getErrorMessage());
-            logger.warn("User ({}), Book ({}) -> (getBook) error {}.", user != null ? user.getId() : "null", id, ex.getErrorMessage());
-        } catch (Exception ex) {
-            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
-            logger.error("User ({}), Book ({}) -> (getBook) error {}.", user != null ? user.getId() : "null", id, ex.getMessage());
+
+    public BookEditDTO getBookEditById(User user, Long bookId) throws ServerException {
+        validateGetBook(user, bookId);
+
+        BookEditDTO bookEdit = bookRepo.getBookEditDTO(bookId);
+
+        if (!bookEdit.getAuthor().equals(user)) {
+            throw new RuntimeException(
+                    String.format("user %d is not the author of the book", user.getId())
+            );
         }
-        return response;
+
+        return bookEdit;
     }
 
-    /**
-     * The method implements adding book to the saved tab for this user
-     *
-     * @param request contains the main parameters for add favorite book
-     * @return dto response, with an error field
-     * @see #validateAddFavoriteBook(AddFavoriteBookReq)
-     */
-    public AddFavoriteResp addFavoriteBook(AddFavoriteBookReq request) {
-        var response = new AddFavoriteResp();
-        try {
-            validateAddFavoriteBook(request);
-            User user = request.getUser();
-            Book book = bookRepo.findById(request.getBookId()).orElseThrow();
-            List<Book> listAllFavorite = userRepo.findFavoriteBookById(user.getId());
+    public void addFavoriteBook(Long userId, Long bookId) {
+        var likesId = bookRepo.getLikesIdByBookId(bookId);
+        var book = bookRepo.getById(bookId);
 
-            //If the user has already liked
-            if (book.getLikes().contains(user)) {
-                book.getLikes().remove(user);
-                listAllFavorite.remove(book);
-            } else {
-                book.getLikes().add(user);
-                listAllFavorite.add(book);
-            }
-
-            user.setFavorite(listAllFavorite);
-            bookRepo.save(book);
-            userRepo.save(user);
-
-        } catch (ServerException e) {
-            response.setError(e.getErrorMessage());
-            logger.warn("User ({}), Book ({}) -> (addFavoriteBook) error {}.", request.getUser() != null ? request.getUser().getId() : "null", request.getBookId(), e.getErrorMessage());
-        } catch (Exception ex) {
-            response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
-            logger.error("User ({}), Book ({}) -> (addFavoriteBook) error {}.", request.getUser() != null ? request.getUser().getId() : "null", request.getBookId(), ex.getMessage());
+        if (likesId.contains(userId)) {
+            userRepo.findById(book.getId());
         }
-        return response;
+
     }
 
     /**
@@ -378,7 +175,6 @@ public class BookService {
      *
      * @param request contains the main parameters for delete favorite book
      * @return dto response, with an error field
-     * @see #validateAddFavoriteBook(AddFavoriteBookReq)
      */
     public DeleteFavoriteHiResp deleteFavoriteBook(DeleteFavoriteBookDtoReq request) {
         var response = new DeleteFavoriteHiResp();
@@ -406,19 +202,32 @@ public class BookService {
         return response;
     }
 
-    /**
-     * The method returns a list of all genres
-     *
-     * @return list genres
-     */
-    public List<Genre> getAllGenre() {
+    public List<Genre> getAllGenres() {
         return Arrays.stream(Genre.values()).toList();
     }
 
+    private List<ReferenceBookDTO> getRefBookById(List<Long> booksId) {
+        List<ReferenceBookDTO> refBooks = new ArrayList<>();
+        for (Long aLong : booksId) {
+            refBooks.add(bookRepo.getReferenceBook(aLong));
+        }
+        return refBooks;
+    }
 
-    private void validateGetBookById(long id) throws ServerException {
-        if (id <= 0) {
-            throw new ServerException(AnswerErrorCode.BOOK_ID_NOT_EXIST);
+    private List<Long> getBooksIdByGenre(String genreName, int numPage, int limit) {
+        if (genreName.equals("All")) {
+            return bookRepo.getBooksIdAllGenres(getSkipRows(numPage), limit);
+        }
+        return bookRepo.getBooksIdByGenre(Genre.valueOf(genreName.toUpperCase()), getSkipRows(numPage), limit);
+    }
+
+    private int getSkipRows(int numPage) {
+        return (Math.max(numPage, 1) - 1) * PAGE_BOOKS_SIZE;
+    }
+
+    private void validationAccessUser(Book book, User user) {
+        if (!book.getAuthor().equals(user)) {
+            throw new RuntimeException("The user %d is not the author of the book.".formatted(user.getId()));
         }
     }
 
@@ -437,101 +246,12 @@ public class BookService {
         }
     }
 
-    private void validateGetAllBookByGenre(String nameGenre, int numPage) throws ServerException {
-        if (nameGenre == null || nameGenre.isEmpty()) {
-            throw new ServerException(AnswerErrorCode.BOOK_TAG_ERROR);
-        }
-        if (numPage < 0) {
-            throw new ServerException(AnswerErrorCode.BOOK_PAGE_ERROR);
-        }
-    }
-
-    private void validateCreateBook(User user, CreateBookDtoReq dto) throws ServerException {
-        if (user == null || user.getUsername() == null) {
-            throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
-        }
-        if (dto.getTitle() == null || dto.getTitle().length() < 3) {
-            throw new ServerException(AnswerErrorCode.BOOK_TITLE_ERROR);
-        }
-        if (!bookRepo.findAllByTitle(dto.getTitle()).isEmpty()) {
-            throw new ServerException(AnswerErrorCode.BOOK_TITLE_ALREADY_EXIST);
-        }
-        if (dto.getBigText() == null || dto.getBigText().length() < 20) {
-            throw new ServerException(AnswerErrorCode.BOOK_SHORT_TEXT);
-        }
-        if (dto.getImgFile() == null) {
-            throw new ServerException(AnswerErrorCode.BOOK_IMG_ERROR);
-        }
-        if (dto.getGenre() == null || dto.getGenre().isEmpty()) {
-            throw new ServerException(AnswerErrorCode.BOOK_TAG_ERROR);
-        }
-    }
-
-    private void validateUpdateBook(User user, UpdateBooksDtoReq dto) throws ServerException {
-        if (dto == null) {
-            throw new ServerException(AnswerErrorCode.REQUEST_IS_NULL);
-        }
-        if (dto.getId() < 1) {
-            throw new ServerException(AnswerErrorCode.BOOK_ID_NOT_EXIST);
-        }
-        if (user == null || user.getUsername() == null) {
-            throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
-        }
-
-        if (dto.getImgFile() == null) {
-            throw new ServerException(AnswerErrorCode.BOOK_IMG_ERROR);
-        }
-
-        List<Book> bookByTitle = bookRepo.findAllByTitle(dto.getTitle());
-        Optional<Book> bookUpdate = bookRepo.findById(dto.getId());
-
-        if (bookUpdate.isEmpty())
-            throw new ServerException(AnswerErrorCode.BOOK_ID_NOT_EXIST);
-
-        if (!bookByTitle.isEmpty() && bookUpdate.get().getId() != bookByTitle.get(0).getId()) {
-            throw new ServerException(AnswerErrorCode.BOOK_TITLE_ALREADY_EXIST);
-        }
-        if (dto.getTitle() == null || dto.getTitle().length() < 3) {
-            throw new ServerException(AnswerErrorCode.BOOK_TITLE_ERROR);
-        }
-        if (dto.getGenre() == null || dto.getGenre().isEmpty()) {
-            throw new ServerException(AnswerErrorCode.BOOK_TAG_ERROR);
-        }
-        if (dto.getBigText() == null || dto.getBigText().length() < 20) {
-            throw new ServerException(AnswerErrorCode.BOOK_SHORT_TEXT);
-        }
-    }
-
-    private void validateDeleteBook(DeleteBookDtoReq request) throws ServerException {
-        if (request.getId() <= 0) {
-            throw new ServerException(AnswerErrorCode.BOOK_ID_NOT_EXIST);
-        }
-        if (request.getUser() == null) {
-            throw new ServerException(AnswerErrorCode.BOOK_USER_NOT_FOUND);
-        }
-    }
-
-    private void validateUser(User user) throws ServerException {
-        if (user == null || user.getId() <= 0) {
-            throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
-        }
-    }
-
-    private void validateGetBook(User user, long id) throws ServerException {
+    private void validateGetBook(User user, Long id) throws ServerException {
         if (user == null) {
             throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
         }
-        if (id <= 0) {
+        if (id != null && id <= 0) {
             throw new ServerException(AnswerErrorCode.BOOK_USER_NOT_FOUND);
-        }
-    }
-
-    private void validateAddFavoriteBook(AddFavoriteBookReq request) throws ServerException {
-        if (request.getBookId() <= 0) {
-            throw new ServerException(AnswerErrorCode.FAVORITE_BOOK_ID_ERROR);
-        }
-        if (request.getUser() == null) {
-            throw new ServerException(AnswerErrorCode.FAVORITE_USER_ERROR);
         }
     }
 
@@ -544,12 +264,22 @@ public class BookService {
         }
     }
 
-    private void validateGetAllFavoriteByUser(User user) throws ServerException {
-        if (user == null) {
-            throw new ServerException(AnswerErrorCode.FAVORITE_USER_ERROR);
+    private void validateGetAllBookByGenre(String genreName, int numPage) {
+        if (genreName == null) {
+            throw new RuntimeException("Genre is null");
         }
-        if (user.getId() <= 0) {
-            throw new ServerException(AnswerErrorCode.USER_NOT_REGISTERED);
+        if (numPage <= 0) {
+            throw new RuntimeException("Error number page");
         }
+    }
+
+    private PageSplitView<List<ReferenceBookDTO>> getPageSplitViewByBookIds(List<Long> booksId, int numPage) {
+        int bookIdCount = Math.min(booksId.size(), PAGE_BOOKS_SIZE);
+        List<ReferenceBookDTO> refBooks = getRefBookById(booksId.subList(0, bookIdCount));
+
+        int pageNumCountView = (int) (numPage + Math.ceil((double) booksId.size() / PAGE_BOOKS_SIZE));
+        List<Integer> pageNumbers = getPageNumbers(numPage, pageNumCountView);
+
+        return new PageSplitView<>(refBooks, pageNumbers);
     }
 }

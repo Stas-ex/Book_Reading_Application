@@ -1,24 +1,22 @@
 package com.diploma.black_fox_ex.controllers.books;
 
-import com.diploma.black_fox_ex.dto.AddFavoriteBookReq;
-import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.dto.DeleteFavoriteBookDtoReq;
+import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.service.BookService;
 import com.diploma.black_fox_ex.service.UserService;
-
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * This is the class for interacting with the "favorite book" page.
+ * This is the class for interacting with the "favorite book" pageNum.
  */
 @Controller
-@RequestMapping("/favorite")
+@RequestMapping("/favorite/{id}")
 public class FavoriteBookController {
     private final UserService userService;
     private final BookService bookService;
@@ -30,41 +28,33 @@ public class FavoriteBookController {
     }
 
     /**
-     * Function to go to the 'favorite book' page
+     * Function to go to the 'favorite book' pageNum
      *
      * @param user  retrieving Authorized User Data Using Spring Security
      * @param model for creating attributes sent to the server as a response
-     * @return user books to the 'favorite book' page
+     * @return user books to the 'favorite book' pageNum
      */
     @GetMapping
-    public String startFavoriteBook(@AuthenticationPrincipal User user, Model model) {
-        var responseDto = bookService.getAllFavoriteByUser(user);
-        if (responseDto.getError() != null) {
-            model.addAttribute("errorFavorite", responseDto.getError());
-        }
+    public String startFavoriteBook(@AuthenticationPrincipal User user,
+                                    @PathVariable("id") int numPage, Model model) {
+        var page = bookService.getAllFavoriteBooksByUser(user, numPage);
         model.addAttribute("userMenu", userService.getUserMenu(user));
-        model.addAttribute("books", responseDto.getListDto());
+        model.addAttribute("pageNumbers", page.pageNumbers());
+        model.addAttribute("books", page.elem());
         return "/book/favorite-book";
     }
 
     /**
      * Function to add book to the saved section
      *
-     * @param user  retrieving Authorized User Data Using Spring Security
-     * @param id    contains the applied indicator for mutable book
-     * @param model for creating attributes sent to the server as a response
-     * @return the 'book look' page otherwise error page
+     * @param user   retrieving Authorized User Data Using Spring Security
+     * @param bookId contains the applied indicator for mutable book
+     * @return the 'book look' pageNum otherwise error pageNum
      */
-    @GetMapping("/{id}/add")
-    public String addFavoriteBook(@AuthenticationPrincipal User user, @PathVariable long id, Model model) {
-        var request = new AddFavoriteBookReq(user, id);
-        var response = bookService.addFavoriteBook(request);
-        if (response.getError() != null) {
-            System.out.println(response.getError());
-            model.addAttribute("error", response.getError());
-            return "/errorPage";
-        }
-        return "redirect:/book/%d/look".formatted(id);
+    @GetMapping("/add")
+    public String addFavoriteBook(@AuthenticationPrincipal User user, @PathVariable("id") long bookId) {
+        bookService.addFavoriteBook(user.getId(), bookId);
+        return "redirect:/book/%d/look/1".formatted(bookId);
     }
 
     /**
@@ -73,16 +63,16 @@ public class FavoriteBookController {
      * @param user  retrieving Authorized User Data Using Spring Security
      * @param id    contains the applied indicator for mutable book
      * @param model for creating attributes sent to the server as a response
-     * @return the 'favorite books' page otherwise error page
+     * @return the 'favorite books' pageNum otherwise error pageNum
      */
-    @GetMapping("/{id}/delete")
+    @GetMapping("/delete")
     public String deleteFavoriteBook(@AuthenticationPrincipal User user, @PathVariable long id, Model model) {
         var request = new DeleteFavoriteBookDtoReq(id, user);
         var response = bookService.deleteFavoriteBook(request);
         if (response.getError() != null) {
             model.addAttribute("error", response.getError());
-            return "errorPage";
+            return "error";
         }
-        return "redirect:/favorite";
+        return "redirect:/favorite/1";
     }
 }

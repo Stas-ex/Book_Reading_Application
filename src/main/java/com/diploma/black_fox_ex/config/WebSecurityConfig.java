@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/registration",
                         "/registration/add", "/about",
-                        "/book/**/look", "/books/**"
+                        "/book/**/look/**", "/books/**"
                 )
                 .permitAll()
                 .anyRequest().authenticated()

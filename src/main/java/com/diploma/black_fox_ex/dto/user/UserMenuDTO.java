@@ -1,4 +1,4 @@
-package com.diploma.black_fox_ex.response;
+package com.diploma.black_fox_ex.dto.user;
 
 import com.diploma.black_fox_ex.io.FileDirectories;
 import com.diploma.black_fox_ex.model.User;
@@ -12,7 +12,7 @@ public class UserMenuDTO {
 
     public UserMenuDTO(User user) {
         this.username = user.getUsername();
-        this.imgFile = FileDirectories.USER_IMG.getPath() + user.getImgFile();
+        this.imgFile = FileDirectories.USER_IMG_DIR.getPath() + user.getImgFile();
         this.email = user.getEmail();
     }
 }

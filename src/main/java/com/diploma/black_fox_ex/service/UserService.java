@@ -1,17 +1,16 @@
 package com.diploma.black_fox_ex.service;
 
 import com.diploma.black_fox_ex.dto.DeleteHelpDtoReq;
-import com.diploma.black_fox_ex.dto.UserDto;
+import com.diploma.black_fox_ex.dto.user.UserDTO;
 import com.diploma.black_fox_ex.exeptions.AnswerErrorCode;
 import com.diploma.black_fox_ex.exeptions.ServerException;
 import com.diploma.black_fox_ex.io.FileDirectories;
 import com.diploma.black_fox_ex.io.FileManager;
-import com.diploma.black_fox_ex.model.Support;
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.repositories.UserRepo;
 import com.diploma.black_fox_ex.response.DeleteHelpResp;
 import com.diploma.black_fox_ex.response.GetAllHelpsResp;
-import com.diploma.black_fox_ex.response.UserMenuDTO;
+import com.diploma.black_fox_ex.dto.user.UserMenuDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * This class performs basic actions on received user interaction requests.
@@ -33,13 +30,14 @@ public class UserService implements UserDetailsService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    private final String DEFAULT_PASS = "Password123";
+    private final String DEFAULT_PASSWORD = "Password123";
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
     private final FileManager fileManager = new FileManager();
 
     @Autowired
-    public UserService(UserRepo userRepo, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepo userRepo,
+                       PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
     }
@@ -76,14 +74,14 @@ public class UserService implements UserDetailsService {
      * function to create the transfer of the required user data in the profile
      *
      * @param user includes all fields of an authorized user
-     * @return dto to display the user on the main profile page
+     * @return dto to display the user on the main profile pageNum
      */
-    public UserDto getUserProfile(User user) {
+    public UserDTO getUserProfile(User user) {
         if (user == null) return null;
-        var userDto = new UserDto(user.getUsername(), user.getEmail(),
-                DEFAULT_PASS, user.getAge(), user.getSex().getTitle(),
+        var userDto = new UserDTO(user.getUsername(), user.getEmail(),
+                DEFAULT_PASSWORD, user.getAge(), user.getSex().getTitle(),
                 user.getInfo(), user.getTelegram(), null);
-        userDto.setFilename(FileDirectories.USER_IMG.getPath() + user.getImgFile());
+        userDto.setFilename(FileDirectories.USER_IMG_DIR.getPath() + user.getImgFile());
         return userDto;
     }
 
@@ -92,8 +90,8 @@ public class UserService implements UserDetailsService {
      *
      * @param dto contains the main parameters for registration user
      */
-    public void registrationUser(UserDto dto) {
-        dto.setFilename(fileManager.createFile(FileDirectories.USER_IMG, dto.getImg()));
+    public void registrationUser(UserDTO dto) {
+        dto.setFilename(fileManager.createFile(FileDirectories.USER_IMG_DIR, dto.getImg()));
         dto.setPassword(passwordEncoder.encode(dto.getPassword()));
         var user = new User(dto);
         userRepo.save(user);
@@ -105,15 +103,15 @@ public class UserService implements UserDetailsService {
      * @param user    includes all fields of an authorized user
      * @param userDto contains the main parameters for update user
      */
-    public void updateUser(User user, UserDto userDto) {
+    public void updateUser(User user, UserDTO userDto) {
 
         //If the user update a password
         String password = userDto.getPassword();
-        userDto.setPassword(password.equals(DEFAULT_PASS) ? user.getPassword() : passwordEncoder.encode(password));
+        userDto.setPassword(password.equals(DEFAULT_PASSWORD) ? user.getPassword() : passwordEncoder.encode(password));
 
         //If the user adds a file
-        String filePath = fileManager.createFile(FileDirectories.USER_IMG, userDto.getImg());
-        userDto.setFilename(filePath.equals("user.jpg") ? user.getImgFile() : filePath);
+        String filePath = fileManager.createFile(FileDirectories.USER_IMG_DIR, userDto.getImg());
+        userDto.setFilename(filePath.equals("user.jpeg") ? user.getImgFile() : filePath);
 
         user.update(userDto);
         userRepo.save(user);
@@ -122,7 +120,7 @@ public class UserService implements UserDetailsService {
 
     public void deleteUser(User user) {
         if (user != null) {
-            user.setDate_delete(Timestamp.valueOf(LocalDateTime.now()));
+            user.setDateTimeDelete(LocalDateTime.now());
             user.setActive(false);
             userRepo.save(user);
         }
@@ -139,8 +137,8 @@ public class UserService implements UserDetailsService {
         GetAllHelpsResp response = new GetAllHelpsResp();
         try {
             validateGetAllAnswersSupport(user);
-            List<Support> listSupp = userRepo.findSupportAnswerById(user.getId());
-            response.setAnswers(listSupp);
+//            List<Support> listSupp = userRepo.fin(user.getId());
+//            response.setAnswers(listSupp);
         } catch (ServerException e) {
             response.setErrors(e.getErrorMessage());
             logger.warn("User ({}) -> (getAllAnswersSupportByUserDto) error {}.", user != null ? user.getId() : "null", e.getErrorMessage());

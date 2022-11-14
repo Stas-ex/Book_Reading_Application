@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import java.text.MessageFormat;
 
 /**
- * This is the class for interacting with the 'comment creator' page.
+ * This is the class for interacting with the 'comment creator' pageNum.
  */
 @Controller
 @RequestMapping("/book/{id}")
 public class LookBookController {
+
     private final BookService bookService;
 
     @Autowired
@@ -25,31 +26,31 @@ public class LookBookController {
     }
 
     /**
-     * Go to book page function
+     * Go to book pageNum function
      *
      * @param user  retrieving Authorized User Data Using Spring Security
      * @param id    id contains a unique book identifier
      * @param model for creating attributes sent to the server as a response
-     * @return like, book to the 'book look' page
+     * @return like, book to the 'book look' pageNum
      */
-    @GetMapping("/look")
-    public String lookBook(@AuthenticationPrincipal User user, @PathVariable long id, Model model) {
-        var response = bookService.getBookById(user, id);
-        if (response.getError() != null) {
-            model.addAttribute("error", response.getError());
-            System.out.println("error");
-            return "redirect:/books";
-        }
-        model.addAttribute("likeActive", response.getLikeActive());
-        model.addAttribute("bookLook", response.getBookDto());
+    @GetMapping("/look/{numPage}")
+    public String lookBook(@PathVariable long id, @PathVariable int numPage,
+                           @AuthenticationPrincipal User user, Model model) {
+        var page = bookService.getLookBookById(id, numPage);
+
+        model.addAttribute("bookLook", page.elem());
+        model.addAttribute("bookId", id);
+        model.addAttribute("pageNumbers", page.pageNumbers());
+        model.addAttribute("likeActive", bookService.isLikeUserId(id, user));
+//        model.addAttribute("comments", bookService.getComments(id, numPage));
         return "/book/book-look";
     }
 
     /**
-     * @param commentDto creating a null model to render the page
+     * @param commentDto creating a null model to render the pageNum
      * @param id         id contains a unique book identifier
      * @param model      for creating attributes sent to the server as a response
-     * @return id to the 'comment creator' page
+     * @return id to the 'comment creator' pageNum
      */
     @GetMapping("/comment")
     public String comment(@ModelAttribute AddCommentDtoReq commentDto, @PathVariable long id, Model model) {
@@ -79,5 +80,4 @@ public class LookBookController {
         }
         return MessageFormat.format("redirect:/book/{0}/look", request.getId());
     }
-
 }

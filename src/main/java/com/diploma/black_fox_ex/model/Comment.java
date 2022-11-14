@@ -24,7 +24,6 @@ public class Comment {
     @JoinColumn(name = "fk_user_id", nullable = false)
     private User user;
 
-
     public Comment() {
     }
 

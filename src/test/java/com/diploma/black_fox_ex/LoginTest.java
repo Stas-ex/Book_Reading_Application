@@ -1,46 +1,63 @@
 package com.diploma.black_fox_ex;
 
-import static org.hamcrest.core.StringContains.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-@RunWith(SpringRunner.class)
+import java.util.List;
+
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @SpringBootTest
-@AutoConfigureMockMvc
+@DisplayName("Login test")
+@RunWith(SpringRunner.class)
 public class LoginTest {
-    @Autowired
-    private MockMvc mockMvc;
 
-    @Test
-    public void contextLoads() throws Exception {
-        this.mockMvc.perform(get("/"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Skuratov S.A.")));
+    @Autowired
+    private WebApplicationContext context;
+
+    private MockMvc mvc;
+
+    @Before
+    public void setup() {
+        mvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
     }
 
     @Test
-    public void loginTest() throws Exception {
-        this.mockMvc.perform(get("/profile"))
-                .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("http://localhost/login"));
+    @DisplayName("Проверка запрещенных ссылок")
+    public void redirectLoginPageTest() throws Exception {
+        List<String> links = List.of(
+                "/profile", "/book/createPage",
+                "/favorite/1", "/book/n/comment",
+                "/profile-books", "/help"
+        );
+
+        for (String link : links) {
+            mvc.perform(get(link))
+                    .andExpect(status().is3xxRedirection())
+                    .andExpect(redirectedUrl("http://localhost/login"));
+        }
     }
 
     @Test
     public void badCredentials() throws Exception {
-        this.mockMvc.perform(post("/login").param("user", "Stanislav"))
-                .andDo(print())
+        this.mvc.perform(post("/login")
+                        .param("user", "Stanislav")
+                        .param("password", "123"))
                 .andExpect(status().isForbidden());
     }
 

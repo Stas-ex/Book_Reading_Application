@@ -54,7 +54,7 @@
             opacity: 1;
         }
 
-        .sidebar .logo-details #btn {
+        .sidebar .logo-details #btnM {
             position: absolute;
             top: 50%;
             right: 0;
@@ -67,7 +67,7 @@
             transition: all 0.5s ease;
         }
 
-        .sidebar.open .logo-details #btn {
+        .sidebar.open .logo-details #btnM {
             text-align: right;
         }
 
@@ -304,55 +304,46 @@
         <div class="logo-details">
             <a th:href="'/'"><i class='bx bxl-gitlab icon'></i></a>
             <div class="logo_name">Black-Fox</div>
-            <i class='bx bx-menu' id="btn"></i>
+            <i class='bx bx-menu' id="btnM"></i>
         </div>
-        <!--        <ul class="nav-list">-->
-        <!--            <li>-->
-        <!--                <i class='bx bx-search'></i>-->
-        <!--                <input type="text" placeholder="Search...">-->
-        <!--                <span class="tooltip">Search</span>-->
-        <!--            </li>-->
-        <!--            <li>-->
         <a href="/">
             <i class='bx bx-home-smile'></i>
-            <span class="links_name">Home</span>
         </a>
-        <span class="tooltip">Home</span>
-        </li>
+        <span class="tooltip" th:text="#{btn.menu.home}"/>
         <li>
             <a th:href="@{/profile}">
                 <i class='bx bx-user-circle'></i>
-                <span class="links_name">Profile</span>
+                <span class="links_name" th:text="#{btn.menu.profile}"/>
             </a>
-            <span class="tooltip">Profile</span>
+            <span class="tooltip" th:text="#{btn.menu.profile}"/>
         </li>
         <li>
-            <a th:href="'/books/all/0'">
+            <a th:href="'/books/All/1'">
                 <i class='bx bx-ghost'></i>
-                <span class="links_name">Books</span>
+                <span class="links_name" th:text="#{btn.menu.books}"/>
             </a>
-            <span class="tooltip">Books</span>
+            <span class="tooltip" th:text="#{btn.menu.books}"/>
         </li>
         <li>
-            <a th:href="@{/favorite}">
+            <a th:href="@{/favorite/1}">
                 <i class='bx bx-heart'></i>
-                <span class="links_name">Saved</span>
+                <span class="links_name" th:text="#{btn.menu.saved}"/>
             </a>
-            <span class="tooltip">Saved</span>
+            <span class="tooltip" th:text="#{btn.menu.saved}"/>
         </li>
         <li>
             <a th:href="@{/about}">
                 <i class='bx bx-mask'></i>
-                <span class="links_name">About us</span>
+                <span class="links_name" th:text="#{btn.menu.author}"/>
             </a>
-            <span class="tooltip">About us</span>
+            <span class="tooltip" th:text="#{btn.menu.author}"/>
         </li>
         <li>
             <a href="/help">
                 <i class='bx bx-meteor'></i>
-                <span class="links_name">Help</span>
+                <span class="links_name" th:text="#{btn.menu.help}"/>
             </a>
-            <span class="tooltip">Help</span>
+            <span class="tooltip" th:text="#{btn.menu.help}"/>
         </li>
 
         <li class="profile">
@@ -370,7 +361,7 @@
     </div>
     <script>
         let sidebar = document.querySelector(".sidebar");
-        let closeBtn = document.querySelector("#btn");
+        let closeBtn = document.querySelector("#btnM");
         let searchBtn = document.querySelector(".bx-search");
 
         closeBtn.addEventListener("click", () => {

@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 /**
- * This is the class for interacting with the "Books" page.
+ * This is the class for interacting with the "Books" pageNum.
  */
 @Controller
 public class AllBooksController {
+
     private final BookService bookService;
     private final UserService userService;
 
@@ -26,26 +27,24 @@ public class AllBooksController {
 
     /**
      * The function of displaying books by genres
-     * @param user retrieving Authorized User Data Using Spring Security
-     * @param numPage contains the serial number of the page of displayed books
-     * @param nameGenre contains the name of the genre that is used in the search filter
-     * @param model for creating attributes sent to the server as a response
-     * @return books, user, genres, number page, name genre to the 'books' page
+     *
+     * @param user      retrieving Authorized User Data Using Spring Security
+     * @param numPage   contains the serial number of the pageNum of displayed books
+     * @param genreName contains the name of the genre that is used in the search filter
+     * @param model     for creating attributes sent to the server as a response
+     * @return books, user, genres, number pageNum, name genre to the 'books' pageNum
      */
-    @GetMapping("/books/{nameGenre}/{numPage}")
-    public String getBooksByGenre(@AuthenticationPrincipal User user, @PathVariable int numPage, @PathVariable String nameGenre, Model model) {
-        var response = bookService.getAllBookByGenre(nameGenre, numPage);
-
-        if (response.getError() != null) {
-            model.addAttribute("errorBooks", response.getError());
-        }
+    @GetMapping("/books/{genreName}/{numPage}")
+    public String getBooksByGenre(@AuthenticationPrincipal User user, @PathVariable int numPage,
+                                  @PathVariable String genreName,
+                                  Model model) {
+        var booksPage = bookService.getAllBookByGenre(genreName, numPage);
         model.addAttribute("userMenu", userService.getUserMenu(user));
-        model.addAttribute("allGenres", response.getGenres());
-        model.addAttribute("books", response.getListDto());
-        model.addAttribute("pageNumbers", response.getPageNumbers());
+        model.addAttribute("allGenres", bookService.getAllGenres());
+        model.addAttribute("pageNumbers", booksPage.pageNumbers());
+        model.addAttribute("books", booksPage.elem());
+        model.addAttribute("genreName", genreName);
         model.addAttribute("numPage", numPage);
-        model.addAttribute("nameGenre", nameGenre);
-
         return "/book/books";
     }
 }

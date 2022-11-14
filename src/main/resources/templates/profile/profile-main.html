@@ -82,7 +82,7 @@
 
     <div class="form-row">
         <div class="col-md-4 mb-3">
-            <label for="usernameId" th:text="#{user-page.field.username}"></label>
+            <label for="usernameId" th:text="#{user-pageNum.field.username}"></label>
             <input type="text" class="form-control input" id="usernameId" name="username"
                    th:value="${userProfile.getUsername()}"
                    readonly="">
@@ -96,7 +96,7 @@
 
     <div class="form-row">
         <div class="col-md-4 mb-3">
-            <label for="email" th:text="#{user-page.field.email}"/>
+            <label for="email" th:text="#{user-pageNum.field.email}"/>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text input" id="inputGroupPrepend3">@</span>
@@ -107,7 +107,7 @@
         </div>
 
         <div class="col-md-4 mb-3">
-            <label for="passwordId" th:text="#{user-page.field.password}"/>
+            <label for="passwordId" th:text="#{user-pageNum.field.password}"/>
             <input type="password" class="form-control input" id="passwordId" name="password"
                    th:value="${userProfile.getPassword()}">
         </div>
@@ -115,14 +115,14 @@
 
     <div class="form-row">
         <div class="col-md-8 mb-3">
-            <label for="img" th:text="#{user-page.field.img}"/>
-            <input type="file" name="img" id="img" class="form-control input">
+            <label for="img" th:text="#{user-pageNum.field.img}"/>
+            <input type="file" name="img" id="img" class="form-control" accept=".jpg, .jpeg, .png">
         </div>
     </div>
 
     <div class="form-row">
         <div class="col-md-8 mb-3">
-            <label for="info" th:text="#{user-page.field.info}"/>
+            <label for="info" th:text="#{user-pageNum.field.info}"/>
             <textarea class="form-control input" id="info" name="info" rows="3"
                       th:text="${userProfile.getInfo()}"/>
         </div>
@@ -130,7 +130,7 @@
 
     <div class="form-row">
         <div class="col-md-8 mb-3">
-            <label for="telegram" th:text="#{user-page.field.telegram}"/>
+            <label for="telegram" th:text="#{user-pageNum.field.telegram}"/>
             <input type="text" id="telegram" name="telegram" class="form-control input"
                    th:value="${userProfile.getTelegram()}" placeholder="@User">
         </div>
@@ -138,7 +138,7 @@
 
     <div class="form-row">
         <div class="col-md-8 mb-3">
-            <label th:text="#{user-page.field.sex}"/>
+            <label th:text="#{user-pageNum.field.sex}"/>
             <div class="input-group">
                 <div class="form-check form-check-inline" th:each="gender: ${genders}">
                     <input class="form-check-input" type="radio" name="sex" id="exampleRadios1"

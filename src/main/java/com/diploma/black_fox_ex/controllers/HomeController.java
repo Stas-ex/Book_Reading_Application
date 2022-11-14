@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.stereotype.Controller;
 
 /**
- * This is the class for interacting with the start page.
+ * This is the class for interacting with the start pageNum.
  */
 @Controller
 public class HomeController {
@@ -22,14 +22,15 @@ public class HomeController {
     }
 
     /**
-     * The function for going to the start page
-     * @param user Retrieving Authorized User Data Using Spring Security
+     * The function for going to the start pageNum
+     *
+     * @param user  Retrieving Authorized User Data Using Spring Security
      * @param model for creating attributes sent to the server as a response
-     * @return the start page
+     * @return the start pageNum
      */
     @GetMapping("/")
     public String getHome(@AuthenticationPrincipal User user, Model model) {
-       model.addAttribute("userMenu",userService.getUserMenu(user));
+        model.addAttribute("userMenu", userService.getUserMenu(user));
         return "home";
     }
 }

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 /**
- * This is the class for interacting with the support page.
+ * This is the class for interacting with the support pageNum.
  */
 @Controller
 @RequestMapping("/help")
@@ -26,10 +26,9 @@ public class HelpController {
     }
 
     /**
-     *
-     * @param user Retrieving Authorized User Data Using Spring Security
+     * @param user  Retrieving Authorized User Data Using Spring Security
      * @param model for creating attributes sent to the server as a response
-     * @return the support page
+     * @return the support pageNum
      */
     @GetMapping
     public String start(@AuthenticationPrincipal User user, Model model) {
@@ -43,11 +42,10 @@ public class HelpController {
     }
 
     /**
-     *
-     * @param id is responsible for the id of the message from the support group
-     * @param user Retrieving Authorized User Data Using Spring Security
+     * @param id    is responsible for the id of the message from the support group
+     * @param user  Retrieving Authorized User Data Using Spring Security
      * @param model for creating attributes sent to the server as a response
-     * @return the support page and possible errors
+     * @return the support pageNum and possible errors
      */
     @GetMapping("/{id}/delete")
     public String deleteAnswerSupport(@PathVariable long id, @AuthenticationPrincipal User user, Model model) {

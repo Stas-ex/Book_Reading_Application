@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 /**
- * This is the class for interacting with the "about author" page.
+ * This is the class for interacting with the "about author" pageNum.
  */
 @Controller
 public class AboutController {
@@ -25,7 +25,7 @@ public class AboutController {
      *
      * @param user Retrieving Authorized User Data Using Spring Security
      * @param model for creating attributes sent to the server as a response
-     * @return the "about author" page
+     * @return the "about author" pageNum
      */
     @GetMapping("/about")
     public String getHome(@AuthenticationPrincipal User user, Model model) {

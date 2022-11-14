@@ -1,6 +1,6 @@
 package com.diploma.black_fox_ex.controllers.user;
 
-import com.diploma.black_fox_ex.dto.UserDto;
+import com.diploma.black_fox_ex.dto.user.UserDTO;
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.model.constant.Sex;
 import com.diploma.black_fox_ex.service.UserService;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 
 /**
- * This is the class for interacting with the "user profile" page.
+ * This is the class for interacting with the "user profile" pageNum.
  */
 @Controller
 @RequestMapping("/profile")
@@ -32,11 +32,11 @@ public class ProfileMainController {
     }
 
     /**
-     * Function to go to the profile page
+     * Function to go to the profile pageNum
      *
      * @param user  Retrieving Authorized User Data Using Spring Security
      * @param model for creating attributes sent to the server as a response
-     * @return the 'user profile' page otherwise error page
+     * @return the 'user profile' pageNum otherwise error pageNum
      */
     @GetMapping
     public String profilePage(@AuthenticationPrincipal User user, Model model) {
@@ -51,16 +51,15 @@ public class ProfileMainController {
      *
      * @param user  Retrieving Authorized User Data Using Spring Security
      * @param model for creating attributes sent to the server as a response
-     * @return to 'user profile' page and possible errors
+     * @return to 'user profile' pageNum and possible errors
      */
     @PostMapping("/update")
     public String update(@AuthenticationPrincipal User user,
-                         @Valid @ModelAttribute("userProfile") UserDto userDto,
+                         @Valid @ModelAttribute("userProfile") UserDTO userDto,
                          BindingResult valid,
                          Model model) {
         model.addAttribute("genders", Sex.values());
 
-        //if password update
         if (valid.hasErrors()) {
             model.addAttribute("userProfile", userService.getUserProfile(user));
             model.addAttribute("warnings", valid.getAllErrors());
@@ -75,7 +74,7 @@ public class ProfileMainController {
      * Function to delete the user
      *
      * @param user Retrieving Authorized User Data Using Spring Security
-     * @return the start page otherwise 'user profile' page
+     * @return the start pageNum otherwise 'user profile' pageNum
      */
     @GetMapping("/delete/me")
     public String delete(@AuthenticationPrincipal User user) {
@@ -87,7 +86,7 @@ public class ProfileMainController {
     /**
      * User account logout function
      *
-     * @return the start page
+     * @return the start pageNum
      */
     @GetMapping("/exit")
     public String logOut() {

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <style>
+        body {
+            background: darkslategrey;
+        }
+
+        .msg-container {
+            background: #1d1b31;
+            border-radius: 100px;
+            margin: 10% auto;
+            width: 550px;
+            height: 550px;
+        }
+
+        .msg-title {
+            color: lightpink;
+            padding-top: 10%;
+            text-align: center;
+        }
+
+        .msg-text {
+            color: lightpink;
+            padding: 17% 10%;
+            font-size: 25px;
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+<div class="msg-container">
+    <h1 class="msg-title">Что-то пошло не так</h1>
+    <p class="msg-text">Обратитесь в службу поддержки.<br> Мы вам поможем!</p>
+    <a style="font-size: 20px; margin: 5% 30%" th:href="'/'" class="btn btn-outline-secondary">Вернуться на главную</a>
+</div>
+</body>
+</html>

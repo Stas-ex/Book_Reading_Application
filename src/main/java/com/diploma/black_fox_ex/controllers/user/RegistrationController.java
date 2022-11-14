@@ -1,6 +1,6 @@
 package com.diploma.black_fox_ex.controllers.user;
 
-import com.diploma.black_fox_ex.dto.UserDto;
+import com.diploma.black_fox_ex.dto.user.UserDTO;
 import com.diploma.black_fox_ex.model.constant.Sex;
 import com.diploma.black_fox_ex.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 
 /**
- * This is the class for interacting with the registration page.
+ * This is the class for interacting with the registration pageNum.
  */
 @Controller
 @RequestMapping("/registration")
 public class RegistrationController {
+
     private final UserService userService;
 
     @Autowired
@@ -29,13 +30,13 @@ public class RegistrationController {
     }
 
     /**
-     * The function for going to the registration page
+     * The function for going to the registration pageNum
      *
      * @param userDto that accepts user input
-     * @return the 'registration' page
+     * @return the 'registration' pageNum
      */
     @GetMapping
-    public String registration(@ModelAttribute("userReg") UserDto userDto, Model model) {
+    public String registration(@ModelAttribute("userReg") UserDTO userDto, Model model) {
         model.addAttribute("genders", Sex.values());
         return "registration";
     }
@@ -43,10 +44,10 @@ public class RegistrationController {
     /**
      * @param userDto that accepts user input
      * @param model   for creating attributes sent to the server as a response
-     * @return to original page in case of error, otherwise to the login page
+     * @return to original pageNum in case of error, otherwise to the login pageNum
      */
     @PostMapping("/add")
-    public String addNewUser(@Valid @ModelAttribute("userReg") UserDto userDto,
+    public String addNewUser(@Valid @ModelAttribute("userReg") UserDTO userDto,
                              BindingResult valid, Model model) {
         if (userService.isExistUser(userDto.getUsername())) {
             valid.addError(new ObjectError(

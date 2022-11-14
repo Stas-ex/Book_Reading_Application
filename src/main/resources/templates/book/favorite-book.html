@@ -85,30 +85,44 @@
 
 <!---------------------------------CARD------------------------------------------------------------------------------->
 <link rel='stylesheet' type="text/css" href='style/card.css'>
-<h4 style="color: crimson; margin: 5%" th:text="${errorFavorite}"/>
+
 <div class="cards">
-    <div th:each="elem : ${books}" style="background-color: peachpuff">
+    <div th:each="book : ${books}" style="background-color: peachpuff">
         <article class="card">
             <div class="img">
-                <img th:src="${elem.getBackgroundImg()}"
+                <img th:src="${book.getFilenameBg()}"
                      alt="Hot air balloons">
             </div>
             <header>
-                <h2 th:text="${elem.getTitle()}"></h2>
+                <h2 th:text="${book.getTitle()}"></h2>
             </header>
             <div class="content">
-                <p th:text="${elem.getSmallText()}"></p>
+                <p th:text="${book.getBigText()}"></p>
             </div>
 
             <div class="col-md-12">
-                <a th:href="'/book/'+${elem.getId()}+'/look'" class="btn btn-outline-warning btns">Look</a>
-                <a th:href="'/favorite/'+${elem.getId()}+'/delete'" class="btn btn-outline-danger btns">Delete</a>
+                <a th:href="'/book/'+${book.getId()}+'/look/1'" class="btn btn-outline-warning btns"
+                   th:text="#{btn.look}"></a>
+                <a th:href="'/favorite/' + ${book.getId()} + '/delete'" class="btn btn-outline-danger btns"
+                   th:text="#{btn.delete}"></a>
             </div>
-            <p style="color: dodgerblue; padding: 2%; font-size: 20px" th:text="'Like is ' + ${elem.getCountLike()}  + ' #' +${elem.getGenre()}"/>
+            <p style="color: dodgerblue; font-size: 20px"
+               th:text="'#' + #{'genre.' + ${book.getGenre().getTitle()}}"></p>
         </article>
     </div>
 </div>
 
+<div style="margin: 2% 1%">
+    <div class="btnNext" th:if="${pageNumbers.size() > 1}">
+        <span th:each="number : ${pageNumbers}">
+            <span>
+                 <a th:href="'/books/' + ${genreName} + '/' + ${number}"
+                    th:class="'btn btn-' + ${number == numPage ? 'warning' : 'dark'}" th:text="${number}"
+                    style="width: 5%;margin: 1%"></a>
+            </span>
+        </span>
+    </div>
+</div>
 <!------------------------------------------------------------------------------->
 
 

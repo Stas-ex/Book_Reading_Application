@@ -1,25 +1,27 @@
 package com.diploma.black_fox_ex.controllers.user;
 
 import com.diploma.black_fox_ex.model.User;
-import com.diploma.black_fox_ex.dto.DeleteBookDtoReq;
 import com.diploma.black_fox_ex.service.BookService;
-
+import com.diploma.black_fox_ex.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
- * This is the class for interacting with the "user books" page.
+ * This is the class for interacting with the "user books" pageNum.
  */
 @Controller
 public class ProfileBooksController {
     private final BookService bookService;
+    private final UserService userService;
 
     @Autowired
-    public ProfileBooksController(BookService bookService) {
+    public ProfileBooksController(BookService bookService, UserService userService) {
         this.bookService = bookService;
+        this.userService = userService;
     }
 
     /**
@@ -27,32 +29,27 @@ public class ProfileBooksController {
      *
      * @param user  retrieving Authorized User Data Using Spring Security
      * @param model for creating attributes sent to the server as a response
-     * @return all books to the 'books' page
+     * @return all books to the 'books' pageNum
      */
-    @GetMapping("/profile-books")
-    public String viewPage(@AuthenticationPrincipal User user, Model model) {
-        var bookDtoResp = bookService.getAllBookByUser(user);
-        if (bookDtoResp.getError() != null)
-            model.addAttribute("errorView", bookDtoResp.getError());
-        else
-            model.addAttribute("books", bookDtoResp.getBooksDto());
+    @GetMapping("/profile-books/page-{numPage}")
+    public String viewPage(@AuthenticationPrincipal User user,
+                           @PathVariable int numPage, Model model) {
+        var bookDtoResp = bookService.getAllBookByUser(user, numPage);
+
+        model.addAttribute("books", bookDtoResp.elem());
+        model.addAttribute("pageNumbers", bookDtoResp.pageNumbers());
+        model.addAttribute("userMenu", userService.getUserMenu(user));
         return "/profile/profile-viewBook";
     }
 
     /**
      * @param user  retrieving Authorized User Data Using Spring Security
      * @param id    contains the applied indicator for mutable book
-     * @param model for creating attributes sent to the server as a response
-     * @return the 'user book' page otherwise error page
+     * @return the 'user book' pageNum otherwise error pageNum
      */
     @GetMapping("/profile-books/{id}/delete")
-    public String deleteBook(@AuthenticationPrincipal User user, @PathVariable long id, Model model) {
-        var request = new DeleteBookDtoReq(id, user);
-        var response = bookService.deleteBook(request);
-        if (response.getError() != null) {
-            model.addAttribute("error", response.getError());
-            return "errorPage";
-        }
-        return "redirect:/profile-books";
+    public String deleteBook(@AuthenticationPrincipal User user, @PathVariable long id)  {
+        bookService.deleteBook(id, user);
+        return "redirect:/profile-books/page-1";
     }
 }

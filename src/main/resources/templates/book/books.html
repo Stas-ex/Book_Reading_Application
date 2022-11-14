@@ -11,7 +11,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 
     body {
-        background: url("https://images.hdqwalls.com/download/fortnite-quad-crusher-n7-2048x1152.jpg") no-repeat;
+        background: url("https://images.hdqwalls.com/download/fortnite-quad-crusher-n7-2048x1152.jpg");
         background-attachment: fixed;
     }
 
@@ -92,30 +92,23 @@
 <!-- TAG ------>
 <div class="tagsSearch">
     <div style="margin: 2% 1%" class="btnNext">
-        <a th:href="'/books/all/0'" class="btn btn-light" style="width: 10%;margin: 1%">All</a>
+        <a th:href="'/books/All/1'" class="btn btn-light" style="width: 10%;margin: 1%" th:text="#{genre.all}"></a>
 
         <span th:each="genre : ${allGenres}">
-             <span th:if="${genre != nameGenre}">
-                 <a th:href="'/books/' + ${genre} + '/0'"
-                    class="btn btn-light" th:text="'#'+${genre}"
-                    style="width: 10%;margin: 1%"/>
-            </span>
-            <span th:if="${genre == nameGenre}">
-                 <a th:href="'/books/' + ${genre} + '/0'"
-                    class="btn btn-warning" th:text="'#'+${genre}"
-                    style="width: 10%;margin: 1%"/>
-            </span>
+             <span>
+                 <a th:href="|/books/${genre.getTitle()}/1|" class="btn"
+                    th:classappend="${genreName != genre.getTitle()} ? 'btn-light' : 'btn-warning'"
+                    th:text="#{'genre.' + ${genre.getTitle()}}" style="width: 10%;margin: 1%"/>
+             </span>
         </span>
     </div>
 </div>
 
-<a th:href="@{/book/createPage}" class="btn btn-warning" style="width: 100%;text-align: center;">Create book</a>
 <div class="cards">
     <div th:each="book : ${books}" style="background-color: peachpuff">
         <article class="card">
             <div class="img">
-                <img th:src="${book.getBackgroundImg()}"
-                     alt="Hot air balloons">
+                <img th:src="${book.getFilenameBg()}" alt="bookImg">
             </div>
 
             <header>
@@ -123,12 +116,15 @@
             </header>
 
             <div class="content">
-                <p th:utext="${book.getSmallText()}"></p>
+                <p th:utext="${book.getBigText()}"></p>
             </div>
 
-            <a th:href="'/book/'+${book.getId()}+'/look'" class="btn btn-outline-warning btns">Look</a>
-            <p style="color: crimson; padding-top: 2%; font-size: 20px" th:text="'Like is ' + ${book.getCountLike()}"/>
-            <p style="color: dodgerblue; font-size: 20px" th:text="' #' +${book.getGenre()}"/>
+            <a th:href="'/book/'+${book.getId()}+'/look/1'" class="btn btn-outline-warning btns"
+               th:text="#{btn.look}"></a>
+            <p style="color: crimson; padding-top: 2%; font-size: 20px"
+               th:text="|#{book.like-text} ${book.getLikeCount()}|"></p>
+            <p style="color: dodgerblue; font-size: 20px"
+               th:text="'#' + #{'genre.' + ${book.getGenre().getTitle()}}"></p>
         </article>
     </div>
 </div>
@@ -137,15 +133,13 @@
     <div class="btnNext" th:if="${pageNumbers.size() > 1}">
         <span th:each="number : ${pageNumbers}">
             <span>
-                 <a th:href="'/books/' + ${nameGenre} + '/' + ${number}"
-                    th:class="'btn btn-' + ${number == numPage ? 'warning' : 'dark'}" th:text="${number}" style="width: 5%;margin: 1%"/>
+                 <a th:href="'/books/' + ${genreName} + '/' + ${number}"
+                    th:class="'btn btn-' + ${number == numPage ? 'warning' : 'dark'}" th:text="${number}"
+                    style="width: 5%;margin: 1%"></a>
             </span>
         </span>
     </div>
 </div>
 
-<div th:if="${errorBooks != null}">
-    <h3 style="text-align: center; color: crimson; padding: 20%" th:text="${errorBooks}"></h3>
-</div>
 </body>
 </html>

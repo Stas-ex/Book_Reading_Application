@@ -1,18 +1,20 @@
 package com.diploma.black_fox_ex.controllers.books;
 
-import com.diploma.black_fox_ex.dto.UpdateBooksDtoReq;
+import com.diploma.black_fox_ex.dto.book.BookReqDTO;
+import com.diploma.black_fox_ex.exeptions.ServerException;
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.service.BookService;
-import com.diploma.black_fox_ex.dto.CreateBookDtoReq;
-
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
- * This is the class for interacting with the "create books" page.
+ * This is the class for interacting with the "create books" pageNum.
  */
 @Controller
 @RequestMapping("/book")
@@ -25,86 +27,85 @@ public class CreateBooksController {
     }
 
     /**
-     * The function to go to the book creation page
+     * The function to go to the book creation pageNum
      *
-     * @param bookDto designed to send a non-null element to the server
-     * @param model   for creating attributes sent to the server as a response
-     * @return list genres, title, to the 'book editing' page
+     * @param book  designed to send a non-null element to the server
+     * @param model for creating attributes sent to the server as a response
+     * @return list genres, title, to the 'book editing' pageNum
      */
     @GetMapping("/createPage")
-    public String profileCreateBook(@ModelAttribute CreateBookDtoReq bookDto, Model model) {
-        model.addAttribute("genres", bookService.getAllGenre());
-        model.addAttribute("title", "Create");
-        model.addAttribute("bookDto", bookDto);
+    public String profileCreateBook(@ModelAttribute("book") BookReqDTO book, Model model) {
+        model.addAttribute("genres", bookService.getAllGenres());
+        model.addAttribute("title", "book-create.title");
         return "/book/book_editing";
     }
 
     /**
-     * The function needed to go to the page of all books
+     * The function needed to go to the pageNum of all books
      *
      * @param user  retrieving Authorized User Data Using Spring Security
      * @param id    contains the unique indicator for mutable book
      * @param model for creating attributes sent to the server as a response
-     * @return page title, list genres, book to the 'book editing' page
+     * @return pageNum title, list genres, book to the 'book editing' pageNum
      */
     @GetMapping("/{id}/editPage")
     public String editingBookPage(@AuthenticationPrincipal User user,
-                                  @PathVariable long id, Model model) {
-        var response = bookService.getBookEditById(user, id);
-        if (response.getError() != null) {
-            return "redirect:/profile-books";
-        }
+                                  @PathVariable long id, Model model) throws ServerException {
+        var book = bookService.getBookEditById(user, id);
 
-        model.addAttribute("title", "Update");
-        model.addAttribute("genres", bookService.getAllGenre());
-        model.addAttribute("bookDto", response.getBookDto());
+        model.addAttribute("title", "book-edit.title");
+        model.addAttribute("genres", bookService.getAllGenres());
+        model.addAttribute("book", book);
+        model.addAttribute("id", id);
         return "/book/book_editing";
     }
 
     /**
      * Function to create book
      *
-     * @param user    retrieving Authorized User Data Using Spring Security
-     * @param bookDto containing a request from the user
-     * @param model   for creating attributes sent to the server as a response
-     * @return the 'user books' page
+     * @param user       retrieving Authorized User Data Using Spring Security
+     * @param bookReqDto containing a request from the user
+     * @param model      for creating attributes sent to the server as a response
+     * @return the 'user books' pageNum
      */
     @PostMapping("/create")
     public String createBook(@AuthenticationPrincipal User user,
-                             @ModelAttribute CreateBookDtoReq bookDto,
+                             @Valid @ModelAttribute("book") BookReqDTO bookReqDto,
+                             BindingResult valid,
                              Model model) {
-        var response = bookService.createBook(user, bookDto);
-        if (response.getError() != null) {
-            model.addAttribute("title", "Create");
-            model.addAttribute("bookDto", bookDto);
-            model.addAttribute("genres", bookService.getAllGenre());
-            model.addAttribute("errorCreateBook", response.getError());
-            return "/book/book_editing";
+        if (valid.hasErrors()) {
+            model.addAttribute("title", "book-create.title");
+            model.addAttribute("genres", bookService.getAllGenres());
+            model.addAttribute("warnings", valid.getAllErrors());
+            return "book/book_editing";
         }
-        return "redirect:/profile-books";
+        bookService.createBook(user.getId(), bookReqDto);
+
+        return "redirect:/profile-books/page-1";
     }
 
     /**
      * The function needed to update the generated book
      *
-     * @param user    retrieving Authorized User Data Using Spring Security
-     * @param bookDto containing a request from the user
-     * @param model   for creating attributes sent to the server as a response
-     * @return 'user books' page
+     * @param user       retrieving Authorized User Data Using Spring Security
+     * @param bookReqDto containing a request from the user
+     * @param model      for creating attributes sent to the server as a response
+     * @return 'user books' pageNum
      */
-    @PostMapping("/{id}/update")
-    public String updateBook(@AuthenticationPrincipal User user,
-                             @ModelAttribute UpdateBooksDtoReq bookDto, Model model) {
-        var response = bookService.updateBook(user, bookDto);
-        if (response.getError() != null) {
-            model.addAttribute("bookDto", bookDto);
-            model.addAttribute("title", "Update");
-            model.addAttribute("genres", bookService.getAllGenre());
-            model.addAttribute("id", bookDto.getId());
-            model.addAttribute("errorCreateBook", response.getError());
+    @PostMapping("/{id}/edit")
+    public String editBook(@AuthenticationPrincipal User user,
+                           @ModelAttribute("book") @Valid BookReqDTO bookReqDto,
+                           @PathVariable("id") Long bookId,
+                           BindingResult valid,
+                           Model model) {
+        if (valid.hasErrors()) {
+            model.addAttribute("title", "book-edit.title");
+            model.addAttribute("genres", bookService.getAllGenres());
+            model.addAttribute("warnings", valid.getAllErrors());
             return "book/book_editing";
         }
-        return "redirect:/profile-books";
+        bookService.updateBook(bookId, bookReqDto, user);
+        return "redirect:/profile-books/page-1";
     }
 
 }
