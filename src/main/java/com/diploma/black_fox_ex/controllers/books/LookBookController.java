@@ -1,14 +1,16 @@
 package com.diploma.black_fox_ex.controllers.books;
 
+import com.diploma.black_fox_ex.dto.CommentDto;
 import com.diploma.black_fox_ex.model.User;
-import com.diploma.black_fox_ex.dto.AddCommentDtoReq;
 import com.diploma.black_fox_ex.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.text.MessageFormat;
 
 /**
@@ -16,14 +18,10 @@ import java.text.MessageFormat;
  */
 @Controller
 @RequestMapping("/book/{id}")
+@RequiredArgsConstructor
 public class LookBookController {
 
     private final BookService bookService;
-
-    @Autowired
-    public LookBookController(BookService bookService) {
-        this.bookService = bookService;
-    }
 
     /**
      * Go to book pageNum function
@@ -33,9 +31,11 @@ public class LookBookController {
      * @param model for creating attributes sent to the server as a response
      * @return like, book to the 'book look' pageNum
      */
-    @GetMapping("/look/{numPage}")
-    public String lookBook(@PathVariable long id, @PathVariable int numPage,
-                           @AuthenticationPrincipal User user, Model model) {
+    @GetMapping("/{numPage}")
+    public String lookBook(@PathVariable long id,
+                           @PathVariable int numPage,
+                           @AuthenticationPrincipal User user,
+                           Model model) {
         var page = bookService.getLookBookById(id, numPage);
 
         model.addAttribute("bookLook", page.elem());
@@ -48,15 +48,14 @@ public class LookBookController {
 
     /**
      * @param commentDto creating a null model to render the pageNum
-     * @param id         id contains a unique book identifier
      * @param model      for creating attributes sent to the server as a response
      * @return id to the 'comment creator' pageNum
      */
-    @GetMapping("/comment")
-    public String comment(@ModelAttribute AddCommentDtoReq commentDto, @PathVariable long id, Model model) {
-        model.addAttribute("commentDto", commentDto);
-        model.addAttribute("id", id);
-        return "comment-add";
+    @GetMapping("/comment-add")
+    public String comment(@ModelAttribute CommentDto commentDto,
+                              @PathVariable long id,
+                              Model model) {
+        return "/comment";
     }
 
     /**
@@ -67,17 +66,17 @@ public class LookBookController {
      * @param model   for creating attributes sent to the server as a response
      * @return the 'book look' page
      */
-    @PostMapping("/comment/add")
+    @PostMapping("/comment")
     public String commentAdd(@AuthenticationPrincipal User user,
-                             @ModelAttribute AddCommentDtoReq request,
+                             @Valid @ModelAttribute CommentDto commentDto,
+                             @PathVariable long id,
+                             BindingResult valid,
                              Model model) {
-        var response = bookService.addComment(user, request);
-        if (response.getError() != null) {
-            model.addAttribute("errorComment", response.getError());
-            model.addAttribute("commentDto", request);
-            model.addAttribute("id", request.getId());
-            return "comment-add";
+        if(valid.hasErrors()){
+            model.addAttribute("warnings", valid.getAllErrors());
+            return "/comment";
         }
-        return MessageFormat.format("redirect:/book/{0}/look", request.getId());
+        bookService.addComment(id, commentDto, user);
+        return MessageFormat.format("redirect:/book/{0}", id);
     }
 }

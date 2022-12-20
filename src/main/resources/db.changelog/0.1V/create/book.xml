@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.12.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <property name="smallTextType" value="varchar(255)" dbms="mysql"/>
+    <property name="keyType" value="bigint" dbms="mysql"/>
+
+    <changeSet id="20221026_create_book" author="skuratov_stanislav">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="book"/>
+            </not>
+        </preConditions>
+        <createTable tableName="book">
+            <column autoIncrement="true" computed="false" name="id" type="${keyType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column computed="false" name="title" type="${smallTextType}"/>
+            <column computed="false" name="background_img" type="${smallTextType}"/>
+            <column computed="false" name="big_text" type="mediumtext"/>
+            <column computed="false" name="genre" type="${smallTextType}"/>
+            <column computed="false" name="fk_author_id" type="${keyType}">
+                <constraints nullable="false"/>
+            </column>
+            <column computed="false" name="date_lock" type="datetime"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="book" baseColumnNames="fk_author_id"
+                                 constraintName="FKmgf96aacmqw9k56fxbbd32wyt" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="20221026_create_user_book_favorite" author="skuratov_stanislav">
+        <createTable tableName="user_book_favorite">
+            <column computed="false" name="fk_users_id" type="${keyType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column computed="false" name="fk_book_id" type="${keyType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="user_book_favorite" baseColumnNames="fk_book_id"
+                                 constraintName="FK9yhlikxvhcgkuwqerwq0rhair" referencedTableName="book"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="user_book_favorite" baseColumnNames="fk_users_id"
+                                 constraintName="FKbt6flinqy9c1m08997vomjlaj" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

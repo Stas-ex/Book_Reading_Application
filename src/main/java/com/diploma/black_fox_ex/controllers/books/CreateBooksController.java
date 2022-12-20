@@ -1,10 +1,10 @@
 package com.diploma.black_fox_ex.controllers.books;
 
-import com.diploma.black_fox_ex.dto.book.BookReqDTO;
+import com.diploma.black_fox_ex.dto.book.BookReqDto;
 import com.diploma.black_fox_ex.exeptions.ServerException;
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,13 +18,10 @@ import javax.validation.Valid;
  */
 @Controller
 @RequestMapping("/book")
+@RequiredArgsConstructor
 public class CreateBooksController {
-    private final BookService bookService;
 
-    @Autowired
-    public CreateBooksController(BookService bookService) {
-        this.bookService = bookService;
-    }
+    private final BookService bookService;
 
     /**
      * The function to go to the book creation pageNum
@@ -33,10 +30,10 @@ public class CreateBooksController {
      * @param model for creating attributes sent to the server as a response
      * @return list genres, title, to the 'book editing' pageNum
      */
-    @GetMapping("/createPage")
-    public String profileCreateBook(@ModelAttribute("book") BookReqDTO book, Model model) {
+    @GetMapping("/new")
+    public String profileCreateBook(@ModelAttribute("book") BookReqDto book, Model model) {
         model.addAttribute("genres", bookService.getAllGenres());
-        model.addAttribute("title", "book-create.title");
+        model.addAttribute("title", "field.book-create.title");
         return "/book/book_editing";
     }
 
@@ -48,12 +45,13 @@ public class CreateBooksController {
      * @param model for creating attributes sent to the server as a response
      * @return pageNum title, list genres, book to the 'book editing' pageNum
      */
-    @GetMapping("/{id}/editPage")
+    @GetMapping("/{id}/edit")
     public String editingBookPage(@AuthenticationPrincipal User user,
-                                  @PathVariable long id, Model model) throws ServerException {
+                                  @PathVariable long id,
+                                  Model model) throws ServerException {
         var book = bookService.getBookEditById(user, id);
 
-        model.addAttribute("title", "book-edit.title");
+        model.addAttribute("title", "field.book-edit.header");
         model.addAttribute("genres", bookService.getAllGenres());
         model.addAttribute("book", book);
         model.addAttribute("id", id);
@@ -68,20 +66,20 @@ public class CreateBooksController {
      * @param model      for creating attributes sent to the server as a response
      * @return the 'user books' pageNum
      */
-    @PostMapping("/create")
+    @PostMapping("/new")
     public String createBook(@AuthenticationPrincipal User user,
-                             @Valid @ModelAttribute("book") BookReqDTO bookReqDto,
+                             @Valid @ModelAttribute("book") BookReqDto bookReqDto,
                              BindingResult valid,
                              Model model) {
         if (valid.hasErrors()) {
-            model.addAttribute("title", "book-create.title");
+            model.addAttribute("title", "field.book-create.title");
             model.addAttribute("genres", bookService.getAllGenres());
             model.addAttribute("warnings", valid.getAllErrors());
             return "book/book_editing";
         }
-        bookService.createBook(user.getId(), bookReqDto);
+        bookService.create(user.getId(), bookReqDto);
 
-        return "redirect:/profile-books/page-1";
+        return "redirect:/profile-books/1";
     }
 
     /**
@@ -94,18 +92,18 @@ public class CreateBooksController {
      */
     @PostMapping("/{id}/edit")
     public String editBook(@AuthenticationPrincipal User user,
-                           @ModelAttribute("book") @Valid BookReqDTO bookReqDto,
+                           @ModelAttribute("book") @Valid BookReqDto bookReqDto,
                            @PathVariable("id") Long bookId,
                            BindingResult valid,
                            Model model) {
         if (valid.hasErrors()) {
-            model.addAttribute("title", "book-edit.title");
+            model.addAttribute("title", "field.book-edit.header");
             model.addAttribute("genres", bookService.getAllGenres());
             model.addAttribute("warnings", valid.getAllErrors());
             return "book/book_editing";
         }
-        bookService.updateBook(bookId, bookReqDto, user);
-        return "redirect:/profile-books/page-1";
+        bookService.update(bookId, bookReqDto, user);
+        return "redirect:/profile-books/1";
     }
 
 }

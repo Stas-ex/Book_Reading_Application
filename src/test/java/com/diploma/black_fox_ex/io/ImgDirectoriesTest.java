@@ -7,12 +7,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static com.diploma.black_fox_ex.io.FileDirectories.BOOK_IMG_DIR;
-import static com.diploma.black_fox_ex.io.FileDirectories.USER_IMG_DIR;
+import static com.diploma.black_fox_ex.io.ImgDirectories.BOOK_IMG_DIR;
+import static com.diploma.black_fox_ex.io.ImgDirectories.USER_IMG_DIR;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(SpringRunner.class)
-class FileDirectoriesTest {
+class ImgDirectoriesTest {
 
     @Test
     public void getDefaultImg() {

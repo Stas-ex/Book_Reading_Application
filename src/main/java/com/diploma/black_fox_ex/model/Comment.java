@@ -14,10 +14,10 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "f_text")
+    @Column(name = "text")
     private String text;
 
-    @Column(name = "f_color")
+    @Column(name = "color")
     private String color;
 
     @ManyToOne(fetch = FetchType.EAGER)

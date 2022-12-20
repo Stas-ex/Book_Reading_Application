@@ -4,15 +4,15 @@ import org.springframework.core.io.FileSystemResource;
 
 import java.io.IOException;
 
-public enum FileDirectories {
+public enum ImgDirectories {
 
+    IMG("src/main/resources/img/"),
     USER_IMG_DIR("src/main/resources/img/user-img/"),
-    BOOK_IMG_DIR("src/main/resources/img/book-img/"),
-    IMG("src/main/resources/img/");
+    BOOK_IMG_DIR("src/main/resources/img/book-img/");
 
     private String path;
 
-    FileDirectories(String path) {
+    ImgDirectories(String path) {
         setPath(path);
     }
 
@@ -21,7 +21,7 @@ public enum FileDirectories {
     }
 
     public void setPath(String path) {
-        if (path.length() != 0) {
+        if (!path.isBlank()) {
             try {
                 this.path = new FileSystemResource(path).getURL().getPath();
             } catch (IOException e) {

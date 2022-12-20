@@ -1,9 +1,9 @@
 package com.diploma.black_fox_ex.controllers.user;
 
-import com.diploma.black_fox_ex.dto.user.UserDTO;
+import com.diploma.black_fox_ex.dto.user.UserDto;
 import com.diploma.black_fox_ex.model.constant.Sex;
 import com.diploma.black_fox_ex.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,14 +20,10 @@ import javax.validation.Valid;
  */
 @Controller
 @RequestMapping("/registration")
+@RequiredArgsConstructor
 public class RegistrationController {
 
     private final UserService userService;
-
-    @Autowired
-    public RegistrationController(UserService userService) {
-        this.userService = userService;
-    }
 
     /**
      * The function for going to the registration pageNum
@@ -36,7 +32,7 @@ public class RegistrationController {
      * @return the 'registration' pageNum
      */
     @GetMapping
-    public String registration(@ModelAttribute("userReg") UserDTO userDto, Model model) {
+    public String registration(@ModelAttribute("userReg") UserDto userDto, Model model) {
         model.addAttribute("genders", Sex.values());
         return "registration";
     }
@@ -46,12 +42,13 @@ public class RegistrationController {
      * @param model   for creating attributes sent to the server as a response
      * @return to original pageNum in case of error, otherwise to the login pageNum
      */
-    @PostMapping("/add")
-    public String addNewUser(@Valid @ModelAttribute("userReg") UserDTO userDto,
-                             BindingResult valid, Model model) {
+    @PostMapping
+    public String addNewUser(@Valid @ModelAttribute("userReg") UserDto userDto,
+                             BindingResult valid,
+                             Model model) {
         if (userService.isExistUser(userDto.getUsername())) {
             valid.addError(new ObjectError(
-                    "username", "registration.user.already.exist")
+                    "username", "exception.user.already.exist")
             );
         }
 
@@ -60,7 +57,7 @@ public class RegistrationController {
             model.addAttribute("warnings", valid.getAllErrors());
             return "registration";
         }
-        userService.registrationUser(userDto);
+        userService.register(userDto);
         return "redirect:/login";
     }
 }

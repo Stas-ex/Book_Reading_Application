@@ -1,7 +1,7 @@
 package com.diploma.black_fox_ex;
 
-import com.diploma.black_fox_ex.dto.book.BookReqDTO;
-import com.diploma.black_fox_ex.dto.book.ReferenceBookDTO;
+import com.diploma.black_fox_ex.dto.book.BookReqDto;
+import com.diploma.black_fox_ex.dto.book.ReferenceBookDto;
 import com.diploma.black_fox_ex.model.Book;
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.model.constant.Genre;
@@ -14,16 +14,16 @@ public abstract class AbstractFactoryEntityTest {
         return new Book("myBookTitle", "book.jpeg", "bigText".repeat(10), Genre.DETECTIVE, new User());
     }
 
-    public BookReqDTO createBookDTO() {
+    public BookReqDto createBookDto() {
         var img = new MockMultipartFile("file", "IMG".getBytes());
-        return new BookReqDTO("myBookTitle",
+        return new BookReqDto("myBookTitle",
                 "bigText ".repeat(30),
                 Genre.DETECTIVE.name(), img
         );
     }
 
-    public ReferenceBookDTO createRefBookDTO(Long id) {
-        return new ReferenceBookDTO(
+    public ReferenceBookDto createRefBookDto(Long id) {
+        return new ReferenceBookDto(
                 id, "myBookTitle", Genre.DETECTIVE, "fileBg.jpg",
                 "bigText".repeat(30), 20
         );

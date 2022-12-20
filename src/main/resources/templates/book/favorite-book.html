@@ -10,7 +10,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 
     body {
-        background: rgb(27, 28, 33) url("https://1jajhn221wip47xgsr2nqz45-wpengine.netdna-ssl.com/wp-content/uploads/2014/11/GE_Proverbs_12_5-2048x1536.png") repeat;
+        background: rgb(27, 28, 33) url("https://img5.goodfon.com/original/2880x1800/f/5a/gory-nebo-sneg-3.jpg") fixed;
         background-attachment: fixed;
         background-size: 100%;
     }
@@ -90,7 +90,7 @@
     <div th:each="book : ${books}" style="background-color: peachpuff">
         <article class="card">
             <div class="img">
-                <img th:src="${book.getFilenameBg()}"
+                <img th:src="${book.getImg()}"
                      alt="Hot air balloons">
             </div>
             <header>
@@ -101,9 +101,9 @@
             </div>
 
             <div class="col-md-12">
-                <a th:href="'/book/'+${book.getId()}+'/look/1'" class="btn btn-outline-warning btns"
+                <a th:href="'/book/'+${book.getId()}+'/1'" class="btn btn-outline-warning btns"
                    th:text="#{btn.look}"></a>
-                <a th:href="'/favorite/' + ${book.getId()} + '/delete'" class="btn btn-outline-danger btns"
+                <a th:href="'/book/favorite/' + ${book.getId()} + '/delete'" class="btn btn-outline-danger btns"
                    th:text="#{btn.delete}"></a>
             </div>
             <p style="color: dodgerblue; font-size: 20px"

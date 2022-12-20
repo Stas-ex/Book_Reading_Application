@@ -108,7 +108,7 @@
     <div th:each="book : ${books}" style="background-color: peachpuff">
         <article class="card">
             <div class="img">
-                <img th:src="${book.getFilenameBg()}" alt="bookImg">
+                <img th:src="${book.getImg()}" alt="bookImg">
             </div>
 
             <header>
@@ -119,10 +119,10 @@
                 <p th:utext="${book.getBigText()}"></p>
             </div>
 
-            <a th:href="'/book/'+${book.getId()}+'/look/1'" class="btn btn-outline-warning btns"
+            <a th:href="'/book/'+${book.getId()}+'/1'" class="btn btn-outline-warning btns"
                th:text="#{btn.look}"></a>
             <p style="color: crimson; padding-top: 2%; font-size: 20px"
-               th:text="|#{book.like-text} ${book.getLikeCount()}|"></p>
+               th:text="|#{field.book.like} ${book.getLikeCount()}|"></p>
             <p style="color: dodgerblue; font-size: 20px"
                th:text="'#' + #{'genre.' + ${book.getGenre().getTitle()}}"></p>
         </article>

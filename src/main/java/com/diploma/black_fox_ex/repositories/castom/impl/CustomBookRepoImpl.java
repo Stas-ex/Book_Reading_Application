@@ -1,8 +1,8 @@
 package com.diploma.black_fox_ex.repositories.castom.impl;
 
-import com.diploma.black_fox_ex.dto.book.BookEditDTO;
-import com.diploma.black_fox_ex.dto.book.BookLookDTO;
-import com.diploma.black_fox_ex.dto.book.ReferenceBookDTO;
+import com.diploma.black_fox_ex.dto.book.BookEditDto;
+import com.diploma.black_fox_ex.dto.book.BookLookDto;
+import com.diploma.black_fox_ex.dto.book.ReferenceBookDto;
 import com.diploma.black_fox_ex.model.QBook;
 import com.diploma.black_fox_ex.model.QUser;
 import com.diploma.black_fox_ex.model.User;
@@ -15,10 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -29,7 +26,7 @@ public class CustomBookRepoImpl implements CustomBookRepo {
 
     private final QBook qBook = QBook.book;
     private final QUser qUser = QUser.user;
-    private final Predicate bookIsNotDel = qBook.dateTimeDelete.isNull();
+    private final Predicate bookIsNotDel = qBook.dateTimeDeletion.isNull();
 
     public CustomBookRepoImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
@@ -59,20 +56,21 @@ public class CustomBookRepoImpl implements CustomBookRepo {
         return Optional.ofNullable(queryFactory
                         .select(qBook.likes)
                         .from(qBook)
-                        .where(qBook.id.eq(id), qUser.dateTimeDelete.isNull())
+                        .where(qBook.id.eq(id), qUser.dateTimeDeletion.isNull())
                         .leftJoin(qBook.likes, qUser)
-                        .fetchFirst()).orElse(new HashSet<>())
+                        .fetchFirst())
+                .orElse(new ArrayList<>())
                 .stream()
                 .map(User::getId)
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public ReferenceBookDTO getReferenceBook(long id) {
+    public ReferenceBookDto getReferenceBook(long id) {
         return queryFactory
                 .select(Projections.constructor(
-                        ReferenceBookDTO.class, qBook.id, qBook.title, qBook.genre,
-                        qBook.filenameBg, qBook.bigText.substring(0, 100),
+                        ReferenceBookDto.class, qBook.id, qBook.title, qBook.genre,
+                        qBook.img, qBook.bigText.substring(0, 100),
                         qBook.likes.size()))
                 .from(qBook)
                 .where(qBook.id.eq(id))
@@ -89,9 +87,9 @@ public class CustomBookRepoImpl implements CustomBookRepo {
     }
 
     @Override
-    public BookEditDTO getBookEditDTO(Long bookId) {
+    public BookEditDto getBookEditDto(Long bookId) {
         return queryFactory
-                .select(Projections.constructor(BookEditDTO.class,
+                .select(Projections.constructor(BookEditDto.class,
                         qBook.title, qBook.genre, qBook.bigText, qBook.author))
                 .from(qBook)
                 .where(qBook.id.eq(bookId), bookIsNotDel)
@@ -99,10 +97,10 @@ public class CustomBookRepoImpl implements CustomBookRepo {
     }
 
     @Override
-    public BookLookDTO getSplitBookDTO(Long bookId, int fromSymbols, int toSymbols) {
+    public BookLookDto getSplitBookDto(Long bookId, int fromSymbols, int toSymbols) {
         return queryFactory
                 .select(Projections.constructor(
-                        BookLookDTO.class, qBook.title, qBook.genre,
+                        BookLookDto.class, qBook.title, qBook.genre,
                         qBook.bigText.substring(fromSymbols, toSymbols)))
                 .from(qBook)
                 .where(qBook.id.eq(bookId), bookIsNotDel)

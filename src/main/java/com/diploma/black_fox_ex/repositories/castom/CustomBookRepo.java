@@ -1,8 +1,8 @@
 package com.diploma.black_fox_ex.repositories.castom;
 
-import com.diploma.black_fox_ex.dto.book.BookEditDTO;
-import com.diploma.black_fox_ex.dto.book.BookLookDTO;
-import com.diploma.black_fox_ex.dto.book.ReferenceBookDTO;
+import com.diploma.black_fox_ex.dto.book.BookEditDto;
+import com.diploma.black_fox_ex.dto.book.BookLookDto;
+import com.diploma.black_fox_ex.dto.book.ReferenceBookDto;
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.model.constant.Genre;
 
@@ -21,12 +21,12 @@ public interface CustomBookRepo {
 
     Set<Long> getLikesIdByBookId(Long id);
 
-    ReferenceBookDTO getReferenceBook(long id);
+    ReferenceBookDto getReferenceBook(long id);
 
     int getPageCountByBookId(Long bookId, int maxSymbols);
 
-    BookEditDTO getBookEditDTO(Long bookId);
+    BookEditDto getBookEditDto(Long bookId);
 
-    BookLookDTO getSplitBookDTO(Long bookId, int fromSymbols, int toSymbols);
+    BookLookDto getSplitBookDto(Long bookId, int fromSymbols, int toSymbols);
 
 }

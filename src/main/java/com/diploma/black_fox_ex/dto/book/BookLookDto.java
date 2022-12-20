@@ -1,10 +1,12 @@
 package com.diploma.black_fox_ex.dto.book;
 
 import com.diploma.black_fox_ex.model.constant.Genre;
+import lombok.Getter;
 
-public class BookLookDTO  extends AbstractBookDTO{
+@Getter
+public class BookLookDto extends BookDto {
 
-    public BookLookDTO(String title, Genre genre, String bigText) {
+    public BookLookDto(String title, Genre genre, String bigText) {
         super(title, genre, bigText.replace("\n","</br>"));
     }
 }

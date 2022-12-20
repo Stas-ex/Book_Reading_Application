@@ -63,22 +63,22 @@
         <div class="card ml-2" style="width: 25rem;height:35rem; margin-top: 3%">
             <img class="card-img-top"
                  style="height: 16rem"
-                 th:src="${book.getFilenameBg()}"
+                 th:src="${book.getImg()}"
                  alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title" th:text="${book.getTitle()}"></h5>
                 <p class="card-text" th:utext="${book.getBigText()}"></p>
             </div>
             <div class="card-footer">
-                <a th:href="'/book/' + ${book.getId()} + '/editPage'"
+                <a th:href="'/book/' + ${book.getId()} + '/edit'"
                    class="card-link btn btn-outline-warning ml-0" th:text="#{btn.update}"/>
-                <a th:href="'/book/'+${book.getId()}+'/look/1'" class="card-link btn btn-outline-info ml-1"
+                <a th:href="'/book/'+${book.getId()}+'/1'" class="card-link btn btn-outline-info ml-1"
                    th:text="#{btn.look}"/>
                 <a th:href="'/profile-books/' + ${book.getId()} + '/delete'"
                    class="card-link btn btn-outline-danger ml-5" th:text="#{btn.delete}"/>
 
                 <p style="color: crimson; padding-top: 2%; font-size: 20px;"
-                   th:text="|#{book.like-text} ${book.getLikeCount()}|"/>
+                   th:text="|#{field.book.like} ${book.getLikeCount()}|"/>
                 <p style="color: dodgerblue; font-size: 20px"
                    th:text="'#' + #{'genre.' + ${book.getGenre().getTitle()}}"></p>
             </div>
@@ -90,7 +90,7 @@
     <div class="btnNext" th:if="${pageNumbers.size() > 1}">
         <span th:each="number : ${pageNumbers}">
             <span>
-                 <a th:href="'/books/' + ${genreName} + '/' + ${number}"
+                 <a th:href="'/book/' + ${number}"
                     th:class="'btn btn-' + ${number == numPage ? 'warning' : 'dark'}" th:text="${number}"
                     style="width: 5%;margin: 1%"></a>
             </span>

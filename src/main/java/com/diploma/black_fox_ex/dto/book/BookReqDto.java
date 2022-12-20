@@ -5,11 +5,11 @@ import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-public class BookReqDTO extends AbstractBookDTO {
+public class BookReqDto extends BookDto {
 
     private final MultipartFile imgFile;
 
-    public BookReqDTO(String title, String bigText, String genre, MultipartFile imgFile) {
+    public BookReqDto(String title, String bigText, String genre, MultipartFile imgFile) {
         super(title, genre == null ? null : Genre.valueOf(genre), bigText);
         this.imgFile = imgFile;
     }

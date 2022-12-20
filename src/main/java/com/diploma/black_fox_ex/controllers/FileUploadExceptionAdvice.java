@@ -1,5 +1,6 @@
 package com.diploma.black_fox_ex.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 /**
  * This class catches global server errors that the program did not handle.
  */
+@Slf4j
 @ControllerAdvice
 public class FileUploadExceptionAdvice {
 
@@ -20,8 +22,8 @@ public class FileUploadExceptionAdvice {
     public static final String DEFAULT_ERROR_VIEW = "error";
 
     @ExceptionHandler(Exception.class)
-    public ModelAndView handleMaxSizeException(HttpServletRequest req, Exception ex) {
-        logger.error("URL: {} MSG: {}", req.getRequestURL(), ex.getMessage());
+    public ModelAndView getException(HttpServletRequest req, Exception ex) {
+        log.error("URL: {} MSG: {}", req.getRequestURL(), ex.getMessage());
         Arrays.stream(ex.getStackTrace()).map(StackTraceElement::toString).forEach(logger::error);
         ex.printStackTrace();
 

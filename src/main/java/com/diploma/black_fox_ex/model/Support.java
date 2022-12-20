@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @RequiredArgsConstructor
+
 @Getter
 @Setter
 @Entity
@@ -17,13 +18,13 @@ public class Support {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "f_ask", length = 2000)
+    @Column(name = "ask", length = 2000)
     private String ask;
 
-    @Column(name = "f_answer", length = 2000)
+    @Column(name = "answer", length = 2000)
     private String answer;
 
-    @Column(name = "f_date")
+    @Column(name = "date")
     private LocalDateTime date;
 
     public Support(Long id, String ask, String answer) {

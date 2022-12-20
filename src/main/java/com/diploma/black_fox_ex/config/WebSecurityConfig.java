@@ -1,8 +1,7 @@
 package com.diploma.black_fox_ex.config;
 
-import com.diploma.black_fox_ex.io.FileDirectories;
-import com.diploma.black_fox_ex.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.diploma.black_fox_ex.io.ImgDirectories;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,19 +11,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserService userService;
-    private final AuthProvider authProvider;
 
-    @Autowired
-    public WebSecurityConfig(UserService userService, AuthProvider authProvider) {
-        this.userService = userService;
-        this.authProvider = authProvider;
-    }
+    private final AuthProvider authProvider;
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers(FileDirectories.IMG.getPath() + "**");
+        web.ignoring().antMatchers(ImgDirectories.IMG.getPath() + "**");
     }
 
     @Override
@@ -33,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/registration",
                         "/registration/add", "/about",
-                        "/book/**/look/**", "/books/**"
+                        "/book/**/**", "/books/**"
                 )
                 .permitAll()
                 .anyRequest().authenticated()

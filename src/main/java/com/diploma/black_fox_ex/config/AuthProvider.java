@@ -2,7 +2,7 @@ package com.diploma.black_fox_ex.config;
 
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,16 +15,11 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 
 @Component
+@RequiredArgsConstructor
 public class AuthProvider implements AuthenticationProvider {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public AuthProvider(UserService userService, PasswordEncoder passwordEncoder) {
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -33,9 +28,7 @@ public class AuthProvider implements AuthenticationProvider {
 
         User user = (User) userService.loadUserByUsername(username);
 
-        if (user != null && user.getActive() && (user.getUsername().equals(username) ||
-                user.getEmail().equals(username))) {
-
+        if (user != null) {
             if (!passwordEncoder.matches(password, user.getPassword())) {
                 throw new BadCredentialsException("Wrong password");
             }

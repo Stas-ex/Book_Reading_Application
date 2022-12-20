@@ -1,5 +1,6 @@
 package com.diploma.black_fox_ex.exeptions;
 
+@Deprecated
 public enum AnswerErrorCode {
     REGISTRATION_WRONG_USERNAME("Username is too short"),
     REGISTRATION_WRONG_AGE_SYNTAX("Syntax error when entering age"),

@@ -4,12 +4,9 @@ import com.diploma.black_fox_ex.model.User;
 import lombok.Data;
 
 @Data
+@Deprecated
 public class AddFavoriteBookReq {
-    private User user;
-    private long bookId;
+    private final User user;
+    private final long bookId;
 
-    public AddFavoriteBookReq(User user, long bookId) {
-        this.user = user;
-        this.bookId = bookId;
-    }
 }

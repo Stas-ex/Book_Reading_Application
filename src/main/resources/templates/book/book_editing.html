@@ -85,16 +85,16 @@
 </head>
 <body>
 
-<form th:action="|/book/${id == null ? 'create' : id + '/edit'}|" method="post" enctype="multipart/form-data">
+<form th:action="|/book/${id == null ? 'new' : id + '/edit'}|" method="post" enctype="multipart/form-data">
     <div class="wrapper">
         <h2 th:text="#{${title}}"></h2>
-        <textarea spellcheck="false" th:placeholder="#{edit-book.field.big-text}" name="bigText" required
+        <textarea spellcheck="false" th:placeholder="#{field.edit-book.big-text}" name="bigText" required
                   th:utext="${book.getBigText()}"></textarea>
 
         <div class="form-row mt-1">
             <div class="col-md-7 mb-3">
                 <input type="text" class="form-control " id="usernameId" name="title"
-                       th:placeholder="#{edit-book.field.title}"
+                       th:placeholder="#{field.edit-book.title}"
                        th:value="${book.getTitle()}" required>
             </div>
             <div class="col-md-5 mb-3">
@@ -114,7 +114,7 @@
 
         <div class="col-md-14">
             <button type="submit" class="btn btn-outline-info" style="width: 25%" align="center" th:text="#{${title}}"/>
-            <a th:href="'/profile-books/page-1'" class="btn btn-outline-danger" style="width: 25%"
+            <a th:href="'/profile-books/1'" class="btn btn-outline-danger" style="width: 25%"
                th:text="#{btn.back}"></a>
         </div>
     </div>

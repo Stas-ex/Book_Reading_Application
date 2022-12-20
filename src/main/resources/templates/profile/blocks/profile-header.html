@@ -29,15 +29,15 @@
     <div class="menu">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a th:class="'nav-link' + ${main}" th:href="@{/profile}" th:text="#{profile-menu.main}"/>
+                <a th:class="'nav-link' + ${main}" th:href="@{/profile}" th:text="#{field.profile-menu.header}"/>
             </li>
             <li class="nav-item">
-                <a th:class="'nav-link' + ${myBooks}" th:href="@{/profile-books/page-1}"
-                   th:text="#{profile-menu.my-books}"/>
+                <a th:class="'nav-link' + ${myBooks}" th:href="@{/profile-books/1}"
+                   th:text="#{field.profile-menu.my-books}"/>
             </li>
             <li class="nav-item">
-                <a th:class="'nav-link' + ${createBook}" th:href="@{/book/createPage}"
-                   th:text="#{profile-menu.create-book}"/>
+                <a th:class="'nav-link' + ${createBook}" th:href="@{/book/new}"
+                   th:text="#{field.profile-menu.create-book}"/>
             </li>
         </ul>
     </div>

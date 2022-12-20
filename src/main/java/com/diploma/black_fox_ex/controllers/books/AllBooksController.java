@@ -3,27 +3,24 @@ package com.diploma.black_fox_ex.controllers.books;
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.service.BookService;
 import com.diploma.black_fox_ex.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * This is the class for interacting with the "Books" pageNum.
  */
 @Controller
+@RequiredArgsConstructor
+@RequestMapping("/books/{genreName}/{numPage}")
 public class AllBooksController {
 
     private final BookService bookService;
     private final UserService userService;
-
-    @Autowired
-    public AllBooksController(BookService bookService, UserService userService) {
-        this.bookService = bookService;
-        this.userService = userService;
-    }
 
     /**
      * The function of displaying books by genres
@@ -34,9 +31,10 @@ public class AllBooksController {
      * @param model     for creating attributes sent to the server as a response
      * @return books, user, genres, number pageNum, name genre to the 'books' pageNum
      */
-    @GetMapping("/books/{genreName}/{numPage}")
-    public String getBooksByGenre(@AuthenticationPrincipal User user, @PathVariable int numPage,
+    @GetMapping
+    public String getBooksByGenre(@AuthenticationPrincipal User user,
                                   @PathVariable String genreName,
+                                  @PathVariable int numPage,
                                   Model model) {
         var booksPage = bookService.getAllBookByGenre(genreName, numPage);
         model.addAttribute("userMenu", userService.getUserMenu(user));

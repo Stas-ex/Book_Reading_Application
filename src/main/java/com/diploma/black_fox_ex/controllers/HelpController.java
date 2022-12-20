@@ -4,9 +4,9 @@ import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.service.UserService;
 import com.diploma.black_fox_ex.dto.DeleteHelpDtoReq;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.stereotype.Controller;
@@ -17,13 +17,10 @@ import org.springframework.ui.Model;
  */
 @Controller
 @RequestMapping("/help")
+@RequiredArgsConstructor
 public class HelpController {
-    private final UserService userService;
 
-    @Autowired
-    public HelpController(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserService userService;
 
     /**
      * @param user  Retrieving Authorized User Data Using Spring Security
@@ -31,8 +28,8 @@ public class HelpController {
      * @return the support pageNum
      */
     @GetMapping
-    public String start(@AuthenticationPrincipal User user, Model model) {
-        var response = userService.getAllAnswersSupportByUserDto(user);
+    public String getPage(@AuthenticationPrincipal User user, Model model) {
+        var response = userService.getAllAnswersSupport(user);
         if (response.getErrors() != null)
             model.addAttribute("error", response.getErrors());
 
@@ -48,9 +45,11 @@ public class HelpController {
      * @return the support pageNum and possible errors
      */
     @GetMapping("/{id}/delete")
-    public String deleteAnswerSupport(@PathVariable long id, @AuthenticationPrincipal User user, Model model) {
+    public String deleteAnswerSupport(@AuthenticationPrincipal User user,
+                                      @PathVariable long id,
+                                      Model model) {
         var request = new DeleteHelpDtoReq(user, id);
-        var response = userService.deleteAnswerByUser(request);
+        var response = userService.deleteAnswerSupport(request);
         if (response.getErrors() != null) {
             model.addAttribute("error", response.getErrors());
             return "help";

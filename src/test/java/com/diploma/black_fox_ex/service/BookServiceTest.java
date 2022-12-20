@@ -1,7 +1,7 @@
 package com.diploma.black_fox_ex.service;
 
 import com.diploma.black_fox_ex.AbstractFactoryEntityTest;
-import com.diploma.black_fox_ex.dto.book.BookReqDTO;
+import com.diploma.black_fox_ex.dto.book.BookReqDto;
 import com.diploma.black_fox_ex.model.Book;
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.model.constant.Genre;
@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,12 +42,12 @@ class BookServiceTest extends AbstractFactoryEntityTest {
     void createBook() {
         User user = createUser();
         Book book = createSmallBook();
-        var bookDto = Mockito.mock(BookReqDTO.class);
+        var bookDto = Mockito.mock(BookReqDto.class);
 
         when(userRepo.getById(user.getId())).thenReturn(user);
         when(bookRepo.save(any(Book.class))).thenReturn(book);
 
-        bookService.createBook(user.getId(), bookDto);
+        bookService.create(user.getId(), bookDto);
 
         verify(userRepo, Mockito.times(1)).getById(user.getId());
         verify(bookRepo, Mockito.times(1)).save(any(Book.class));
@@ -54,33 +55,33 @@ class BookServiceTest extends AbstractFactoryEntityTest {
 
     @Test
     void updateBook() {
-        var bookDTO = createBookDTO();
+        var bookDto = createBookDto();
         var user = createUser();
         var book = createSmallBook();
 
         book.setAuthor(user);
 
-        when(bookRepo.getById(666L)).thenReturn(book);
-        bookService.updateBook(666L, bookDTO, user);
+        when(bookRepo.findById(666L)).thenReturn(Optional.of(book));
+        bookService.update(666L, bookDto, user);
 
         verify(bookRepo, Mockito.times(1)).save(any(Book.class));
     }
 
     @Test
     void updateBookAuthorValidationFail() {
-        var bookDTO = createBookDTO();
+        var bookDto = createBookDto();
         var author = createUser();
         var book = createSmallBook();
         book.setAuthor(author);
 
 
-        when(bookRepo.getById(2L)).thenReturn(book);
+        when(bookRepo.findById(2L)).thenReturn(Optional.of(book));
 
         var user = createUser();
         user.setId(22L);
 
         try {
-            bookService.updateBook(2L, bookDTO, user);
+            bookService.update(2L, bookDto, user);
             fail();
         } catch (RuntimeException ex) {
             assertEquals(ex.getMessage(), "The user %d is not the author of the book.".formatted(user.getId()));
@@ -97,7 +98,7 @@ class BookServiceTest extends AbstractFactoryEntityTest {
         when(bookRepo.getById(3L)).thenReturn(book);
 
         try {
-            bookService.deleteBook(3L, user);
+            bookService.delete(3L, user);
             fail();
         } catch (RuntimeException ex) {
             assertEquals(ex.getMessage(), "The user %d is not the author of the book.".formatted(user.getId()));
@@ -106,7 +107,7 @@ class BookServiceTest extends AbstractFactoryEntityTest {
         book.setAuthor(user);
         when(bookRepo.getById(4L)).thenReturn(book);
 
-        bookService.deleteBook(4L, user);
+        bookService.delete(4L, user);
 
         verify(bookRepo, Mockito.times(1)).save(any(Book.class));
         verify(bookRepo, Mockito.times(0)).delete(any(Book.class));
@@ -131,8 +132,8 @@ class BookServiceTest extends AbstractFactoryEntityTest {
 
     @Test
     void getAllBookByGenre() {
-        var bookRef1 = createRefBookDTO(1L);
-        var bookRef2 = createRefBookDTO(2L);
+        var bookRef1 = createRefBookDto(1L);
+        var bookRef2 = createRefBookDto(2L);
         var genre = Genre.DOCUMENTARY;
 
         when(bookRepo.getBooksIdByGenre(eq(genre), anyInt(), anyInt())).thenReturn(List.of(1L, 2L));

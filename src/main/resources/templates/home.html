@@ -5,7 +5,7 @@
     <title>Black-Fox [Home]</title>
     <style>
         body {
-            background: url(https://vsthemes.org/uploads/posts/2019-07/1582033782_minimalist-anime_vsthemes_ru-5.jpg);
+            background: url(https://img5.goodfon.ru/original/2880x1800/5/f5/apple-minimalism-new.jpg);
             background-attachment: fixed;
             background-size: 100%;
             /* Фиксируем фон веб-страницы */
@@ -95,8 +95,8 @@
                     <img src="https://phonoteka.org/uploads/posts/2021-07/1625755418_17-phonoteka-org-p-milie-arti-po-garri-potteru-krasivo-17.jpg"
                          alt="Los Angeles">
                     <div class="carousel-caption">
-                        <h3>Harry Potter</h3>
-                        <p>Greatness breeds envy, envy breeds evil, lies - sparks of evil!</p>
+                        <h3 th:text="#{field.carousel.header.one}"></h3>
+                        <p th:text="#{field.carousel.text.one}"></p>
                     </div>
                 </div>
 
@@ -104,8 +104,8 @@
                     <img src="https://w-dog.ru/wallpapers/13/3/446307169044587/art-benedikt-kamberbetch-skripka-sherlok-alicexz.jpg"
                          alt="Chicago">
                     <div class="carousel-caption">
-                        <h3>Erich Maria Remarque</h3>
-                        <p>Happiness comes somehow very simply and always much easier than you think.</p>
+                        <h3 th:text="#{field.carousel.header.two}"></h3>
+                        <p th:text="#{field.carousel.text.two}"></p>
                     </div>
                 </div>
 
@@ -113,8 +113,8 @@
                     <img src="https://i.pinimg.com/originals/e1/24/89/e12489cd7bc14b1853960b3bfc684ff2.jpg"
                          alt="A P Chehov">
                     <div class="carousel-caption">
-                        <h3>Taras Bulba</h3>
-                        <p>I gave birth to you, and I will kill you!</p>
+                        <h3 th:text="#{field.carousel.header.three}"></h3>
+                        <p th:text="#{field.carousel.text.three}"></p>
                     </div>
                 </div>
 
@@ -122,16 +122,16 @@
                 <div class="item">
                     <img src="https://pbs.twimg.com/media/EE1ZuC_XkAYttDV.jpg" alt="A P Chehov">
                     <div class="carousel-caption">
-                        <h3>Elena Kogtevran</h3>
-                        <p>If you don't ask, you never know. If you know, you just need to ask</p>
+                        <h3 th:text="#{field.carousel.header.four}"></h3>
+                        <p th:text="#{field.carousel.text.four}"></p>
                     </div>
                 </div>
                 <div class="item">
                     <img src="https://w-dog.ru/wallpapers/12/17/553074260484424/art-fantaziya-derevo-lenty-deti-shapki-pticy.jpg"
                          alt="A P Chehov">
                     <div class="carousel-caption">
-                        <h3>Hermione Granger</h3>
-                        <p>Fear of the name increases fear of the wearer</p>
+                        <h3 th:text="#{field.carousel.header.five}"></h3>
+                        <p th:text="#{field.carousel.text.five}"></p>
                     </div>
                 </div>
             </div>
@@ -152,8 +152,7 @@
     <div class="container marketing">
         <div class="row">
             <div>
-                <h1 style="color: white; text-align: center; margin: 0; line-height: 0; font-size: 40px;">Top best
-                    writers</h1>
+                <h1 style="color: white; text-align: center; margin: 0; line-height: 0; font-size: 40px;" th:text="#{field.best-user.header}"></h1>
             </div>
             <div class="col-lg-4">
                 <svg class="bd-placeholder-img rounded-circle" width="140" height="140"
@@ -163,9 +162,8 @@
                          src="https://sun9-31.userapi.com/impg/n_vm9rWmEFH2kN2TRgtVKrfY5gF4wYVsV9asFg/3AYKCLDsA1A.jpg?size=1280x853&quality=96&sign=f68bc58bab93cf8d2079dfe760cf97fb&type=album"/>
                 </svg>
 
-                <h2>Skuratov S.A.</h2>
-                <p>A wonderful person who has written over 10 articles that have earned a lot of positive comments</p>
-                <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+                <h2 th:text="#{field.best-user.header.one}"></h2>
+                <p th:text="#{field.best-user.text.one}"></p>
             </div><!-- /.col-lg-4 -->
             <div class="col-lg-4">
                 <svg class="bd-placeholder-img rounded-circle" width="140" height="140"
@@ -175,10 +173,8 @@
                          src="https://sun9-12.userapi.com/impg/9aqO5lAfqMrc9hPJik1JsZJmUqA9f2QS3-csCA/WS_-vw7urIQ.jpg?size=1280x1280&quality=95&sign=4ffe740fc8f9a78e0c2b9eabb3a35db0&type=album"/>
                 </svg>
 
-                <h2>Androsenco A.S.</h2>
-                <p>I bought my first book in 12th grade and has no regrets at all. Knows how to cross stitch and is a
-                    dark lord.</p>
-                <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+                <h2 th:text="#{field.best-user.header.two}"></h2>
+                <p th:text="#{field.best-user.text.two}"></p>
             </div><!-- /.col-lg-4 -->
             <div class="col-lg-4">
                 <svg class="bd-placeholder-img rounded-circle" width="140" height="140"
@@ -188,10 +184,8 @@
                          src="https://sun9-60.userapi.com/impg/eujFQE4r_Y2uUSU0frQkl_cQjgaOQzTUqIUciA/J4VHrUq-LiI.jpg?size=1280x853&quality=96&sign=d0d88ec3fc6ca2ec50e34cbffafe1286&type=album"/>
                 </svg>
 
-                <h2>Bulambaev R.R.</h2>
-                <p>Once a job at a factory, but this poor past left him a year ago. He started learning CodeGym and
-                    started working as a white-collar salesman.</p>
-                <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+                <h2 th:text="#{field.best-user.header.three}"></h2>
+                <p th:text="#{field.best-user.text.three}"></p>
             </div><!-- /.col-lg-4 -->
         </div><!-- /.row -->
 
@@ -199,10 +193,9 @@
         <hr class="featurette-divider">
         <div class="row featurette">
             <div class="col-md-7">
-                <h2 class="featurette-heading">Gregory David Roberts <span class="text-muted">Shantaram</span></h2>
-                <p class="lead">The truth is, there are no good or bad people. Good and evil are not in people, but in
-                    their actions. People remain just people, and what connects them with good or evil is what they do -
-                    or refuse to do.</p>
+<!--                Gregory David Roberts <span class="text-muted">Shantaram</span>-->
+                <h2 class="featurette-heading" th:text="#{field.info.header.one}"></h2>
+                <p class="lead" th:text="#{field.info.text.one}"></p>
             </div>
             <div class="col-md-5">
                 <img src="https://img1.goodfon.ru/wallpaper/nbig/2/d1/sab-ziro-sub-zero-subzero.jpg"
@@ -214,9 +207,8 @@
 
         <div class="row featurette">
             <div class="col-md-7 order-md-2">
-                <h2 class="featurette-heading">Max Fry <span class="text-muted">Exo Labyrinths</span></h2>
-                <p class="lead">From time to time, you should say nonsense, it helps to create a warm and friendly
-                    atmosphere.</p>
+                <h2 class="featurette-heading" th:text="#{field.info.header.two}"></h2>
+                <p class="lead" th:text="#{field.info.text.two}"></p>
             </div>
             <div class="col-md-5 order-md-1">
                 <img src="https://i.pinimg.com/474x/03/f7/65/03f765f607be6b189c03b312a559f335.jpg"
@@ -228,9 +220,8 @@
 
         <div class="row featurette">
             <div class="col-md-7">
-                <h2 class="featurette-heading">Julio Cortazar <span class="text-muted">CClassics Game</span></h2>
-                <p class="lead">It seems to me all the time that our relationship is like a chemical reaction: they seem
-                    to be outside of us and do not depend on us. A drawing that looms by itself.</p>
+                <h2 class="featurette-heading" th:text="#{field.info.header.three}"></h2>
+                <p class="lead" th:text="#{field.info.text.three}"></p>
             </div>
             <div class="col-md-5">
                 <img src="https://cdn-images.threadless.com/threadless-media/artist_shops/shops/WildOak/products/845002/shirt-1543222130-de32cd477431bbbd492504bd38585fbe.png?v=3&d=eyJvbmx5X21ldGEiOiBmYWxzZSwgImZvcmNlIjogZmFsc2UsICJvcHMiOiBbWyJ0cmltIiwgW2ZhbHNlLCBmYWxzZV0sIHt9XSwgWyJyZXNpemUiLCBbXSwgeyJ3aWR0aCI6IDk5Ni4wLCAiYWxsb3dfdXAiOiBmYWxzZSwgImhlaWdodCI6IDk5Ni4wfV0sIFsiY2FudmFzX2NlbnRlcmVkIiwgWzEyMDAsIDEyMDBdLCB7ImJhY2tncm91bmQiOiAiZjJkZGNjIn1dLCBbInJlc2l6ZSIsIFs4MDBdLCB7fV0sIFsiY2FudmFzX2NlbnRlcmVkIiwgWzgwMCwgODAwLCAiI2ZmZmZmZiJdLCB7fV0sIFsiZW5jb2RlIiwgWyJqcGciLCA4NV0sIHt9XV19"

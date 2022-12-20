@@ -41,9 +41,9 @@ public class LoginTest {
     @DisplayName("Проверка запрещенных ссылок")
     public void redirectLoginPageTest() throws Exception {
         List<String> links = List.of(
-                "/profile", "/book/createPage",
-                "/favorite/1", "/book/n/comment",
-                "/profile-books", "/help"
+                "/profile", "/book/new",
+                "/book/favorite/1", "/book/n/comment",
+                "/profile-books/1", "/help"
         );
 
         for (String link : links) {

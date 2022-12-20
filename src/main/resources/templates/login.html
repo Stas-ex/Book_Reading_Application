@@ -33,42 +33,40 @@
 </style>
 
 <div class="form-container">
-    <h1 style="margin-top: 10%" align="center">Log in</h1>
+    <h1 style="margin-top: 10%" align="center" th:text="#{field.login.header}"></h1>
 
     <form th:action="@{/login}" method="post" th:default-target-url="'/profile'">
         <div class="form-group main" align="center">
             <div class="col-md-10 mb-3" style=" margin-top: 2%">
-                <label for="exampleInputEmail1">Email address</label>
+                <label for="exampleInputEmail1" th:text="#{field.username}"></label>
                 <input type="text" class="form-control" id="exampleInputEmail1" name="username"
-                       placeholder="Enter userName" style="width: 40%">
-                <small id="emailHelp" class="form-text text-muted">Enter username.</small>
+                       placeholder="Stanislav" style="width: 40%">
             </div>
         </div>
         <div class="form-group" align="center">
             <div class="col-md-10 mb-3">
-                <label for="exampleInputPassword1">Password</label>
+                <label for="exampleInputPassword1" th:text="#{field.password}"></label>
                 <input type="password" class="form-control" id="exampleInputPassword1" name="password"
                        placeholder="Password" style="width: 40%">
-                <small id="passHelp" class="form-text text-muted">Enter user password.</small>
             </div>
         </div>
 
         <div class="form-group" align="center">
             <div class="col-md-10 mt-3 input">
-                <button style="width: 40%; margin-top: 5%;" type="submit" class="btn btn-dark">Log in</button>
+                <button style="width: 40%; margin-top: 5%;" type="submit" class="btn btn-dark" th:text="#{btn.login}"></button>
             </div>
         </div>
     </form>
 
     <div class="form-group" align="center">
         <div class="col-md-10 mt-2">
-            <a style="width: 20%" th:href="'/'" class="btn btn-outline-secondary">Back</a>
-            <a style="width: 20%" th:href="'/registration'" class="btn btn-outline-warning">Registration</a>
+            <a style="width: 20%" th:href="'/'" class="btn btn-outline-secondary" th:text="#{btn.back}"></a>
+            <a style="width: 20%" th:href="'/registration'" class="btn btn-outline-warning" th:text="#{btn.reg}"></a>
         </div>
     </div>
 
     <div th:if="${param.error}">
-        <h3 style="color: crimson; margin-top: 5%" align="center">Invalid username and password.</h3>
+        <h3 style="color: crimson; margin-top: 5%" align="center" th:text="#{exception.login}"></h3>
     </div>
 </div>
 </html>

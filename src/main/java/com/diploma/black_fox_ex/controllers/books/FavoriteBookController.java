@@ -4,7 +4,7 @@ import com.diploma.black_fox_ex.dto.DeleteFavoriteBookDtoReq;
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.service.BookService;
 import com.diploma.black_fox_ex.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,16 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * This is the class for interacting with the "favorite book" pageNum.
  */
 @Controller
-@RequestMapping("/favorite/{id}")
+@RequestMapping("/book/favorite")
+@RequiredArgsConstructor
 public class FavoriteBookController {
+
     private final UserService userService;
     private final BookService bookService;
-
-    @Autowired
-    public FavoriteBookController(UserService userService, BookService bookService) {
-        this.userService = userService;
-        this.bookService = bookService;
-    }
 
     /**
      * Function to go to the 'favorite book' pageNum
@@ -34,9 +30,10 @@ public class FavoriteBookController {
      * @param model for creating attributes sent to the server as a response
      * @return user books to the 'favorite book' pageNum
      */
-    @GetMapping
-    public String startFavoriteBook(@AuthenticationPrincipal User user,
-                                    @PathVariable("id") int numPage, Model model) {
+    @GetMapping("/{page}")
+    public String getPage(@AuthenticationPrincipal User user,
+                                    @PathVariable("page") int numPage,
+                                    Model model) {
         var page = bookService.getAllFavoriteBooksByUser(user, numPage);
         model.addAttribute("userMenu", userService.getUserMenu(user));
         model.addAttribute("pageNumbers", page.pageNumbers());
@@ -51,10 +48,10 @@ public class FavoriteBookController {
      * @param bookId contains the applied indicator for mutable book
      * @return the 'book look' pageNum otherwise error pageNum
      */
-    @GetMapping("/add")
+    @GetMapping("{id}/add")
     public String addFavoriteBook(@AuthenticationPrincipal User user, @PathVariable("id") long bookId) {
         bookService.addFavoriteBook(user.getId(), bookId);
-        return "redirect:/book/%d/look/1".formatted(bookId);
+        return "redirect:/book/%d/1".formatted(bookId);
     }
 
     /**
@@ -65,7 +62,7 @@ public class FavoriteBookController {
      * @param model for creating attributes sent to the server as a response
      * @return the 'favorite books' pageNum otherwise error pageNum
      */
-    @GetMapping("/delete")
+    @GetMapping("{id}/delete")
     public String deleteFavoriteBook(@AuthenticationPrincipal User user, @PathVariable long id, Model model) {
         var request = new DeleteFavoriteBookDtoReq(id, user);
         var response = bookService.deleteFavoriteBook(request);
@@ -73,6 +70,6 @@ public class FavoriteBookController {
             model.addAttribute("error", response.getError());
             return "error";
         }
-        return "redirect:/favorite/1";
+        return "redirect:/book/favorite/1";
     }
 }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.12.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <property name="keyType" value="bigint" dbms="mysql"/>
+
+    <changeSet id="20221026_create_support" author="skuratov_stanislav">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="support"/>
+            </not>
+        </preConditions>
+        <createTable tableName="support">
+            <column autoIncrement="true" computed="false" name="id" type="${keyType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column computed="false" name="ask" type="varchar(1000)"/>
+            <column computed="false" name="answer" type="varchar(1000)"/>
+            <column computed="false" name="date" type="datetime"/>
+            <column computed="false" name="fk_user_id" type="${keyType}"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20221026_create_users_support" author="skuratov_stanislav">
+        <createTable tableName="users_support">
+            <column computed="false" name="fk_user_id" type="${keyType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column computed="false" name="fk_support_id" type="${keyType}">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="users_support" baseColumnNames="fk_user_id"
+                                 constraintName="FKehkt3b4ia7vvi157uvl5nqr9o" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="users_support" baseColumnNames="fk_support_id"
+                                 constraintName="FKfbntxc1e7ykbb77fhfk6cvorl" referencedTableName="support"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

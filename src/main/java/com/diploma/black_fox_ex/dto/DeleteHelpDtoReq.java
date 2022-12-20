@@ -4,12 +4,10 @@ import com.diploma.black_fox_ex.model.User;
 import lombok.Data;
 
 @Data
+@Deprecated
 public class DeleteHelpDtoReq {
-    private User user;
-    private long id;
 
-    public DeleteHelpDtoReq(User user, long id) {
-        this.user = user;
-        this.id = id;
-    }
+    private final User user;
+    private final long id;
+
 }

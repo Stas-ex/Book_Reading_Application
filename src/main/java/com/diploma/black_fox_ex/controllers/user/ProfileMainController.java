@@ -1,10 +1,10 @@
 package com.diploma.black_fox_ex.controllers.user;
 
-import com.diploma.black_fox_ex.dto.user.UserDTO;
+import com.diploma.black_fox_ex.dto.user.UserProfileDto;
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.model.constant.Sex;
 import com.diploma.black_fox_ex.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -21,15 +21,11 @@ import javax.validation.Valid;
  * This is the class for interacting with the "user profile" pageNum.
  */
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/profile")
 public class ProfileMainController {
 
     private final UserService userService;
-
-    @Autowired
-    public ProfileMainController(UserService userService) {
-        this.userService = userService;
-    }
 
     /**
      * Function to go to the profile pageNum
@@ -55,7 +51,7 @@ public class ProfileMainController {
      */
     @PostMapping("/update")
     public String update(@AuthenticationPrincipal User user,
-                         @Valid @ModelAttribute("userProfile") UserDTO userDto,
+                         @Valid @ModelAttribute("userProfile") UserProfileDto userDto,
                          BindingResult valid,
                          Model model) {
         model.addAttribute("genders", Sex.values());
@@ -66,7 +62,7 @@ public class ProfileMainController {
             return "/profile/profile-main";
         }
 
-        userService.updateUser(user, userDto);
+        userService.update(user, userDto);
         return "redirect:/profile";
     }
 
@@ -76,10 +72,10 @@ public class ProfileMainController {
      * @param user Retrieving Authorized User Data Using Spring Security
      * @return the start pageNum otherwise 'user profile' pageNum
      */
-    @GetMapping("/delete/me")
+    @GetMapping("/delete")
     public String delete(@AuthenticationPrincipal User user) {
         SecurityContextHolder.getContext().setAuthentication(null);
-        userService.deleteUser(user);
+        userService.delete(user);
         return "redirect:/";
     }
 

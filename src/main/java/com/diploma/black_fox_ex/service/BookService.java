@@ -1,27 +1,25 @@
 package com.diploma.black_fox_ex.service;
 
 import com.diploma.black_fox_ex.dto.AddCommentDtoReq;
+import com.diploma.black_fox_ex.dto.CommentDto;
 import com.diploma.black_fox_ex.dto.DeleteFavoriteBookDtoReq;
 import com.diploma.black_fox_ex.dto.PageSplitView;
-import com.diploma.black_fox_ex.dto.book.AbstractBookDTO;
-import com.diploma.black_fox_ex.dto.book.BookEditDTO;
-import com.diploma.black_fox_ex.dto.book.BookReqDTO;
-import com.diploma.black_fox_ex.dto.book.ReferenceBookDTO;
+import com.diploma.black_fox_ex.dto.book.BookDto;
+import com.diploma.black_fox_ex.dto.book.BookEditDto;
+import com.diploma.black_fox_ex.dto.book.BookReqDto;
+import com.diploma.black_fox_ex.dto.book.ReferenceBookDto;
 import com.diploma.black_fox_ex.exeptions.AnswerErrorCode;
 import com.diploma.black_fox_ex.exeptions.ServerException;
-import com.diploma.black_fox_ex.io.FileDirectories;
-import com.diploma.black_fox_ex.io.FileManager;
+import com.diploma.black_fox_ex.io.ImgManager;
+import com.diploma.black_fox_ex.mappers.EntityMapper;
 import com.diploma.black_fox_ex.model.Book;
-import com.diploma.black_fox_ex.model.Comment;
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.model.constant.Genre;
 import com.diploma.black_fox_ex.repositories.BookRepo;
 import com.diploma.black_fox_ex.repositories.CommentsRepo;
 import com.diploma.black_fox_ex.repositories.UserRepo;
-import com.diploma.black_fox_ex.response.AddCommentDtoResp;
 import com.diploma.black_fox_ex.response.DeleteFavoriteHiResp;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,13 +28,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.diploma.black_fox_ex.io.ImgDirectories.BOOK_IMG_DIR;
+import static com.diploma.black_fox_ex.mappers.EntityMapper.toComment;
+
 /**
  * This class performs basic actions on received book interaction requests.
  */
+@Slf4j
 @Service
-public class BookService extends AbstractService {
-
-    private final static Logger logger = LoggerFactory.getLogger(BookService.class);
+public class BookService extends PageService {
 
     int MAX_SYMBOLS = 1800;
     public final int PAGE_BOOKS_SIZE = 50;
@@ -44,7 +44,6 @@ public class BookService extends AbstractService {
     private final BookRepo bookRepo;
     private final UserRepo userRepo;
     private final CommentsRepo commentsRepo;
-    private final FileManager fileManager;
 
     @Autowired
     public BookService(BookRepo bookRepo, UserRepo userRepo,
@@ -52,47 +51,43 @@ public class BookService extends AbstractService {
         this.bookRepo = bookRepo;
         this.userRepo = userRepo;
         this.commentsRepo = commentsRepo;
-        fileManager = new FileManager();
     }
 
-    public void createBook(Long authorId, BookReqDTO bookReqDto) {
-        String filename = fileManager.createFile(FileDirectories.BOOK_IMG_DIR, bookReqDto.getImgFile());
+    public void create(Long authorId, BookReqDto bookDto) {
+        String img = ImgManager.save(BOOK_IMG_DIR, bookDto.getImgFile());
         User author = userRepo.getById(authorId);
-        Book book = new Book(bookReqDto, filename, author);
-        bookRepo.save(book);
+        bookRepo.save(EntityMapper.toBook(author, bookDto, img));
     }
 
-    public void updateBook(Long bookId, BookReqDTO bookReqDTO, User user) {
-        Book book = bookRepo.getById(bookId);
+    public void update(Long bookId, BookReqDto bookDto, User user) {
+        var book = bookRepo.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found"));
         validationAccessUser(book, user);
 
-        String filePath = fileManager.createFile(FileDirectories.BOOK_IMG_DIR, bookReqDTO.getImgFile());
-        filePath = filePath.equals("book.jpeg") ? book.getFilenameBg() : filePath;
-
-        book.updateBook(bookReqDTO, filePath);
-        bookRepo.save(book);
+        String filename = ImgManager.save(BOOK_IMG_DIR, bookDto.getImgFile());
+        filename = ImgManager.isDefaultImg(filename) ? book.getImg() : filename;
+        bookRepo.save(EntityMapper.updateBook(book, bookDto, filename));
     }
 
-    public void deleteBook(Long id, User user) {
+    public void delete(Long id, User user) {
         Book book = bookRepo.getById(id);
         validationAccessUser(book, user);
-        book.setDateTimeDelete(LocalDateTime.now());
+        book.setDateTimeDeletion(LocalDateTime.now());
         bookRepo.save(book);
     }
 
-    public PageSplitView<List<ReferenceBookDTO>> getAllBookByGenre(String genreName, int numPage) {
+    public PageSplitView<List<ReferenceBookDto>> getAllBookByGenre(String genreName, int numPage) {
         validateGetAllBookByGenre(genreName, numPage);
         List<Long> booksId = getBooksIdByGenre(genreName, numPage, PAGE_BOOKS_SIZE * 3);
 
         return getPageSplitViewByBookIds(booksId, numPage);
     }
 
-    public PageSplitView<AbstractBookDTO> getLookBookById(Long bookId, int numPage) {
+    public PageSplitView<BookDto> getLookBookById(Long bookId, int numPage) {
         int fromSymbols = (numPage - 1) * MAX_SYMBOLS;
         int toSymbols = numPage * MAX_SYMBOLS;
 
         var pageCount = bookRepo.getPageCountByBookId(bookId, MAX_SYMBOLS);
-        var dtoBook = bookRepo.getSplitBookDTO(bookId, fromSymbols, toSymbols);
+        var dtoBook = bookRepo.getSplitBookDto(bookId, fromSymbols, toSymbols);
         var pages = getPageNumbers(numPage, pageCount);
 
         return new PageSplitView<>(dtoBook, pages);
@@ -104,7 +99,7 @@ public class BookService extends AbstractService {
     }
 
 
-    public PageSplitView<List<ReferenceBookDTO>> getAllFavoriteBooksByUser(User user, int numPage) {
+    public PageSplitView<List<ReferenceBookDto>> getAllFavoriteBooksByUser(User user, int numPage) {
         var booksId = bookRepo.getFavoriteBooksId(user, getSkipRows(numPage), PAGE_BOOKS_SIZE * 3);
 
         return getPageSplitViewByBookIds(booksId, numPage);
@@ -114,42 +109,30 @@ public class BookService extends AbstractService {
      * Method create comment for a book
      *
      * @param user    includes all fields of an authorized user
-     * @param request contains the main parameters for create comment
+     * @param commentDto contains the main parameters for create comment
      * @return dto response , with an error field
      * @see #validateAddComment(User, AddCommentDtoReq)
      */
-    public AddCommentDtoResp addComment(User user, AddCommentDtoReq request) {
-        var responseError = new AddCommentDtoResp();
-        try {
-            validateAddComment(user, request);
-            Comment comment = new Comment(request.getBigText(), request.getColor(), user);
-            Book book = bookRepo.findById(request.getId()).orElseThrow();
-            book.addComments(comment);
+    public void addComment(long bookId, CommentDto commentDto, User user) {
+        var comment = toComment(commentDto, user);
+        var book = bookRepo.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found"));
+        book.addComments(comment);
 
-            commentsRepo.save(comment);
-            bookRepo.save(book);
-            userRepo.save(user);
-        } catch (ServerException e) {
-            responseError.setError(e.getErrorMessage());
-            logger.warn("User ({}), Book ({}) -> (addComment) error {}.", user != null ? user.getId() : "null", request.getId(), e.getErrorMessage());
-        } catch (Exception ex) {
-            responseError.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
-            logger.error("User ({}), Book ({})  -> (addComment) error {}.", user != null ? user.getId() : "null", request.getId(), ex.getMessage());
-        }
-        return responseError;
+        commentsRepo.save(comment);
+        bookRepo.save(book);
     }
 
 
-    public PageSplitView<List<ReferenceBookDTO>> getAllBookByUser(User user, int numPage) {
+    public PageSplitView<List<ReferenceBookDto>> getAllBookByUser(User user, int numPage) {
         var booksId = bookRepo.getBooksIdByUser(user, getSkipRows(numPage), PAGE_BOOKS_SIZE * 3);
         return getPageSplitViewByBookIds(booksId, numPage);
     }
 
 
-    public BookEditDTO getBookEditById(User user, Long bookId) throws ServerException {
+    public BookEditDto getBookEditById(User user, Long bookId) throws ServerException {
         validateGetBook(user, bookId);
 
-        BookEditDTO bookEdit = bookRepo.getBookEditDTO(bookId);
+        BookEditDto bookEdit = bookRepo.getBookEditDto(bookId);
 
         if (!bookEdit.getAuthor().equals(user)) {
             throw new RuntimeException(
@@ -160,14 +143,15 @@ public class BookService extends AbstractService {
         return bookEdit;
     }
 
-    public void addFavoriteBook(Long userId, Long bookId) {
-        var likesId = bookRepo.getLikesIdByBookId(bookId);
-        var book = bookRepo.getById(bookId);
+    public void addFavoriteBook(long userId, Long bookId) {
+        var book = bookRepo.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found"));
+        var user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (likesId.contains(userId)) {
-            userRepo.findById(book.getId());
-        }
+        if (user.getFavorite().contains(book)) user.removeFavorite(book);
+        else user.addFavorite(book);
 
+        userRepo.save(user);
+        bookRepo.save(book);
     }
 
     /**
@@ -183,7 +167,7 @@ public class BookService extends AbstractService {
 
             User user = request.getUser();
             Book book = bookRepo.findById(request.getBookId()).orElseThrow();
-            List<Book> listAllFavorite = userRepo.findFavoriteBookById(user.getId());
+            List<Book> listAllFavorite = List.of();//userRepo.findFavoriteBooksUsingUserId(user.getId());
 
             listAllFavorite.remove(book);
             book.getLikes().remove(user);
@@ -194,10 +178,10 @@ public class BookService extends AbstractService {
 
         } catch (ServerException e) {
             response.setError(e.getErrorMessage());
-            logger.warn("User ({}), Book ({}) -> (deleteFavoriteBook) error {}.", request.getUser() != null ? request.getUser().getId() : "null", request.getBookId(), e.getErrorMessage());
+            log.warn("User ({}), Book ({}) -> (deleteFavoriteBook) error {}.", request.getUser() != null ? request.getUser().getId() : "null", request.getBookId(), e.getErrorMessage());
         } catch (Exception ex) {
             response.setError(AnswerErrorCode.EXCEPTION_ERROR.getMsg());
-            logger.error("User ({}), Book ({}) -> (deleteFavoriteBook) error {}.", request.getUser() != null ? request.getUser().getId() : "null", request.getBookId(), ex.getMessage());
+            log.error("User ({}), Book ({}) -> (deleteFavoriteBook) error {}.", request.getUser() != null ? request.getUser().getId() : "null", request.getBookId(), ex.getMessage());
         }
         return response;
     }
@@ -206,8 +190,8 @@ public class BookService extends AbstractService {
         return Arrays.stream(Genre.values()).toList();
     }
 
-    private List<ReferenceBookDTO> getRefBookById(List<Long> booksId) {
-        List<ReferenceBookDTO> refBooks = new ArrayList<>();
+    private List<ReferenceBookDto> getRefBookById(List<Long> booksId) {
+        List<ReferenceBookDto> refBooks = new ArrayList<>();
         for (Long aLong : booksId) {
             refBooks.add(bookRepo.getReferenceBook(aLong));
         }
@@ -273,9 +257,9 @@ public class BookService extends AbstractService {
         }
     }
 
-    private PageSplitView<List<ReferenceBookDTO>> getPageSplitViewByBookIds(List<Long> booksId, int numPage) {
+    private PageSplitView<List<ReferenceBookDto>> getPageSplitViewByBookIds(List<Long> booksId, int numPage) {
         int bookIdCount = Math.min(booksId.size(), PAGE_BOOKS_SIZE);
-        List<ReferenceBookDTO> refBooks = getRefBookById(booksId.subList(0, bookIdCount));
+        List<ReferenceBookDto> refBooks = getRefBookById(booksId.subList(0, bookIdCount));
 
         int pageNumCountView = (int) (numPage + Math.ceil((double) booksId.size() / PAGE_BOOKS_SIZE));
         List<Integer> pageNumbers = getPageNumbers(numPage, pageNumCountView);

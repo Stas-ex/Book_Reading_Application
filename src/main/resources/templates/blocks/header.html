@@ -36,6 +36,12 @@
             position: relative;
         }
 
+        .language {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
         .sidebar .logo-details .icon {
             opacity: 0;
             transition: all 0.5s ease;
@@ -306,13 +312,30 @@
             <div class="logo_name">Black-Fox</div>
             <i class='bx bx-menu' id="btnM"></i>
         </div>
-        <a href="/">
-            <i class='bx bx-home-smile'></i>
-        </a>
-        <span class="tooltip" th:text="#{btn.menu.home}"/>
+        <li>
+            <a th:href="'?lang=ru'">
+                <i class='bx bx-font-color'></i>
+                <span class="links_name" style="text-align: center" th:text="Ru"/>
+            </a>
+            <span class="tooltip" th:text="Ru"/>
+        </li>
+        <li>
+            <a th:href="'?lang=en'">
+                <i class='bx bxl-edge'></i>
+                <span class="links_name" style="text-align: center" th:text="En"/>
+            </a>
+            <span class="tooltip" th:text="En"/>
+        </li>
+        <li>
+            <a href="/">
+                <i class='bx bx-home-smile'></i>
+                <span class="tooltip" th:text="#{btn.menu.home}"/>
+            </a>
+            <span class="tooltip" th:text="#{btn.menu.home}"/>
+        </li>
         <li>
             <a th:href="@{/profile}">
-                <i class='bx bx-user-circle'></i>
+                <i class='bx bx-face'></i>
                 <span class="links_name" th:text="#{btn.menu.profile}"/>
             </a>
             <span class="tooltip" th:text="#{btn.menu.profile}"/>
@@ -325,7 +348,7 @@
             <span class="tooltip" th:text="#{btn.menu.books}"/>
         </li>
         <li>
-            <a th:href="@{/favorite/1}">
+            <a th:href="@{/book/favorite/1}">
                 <i class='bx bx-heart'></i>
                 <span class="links_name" th:text="#{btn.menu.saved}"/>
             </a>
@@ -348,10 +371,10 @@
 
         <li class="profile">
             <div class="profile-details">
-                <img th:if="${user != null}" th:src="${user.getImgFile()}" alt="profileImg">
+                <img th:if="${user != null}" th:src="${user.img()}" alt="profileImg">
                 <div class="name_job">
-                    <div class="name" th:if="${user != null}" th:text="${user.getUsername()}"></div>
-                    <div class="job" th:if="${user != null}" th:text="${user.getEmail()}"></div>
+                    <div class="name" th:if="${user != null}" th:text="${user.username()}"></div>
+                    <div class="job" th:if="${user != null}" th:text="${user.email()}"></div>
                 </div>
             </div>
             <a th:if="${user != null}" th:href="'/profile/exit'"><i class='bx bx-log-out' id="log_out"></i></a>

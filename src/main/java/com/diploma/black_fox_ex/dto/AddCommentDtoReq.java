@@ -3,14 +3,11 @@ package com.diploma.black_fox_ex.dto;
 import lombok.Data;
 
 @Data
+@Deprecated
 public class AddCommentDtoReq {
-    private long id;
-    private String bigText;
-    private String color;
 
-    public AddCommentDtoReq(long id, String bigText, String color) {
-        this.id = id;
-        this.bigText = bigText;
-        this.color = color;
-    }
+    private final long id;
+    private final String bigText;
+    private final String color;
+
 }

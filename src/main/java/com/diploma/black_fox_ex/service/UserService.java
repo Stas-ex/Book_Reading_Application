@@ -1,18 +1,17 @@
 package com.diploma.black_fox_ex.service;
 
 import com.diploma.black_fox_ex.dto.DeleteHelpDtoReq;
-import com.diploma.black_fox_ex.dto.user.UserDTO;
+import com.diploma.black_fox_ex.dto.user.UserDto;
+import com.diploma.black_fox_ex.dto.user.UserMenuDto;
+import com.diploma.black_fox_ex.dto.user.UserProfileDto;
 import com.diploma.black_fox_ex.exeptions.AnswerErrorCode;
 import com.diploma.black_fox_ex.exeptions.ServerException;
-import com.diploma.black_fox_ex.io.FileDirectories;
-import com.diploma.black_fox_ex.io.FileManager;
+import com.diploma.black_fox_ex.io.ImgManager;
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.repositories.UserRepo;
 import com.diploma.black_fox_ex.response.DeleteHelpResp;
 import com.diploma.black_fox_ex.response.GetAllHelpsResp;
-import com.diploma.black_fox_ex.dto.user.UserMenuDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,24 +21,25 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+import static com.diploma.black_fox_ex.io.ImgDirectories.USER_IMG_DIR;
+import static com.diploma.black_fox_ex.mappers.EntityMapper.*;
+import static org.apache.logging.log4j.util.Strings.isBlank;
+
 /**
  * This class performs basic actions on received user interaction requests.
  */
 @Service
+@Slf4j
 public class UserService implements UserDetailsService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-
-    private final String DEFAULT_PASSWORD = "Password123";
     private final UserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
-    private final FileManager fileManager = new FileManager();
 
     @Autowired
     public UserService(UserRepo userRepo,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder encoder) {
         this.userRepo = userRepo;
-        this.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = encoder;
     }
 
     /**
@@ -52,11 +52,11 @@ public class UserService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails userDetails;
-        if ((userDetails = userRepo.findByUsername(username)) == null) {
-            userDetails = userRepo.findByEmail(username);
-        }
-        return userDetails;
+        return userRepo.findByEmail(username)
+                .orElse(
+                        userRepo.findByUsername(username)
+                                .orElse(null)
+                );
     }
 
     /**
@@ -65,9 +65,8 @@ public class UserService implements UserDetailsService {
      * @param user includes all fields of an authorized user
      * @return dto for use in the bottom corner of the menu
      */
-    public UserMenuDTO getUserMenu(User user) {
-        if (user == null) return null;
-        return new UserMenuDTO(user);
+    public UserMenuDto getUserMenu(User user) {
+        return user == null ? null : toUserMenuDto(user);
     }
 
     /**
@@ -76,25 +75,25 @@ public class UserService implements UserDetailsService {
      * @param user includes all fields of an authorized user
      * @return dto to display the user on the main profile pageNum
      */
-    public UserDTO getUserProfile(User user) {
-        if (user == null) return null;
-        var userDto = new UserDTO(user.getUsername(), user.getEmail(),
-                DEFAULT_PASSWORD, user.getAge(), user.getSex().getTitle(),
-                user.getInfo(), user.getTelegram(), null);
-        userDto.setFilename(FileDirectories.USER_IMG_DIR.getPath() + user.getImgFile());
+    public UserProfileDto getUserProfile(User user) {
+        if (user == null) {
+            return null;
+        }
+
+        var userDto = toUserProfileDto(user);
+        userDto.setFilename(USER_IMG_DIR.getPath() + user.getImg());
         return userDto;
     }
 
     /**
      * User registration method
      *
-     * @param dto contains the main parameters for registration user
+     * @param userDto contains the main parameters for registration user
      */
-    public void registrationUser(UserDTO dto) {
-        dto.setFilename(fileManager.createFile(FileDirectories.USER_IMG_DIR, dto.getImg()));
-        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
-        var user = new User(dto);
-        userRepo.save(user);
+    public void register(UserDto userDto) {
+        userDto.setFilename(ImgManager.save(USER_IMG_DIR, userDto.getImg()));
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        userRepo.save(toUser(userDto));
     }
 
     /**
@@ -103,24 +102,24 @@ public class UserService implements UserDetailsService {
      * @param user    includes all fields of an authorized user
      * @param userDto contains the main parameters for update user
      */
-    public void updateUser(User user, UserDTO userDto) {
+    public void update(User user, UserProfileDto userDto) {
 
         //If the user update a password
         String password = userDto.getPassword();
-        userDto.setPassword(password.equals(DEFAULT_PASSWORD) ? user.getPassword() : passwordEncoder.encode(password));
+
+        userDto.setPassword(isBlank(password) ? user.getPassword() : passwordEncoder.encode(password));
 
         //If the user adds a file
-        String filePath = fileManager.createFile(FileDirectories.USER_IMG_DIR, userDto.getImg());
-        userDto.setFilename(filePath.equals("user.jpeg") ? user.getImgFile() : filePath);
+        String filename = ImgManager.save(USER_IMG_DIR, userDto.getImg());
+        userDto.setFilename(ImgManager.isDefaultImg(filename) ? filename : user.getImg());
 
-        user.update(userDto);
-        userRepo.save(user);
+        userRepo.save(updateUser(user, userDto));
     }
 
 
-    public void deleteUser(User user) {
+    public void delete(User user) {
         if (user != null) {
-            user.setDateTimeDelete(LocalDateTime.now());
+            user.setDateTimeDeletion(LocalDateTime.now());
             user.setActive(false);
             userRepo.save(user);
         }
@@ -133,7 +132,7 @@ public class UserService implements UserDetailsService {
      * @return dto response containing a list of messages from the support service
      * @see #validateGetAllAnswersSupport(User)
      */
-    public GetAllHelpsResp getAllAnswersSupportByUserDto(User user) {
+    public GetAllHelpsResp getAllAnswersSupport(User user) {
         GetAllHelpsResp response = new GetAllHelpsResp();
         try {
             validateGetAllAnswersSupport(user);
@@ -141,9 +140,9 @@ public class UserService implements UserDetailsService {
 //            response.setAnswers(listSupp);
         } catch (ServerException e) {
             response.setErrors(e.getErrorMessage());
-            logger.warn("User ({}) -> (getAllAnswersSupportByUserDto) error {}.", user != null ? user.getId() : "null", e.getErrorMessage());
+            log.warn("User ({}) -> (getAllAnswersSupport) error {}.", user != null ? user.getId() : "null", e.getErrorMessage());
         } catch (Exception ex) {
-            logger.error("User ({}) -> (getAllAnswersSupportByUserDto) error {}.", user != null ? user.getId() : "null", ex.getMessage());
+            log.error("User ({}) -> (getAllAnswersSupport) error {}.", user != null ? user.getId() : "null", ex.getMessage());
         }
         return response;
     }
@@ -155,18 +154,18 @@ public class UserService implements UserDetailsService {
      * @return dto response, with an error field
      * @see #validateDeleteAnswerSupport(DeleteHelpDtoReq)
      */
-    public DeleteHelpResp deleteAnswerByUser(DeleteHelpDtoReq request) {
+    public DeleteHelpResp deleteAnswerSupport(DeleteHelpDtoReq request) {
         DeleteHelpResp response = new DeleteHelpResp();
         try {
             validateDeleteAnswerSupport(request);
-            User user = userRepo.findByUsername(request.getUser().getUsername());
+            User user = userRepo.findByUsername(request.getUser().getUsername()).orElseThrow();
             user.removeSupportAnswer(request.getId());
             userRepo.save(user);
         } catch (ServerException e) {
             response.setErrors(e.getErrorMessage());
-            logger.warn("User ({}) -> (deleteAnswerByUser) error {}.", request.getUser() != null ? request.getUser().getId() : "null", e.getErrorMessage());
+            log.warn("User ({}) -> (deleteAnswer) error {}.", request.getUser() != null ? request.getUser().getId() : "null", e.getErrorMessage());
         } catch (Exception ex) {
-            logger.error("User ({}) -> (deleteAnswerByUser) error {}.", request.getUser() != null ? request.getUser().getId() : "null", ex.getMessage());
+            log.error("User ({}) -> (deleteAnswer) error {}.", request.getUser() != null ? request.getUser().getId() : "null", ex.getMessage());
         }
         return response;
     }
@@ -187,6 +186,6 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean isExistUser(String username) {
-        return userRepo.findByUsername(username) != null;
+        return userRepo.findByUsername(username).isPresent();
     }
 }

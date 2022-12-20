@@ -3,9 +3,9 @@ package com.diploma.black_fox_ex.controllers;
 import com.diploma.black_fox_ex.model.User;
 import com.diploma.black_fox_ex.service.UserService;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.stereotype.Controller;
 
@@ -13,13 +13,10 @@ import org.springframework.stereotype.Controller;
  * This is the class for interacting with the start pageNum.
  */
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
-    private final UserService userService;
 
-    @Autowired
-    public HomeController(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserService userService;
 
     /**
      * The function for going to the start pageNum
